@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs22.entity;
 
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs22.constant.Gender;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,59 +22,125 @@ public class User implements Serializable {
 
   private static final int serialVersionUID = 1;
 
-  @Id
-  @GeneratedValue
-  private int userId;
+    @Id
+    @GeneratedValue
+    private int userId;
 
-  @Column(nullable = false)
-  private String name;
+    @Column(nullable = false)
+    private String email;
 
-  @Column(nullable = false, unique = true)
-  private String username;
+    @Column(nullable = false, unique = true)
+    private String username;
 
-  @Column(nullable = false, unique = true)
-  private String token;
+    @Column
+    private String firstName;
 
-  @Column(nullable = false)
-  private UserStatus status;
+    @Column
+    private String lastName;
 
-  public int getUserId() {
+    @Column(nullable = false)
+    private String password;
+
+    @Column
+    private Gender gender;
+
+    @Column(nullable = false)
+    private UserStatus status;
+
+    @Column(nullable = false, unique = true)
+    private String token;
+
+    @Column
+    private String bio;
+
+    @Column
+    private String profilePicture;
+
+    public int getUserId() {
     return userId;
   }
 
-  public void setUserId(int id) {
+    public void setUserId(int id) {
     this.userId = id;
-  }
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public String getUsername() {
+    public String getUsername() {
     return username;
-  }
+    }
 
-  public void setUsername(String username) {
+    public void setUsername(String username) {
     this.username = username;
-  }
+    }
 
-  public String getToken() {
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public String getToken() {
     return token;
-  }
+    }
 
-  public void setToken(String token) {
+    public void setToken(String token) {
     this.token = token;
-  }
+    }
 
-  public UserStatus getStatus() {
-    return status;
-  }
+    public String getBio() {
+        return bio;
+    }
 
-  public void setStatus(UserStatus status) {
-    this.status = status;
-  }
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 }

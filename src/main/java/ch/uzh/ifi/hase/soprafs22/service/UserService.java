@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -54,6 +55,34 @@ public class UserService {
     return newUser;
   }
 
+  public User login(int userId, User userLoginCredentials){
+      // find user by userId
+      User userById = userRepository.findByUserId(userId);
+
+      // user is not registered
+      if(userById == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                  "User not found. Are you registered yet?");
+      }
+
+      // check whether password is correct
+      else if(!Objects.equals(userById.getPassword(), userLoginCredentials.getPassword())){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "The password is not correct!");
+      }
+
+      // check whether username is correct
+      else if(!Objects.equals(userById.getUsername(), userLoginCredentials.getUsername())){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "The username is not correct!");
+      }
+
+      // update status
+      userById.setStatus(UserStatus.ONLINE);
+
+      return userById;
+  }
+
   /**
    * This is a helper method that will check the uniqueness criteria of the
    * username and the name
@@ -66,16 +95,16 @@ public class UserService {
    */
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
-    User userByName = userRepository.findByName(userToBeCreated.getName());
+    User userByEmail = userRepository.findByEmail(userToBeCreated.getEmail());
 
     String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-    if (userByUsername != null && userByName != null) {
+    if (userByUsername != null && userByEmail != null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          String.format(baseErrorMessage, "username and the name", "are"));
+          String.format(baseErrorMessage, "username and the email", "are"));
     } else if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username", "is"));
-    } else if (userByName != null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "name", "is"));
+    } else if (userByEmail != null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "email", "is"));
     }
   }
 }

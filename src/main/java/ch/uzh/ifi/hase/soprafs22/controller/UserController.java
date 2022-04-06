@@ -31,21 +31,25 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
-    // convert API user to internal representation
-    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        // convert API user to internal representation
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
-    // create user
-    User createdUser = userService.createUser(userInput);
+        // create user
+        User createdUser = userService.createUser(userInput);
 
-    // convert internal representation of user back to API
-    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+        // convert internal representation of user back to API
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
     }
 
 
     @PostMapping("/users/{userId}/login")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void login(@PathVariable int userId, @RequestBody User loginCredentials){
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO login(@PathVariable int userId, @RequestBody User userLoginCredentials){
+        // check if user is registered
+        User loggedInUser = userService.login(userId, userLoginCredentials);
 
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(loggedInUser);
     }
 
     @PostMapping("/users/{userId}/logout")
