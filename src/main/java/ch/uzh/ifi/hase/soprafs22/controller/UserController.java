@@ -44,7 +44,7 @@ public class UserController {
 
     @PostMapping("/users/{userId}/login")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void login(@PathVariable int userId){
+    public void login(@PathVariable int userId, @RequestBody User loginCredentials){
 
     }
 
