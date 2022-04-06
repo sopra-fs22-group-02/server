@@ -1,24 +1,11 @@
 package ch.uzh.ifi.hase.soprafs22.controller;
 
-import ch.uzh.ifi.hase.soprafs22.entity.User;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapper;
-import ch.uzh.ifi.hase.soprafs22.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Place Controller
- * This class is responsible for handling all REST request that are related to
- * the place.
- * The controller will receive the request and delegate the execution to the
- * PlaceService and finally return the result.
- */
 public class PlaceController {
+/** POST endpoints */
+
     @PostMapping("/places/{userId}/{placeId}")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public void createSleepEvent(@PathVariable int userId, @PathVariable int placeId){
@@ -30,6 +17,8 @@ public class PlaceController {
     public void createPlace(@PathVariable int userId){
 
     }
+
+/** GET endpoints */
 
     @GetMapping("/places/{userId}")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
@@ -49,6 +38,8 @@ public class PlaceController {
 
     }
 
+/** DELETE endpoints */
+
     @DeleteMapping("/places/{userId}/{placeId}")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public void deletePlace(@PathVariable int userId, @PathVariable int placeId){
@@ -61,6 +52,8 @@ public class PlaceController {
 
     }
 
+/** PUT endpoints */
+
     @PutMapping("/places/{userId}/{placeId}")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public void updatePlace(@PathVariable int userId, @PathVariable int placeId){
@@ -72,5 +65,4 @@ public class PlaceController {
     public void updateSleepEvent(@PathVariable int userId, @PathVariable int placeId, @PathVariable int eventId){
 
     }
-
 }

@@ -19,11 +19,11 @@ import java.io.Serializable;
 @Table(name = "USER")
 public class User implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final int serialVersionUID = 1;
 
   @Id
   @GeneratedValue
-  private Long id;
+  private int userId;
 
   @Column(nullable = false)
   private String name;
@@ -37,12 +37,12 @@ public class User implements Serializable {
   @Column(nullable = false)
   private UserStatus status;
 
-  public Long getId() {
-    return id;
+  public int getUserId() {
+    return userId;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public void setUserId(int id) {
+    this.userId = id;
   }
 
   public String getName() {

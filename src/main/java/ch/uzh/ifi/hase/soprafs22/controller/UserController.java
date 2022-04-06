@@ -7,10 +7,6 @@ import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs22.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpServerErrorException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User Controller
@@ -58,17 +54,21 @@ public class UserController {
 
     }
 
+/** GET endpoints */
+
     @GetMapping("/users/{userId}/profile")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public void profile(@PathVariable int userId){
 
     }
 
-    @PutMapping("/users/{userId}/notifications")
+    @GetMapping("/users/{userId}/notifications")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public void notification(@PathVariable int userId){
 
     }
+
+/** PUT endpoints */
 
     @PutMapping("/users/{userId}/profile")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
@@ -81,5 +81,4 @@ public class UserController {
     public void updateNotification(@PathVariable int userId){
 
     }
-
 }
