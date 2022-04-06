@@ -39,17 +39,19 @@ public class UserServiceIntegrationTest {
     // given
     assertNull(userRepository.findByUsername("testUsername"));
 
-    User testUser = new User();
-    testUser.setFirstName("testName");
-    testUser.setUsername("testUsername");
+   User testUser = new User();
+   testUser.setEmail("firstname.lastname@uzh.ch");
+   testUser.setUsername("testUsername");
+   testUser.setPassword("password");
 
     // when
     User createdUser = userService.createUser(testUser);
 
     // then
     assertEquals(testUser.getUserId(), createdUser.getUserId());
-    assertEquals(testUser.getFirstName(), createdUser.getFirstName());
+    assertEquals(testUser.getEmail(), createdUser.getEmail());
     assertEquals(testUser.getUsername(), createdUser.getUsername());
+    assertEquals(testUser.getPassword(), createdUser.getPassword());
     assertNotNull(createdUser.getToken());
     assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
   }
@@ -59,16 +61,18 @@ public class UserServiceIntegrationTest {
     assertNull(userRepository.findByUsername("testUsername"));
 
     User testUser = new User();
-    testUser.setFirstName("testName");
-    testUser.setUsername("testUsername");
+    testUser.setEmail("firstname.lastname@uzh.ch");
+    testUser.setUsername("username");
+    testUser.setPassword("password");
     User createdUser = userService.createUser(testUser);
 
     // attempt to create second user with same username
     User testUser2 = new User();
 
     // change the name but forget about the username
-    testUser2.setFirstName("testName2");
-    testUser2.setUsername("testUsername");
+    testUser2.setEmail("firstname2.lastname@uzh.ch");
+    testUser2.setUsername("username");
+    testUser.setPassword("password");
 
     // check that an error is thrown
     assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));

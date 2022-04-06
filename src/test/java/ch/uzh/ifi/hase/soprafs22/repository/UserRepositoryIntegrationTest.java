@@ -23,8 +23,9 @@ public class UserRepositoryIntegrationTest {
   public void findById_success() {
     // given
     User user = new User();
-    user.setFirstName("Firstname Lastname");
-    user.setUsername("firstname@lastname");
+    user.setEmail("firstname.lastname@uzh.ch");
+    user.setUsername("username");
+    user.setPassword("password");
     user.setStatus(UserStatus.OFFLINE);
     user.setToken("1");
 
@@ -35,9 +36,10 @@ public class UserRepositoryIntegrationTest {
     User found = userRepository.findByUserId(user.getUserId());
 
     // then
-    assertNotNull(found.getUserId());
-    assertEquals(found.getFirstName(), user.getFirstName());
+    assertEquals(found.getUserId(), user.getUserId());
+    assertEquals(found.getEmail(), user.getEmail());
     assertEquals(found.getUsername(), user.getUsername());
+    assertEquals(found.getPassword(), user.getPassword());
     assertEquals(found.getToken(), user.getToken());
     assertEquals(found.getStatus(), user.getStatus());
   }
