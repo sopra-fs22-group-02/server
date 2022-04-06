@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs22.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
  * The controller will receive the request and delegate the execution to the
  * UserService and finally return the result.
  */
-//test SonarQube after configuration
+
 @RestController
 public class UserController {
 
@@ -28,25 +29,12 @@ public class UserController {
     this.userService = userService;
   }
 
-  @GetMapping("/users")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public List<UserGetDTO> getAllUsers() {
-    // fetch all users in the internal representation
-    List<User> users = userService.getUsers();
-    List<UserGetDTO> userGetDTOs = new ArrayList<>();
+/** POST endpoints */
 
-    // convert each user to the API representation
-    for (User user : users) {
-      userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
-    }
-    return userGetDTOs;
-  }
-
-  @PostMapping("/users")
-  @ResponseStatus(HttpStatus.CREATED)
-  @ResponseBody
-  public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
+    @PostMapping("/users")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
     // convert API user to internal representation
     User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
@@ -55,5 +43,43 @@ public class UserController {
 
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
-  }
+    }
+
+
+    @PostMapping("/users/{userId}/login")
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public void login(@PathVariable int userId){
+
+    }
+
+    @PostMapping("/users/{userId}/logout")
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public void logout(@PathVariable int userId){
+
+    }
+
+    @GetMapping("/users/{userId}/profile")
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public void profile(@PathVariable int userId){
+
+    }
+
+    @PutMapping("/users/{userId}/notifications")
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public void notification(@PathVariable int userId){
+
+    }
+
+    @PutMapping("/users/{userId}/profile")
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public void updateProfile(@PathVariable int userId){
+
+    }
+
+    @PutMapping("/users/{userId}/notifications")
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public void updateNotification(@PathVariable int userId){
+
+    }
+
 }
