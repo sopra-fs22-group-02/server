@@ -27,6 +27,7 @@ public class UserController {
 
 /** POST endpoints */
 
+    //registration
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -41,21 +42,24 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
     }
 
-
-    @PostMapping("/users/{userId}/login")
+    //login
+    @PostMapping("/users/{username}/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO login(@PathVariable int userId, @RequestBody User userLoginCredentials){
+    public UserGetDTO login(@PathVariable String username, @RequestBody User userLoginCredentials){
         // check if user is registered
-        User loggedInUser = userService.login(userId, userLoginCredentials);
+        User loggedInUser = userService.login(username, userLoginCredentials);
 
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(loggedInUser);
     }
 
     @PostMapping("/users/{userId}/logout")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void logout(@PathVariable int userId){
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO logout(@PathVariable int userId){
+        User loggedOutUser = userService.logout(userId);
 
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(loggedOutUser);
     }
 
 /** GET endpoints */

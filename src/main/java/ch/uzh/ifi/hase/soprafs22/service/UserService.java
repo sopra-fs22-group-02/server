@@ -55,30 +55,40 @@ public class UserService {
     return newUser;
   }
 
-  public User login(int userId, User userLoginCredentials){
+  public User login(String username, User userLoginCredentials){
       // find user by userId
-      User userById = userRepository.findByUserId(userId);
+      User userByUsername = userRepository.findByUsername(username);
 
       // user is not registered
-      if(userById == null){
+      if(userByUsername == null){
           throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                   "User not found. Are you registered yet?");
       }
 
       // check whether password is correct
-      else if(!Objects.equals(userById.getPassword(), userLoginCredentials.getPassword())){
+      else if(!Objects.equals(userByUsername.getPassword(), userLoginCredentials.getPassword())){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                   "The password is not correct!");
       }
 
       // check whether username is correct
-      else if(!Objects.equals(userById.getUsername(), userLoginCredentials.getUsername())){
+      else if(!Objects.equals(userByUsername.getUsername(), userLoginCredentials.getUsername())){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                   "The username is not correct!");
       }
 
       // update status
-      userById.setStatus(UserStatus.ONLINE);
+      userByUsername.setStatus(UserStatus.ONLINE);
+
+      return userByUsername;
+  }
+
+  public User logout(int userId){
+      // find user by userId
+      User userById = userRepository.findByUserId(userId);
+
+      // update status
+      userById.setStatus(UserStatus.OFFLINE);
 
       return userById;
   }
