@@ -66,8 +66,13 @@ public class UserController {
 
     @GetMapping("/users/{userId}/profile")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void profile(@PathVariable int userId){
+    public UserGetDTO profile(@PathVariable int userId){
+        // fetch user by id in the internal representation
+        User user = userService.findUserById(userId);
 
+        //convert user to the API representation
+        UserGetDTO foundUser = DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
+        return foundUser;
     }
 
     @GetMapping("/users/{userId}/notifications")
@@ -80,8 +85,12 @@ public class UserController {
 
     @PutMapping("/users/{userId}/profile")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void updateProfile(@PathVariable int userId){
+    public UserGetDTO updateProfile(@RequestBody User userUpdates, @PathVariable int userId){
+        // update user
+        User updatedUser = userService.updateUser(userUpdates, userId);
 
+        // convert internal representation of user back to API
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(updatedUser);
     }
 
     @PutMapping("/users/{userId}/notifications")
