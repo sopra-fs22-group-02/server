@@ -8,6 +8,9 @@ import ch.uzh.ifi.hase.soprafs22.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * User Controller
  * This class is responsible for handling all REST request that are related to
@@ -59,6 +62,20 @@ public class UserController {
     }
 
 /** GET endpoints */
+    @GetMapping("/users")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<UserGetDTO> getAllUsers() {
+        // fetch all users in the internal representation
+        List<User> users = userService.getUsers();
+        List<UserGetDTO> userGetDTOs = new ArrayList<>();
+
+        // convert each user to the API representation
+        for (User user : users) {
+            userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+        }
+        return userGetDTOs;
+    }
 
     @GetMapping("/users/{userId}/profile")
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
