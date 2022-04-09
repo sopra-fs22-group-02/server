@@ -13,7 +13,6 @@ public class Place {
     @GeneratedValue
     private int placeId;
     private User provider;
-    private Campus closestCampus;
     private Location location;
     private String description;
     private String pictureOfThePlace;
@@ -35,14 +34,6 @@ public class Place {
 
     public void setProvider(User provider){
         this.provider = provider;
-    }
-
-    public Campus getClosestCampus(){
-        return closestCampus;
-    }
-
-    public void setClosestCampus(Campus closestCampus){
-        this.closestCampus = closestCampus;
     }
 
     public Location getLocation(){
