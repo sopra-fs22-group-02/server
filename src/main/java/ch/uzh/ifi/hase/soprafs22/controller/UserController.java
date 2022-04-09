@@ -65,7 +65,7 @@ public class UserController {
 /** GET endpoints */
 
     @GetMapping("/users/{userId}/profile")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ResponseStatus(HttpStatus.OK)
     public UserGetDTO profile(@PathVariable int userId){
         // fetch user by id in the internal representation
         User user = userService.findUserById(userId);
@@ -84,7 +84,7 @@ public class UserController {
 /** PUT endpoints */
 
     @PutMapping("/users/{userId}/profile")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ResponseStatus(HttpStatus.OK)
     public UserGetDTO updateProfile(@RequestBody User userUpdates, @PathVariable int userId){
         // update user
         User updatedUser = userService.updateUser(userUpdates, userId);
