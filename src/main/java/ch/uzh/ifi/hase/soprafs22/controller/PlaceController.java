@@ -73,9 +73,9 @@ public class PlaceController {
 /** DELETE endpoints */
 
     @DeleteMapping("/places/{userId}/{placeId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePlace(@PathVariable int userId, @PathVariable int placeId){
-
+        placeManager.deletePlace(userId, placeId);
     }
 
     @DeleteMapping("/places/{userId}/{placeId}/events/{eventId}")

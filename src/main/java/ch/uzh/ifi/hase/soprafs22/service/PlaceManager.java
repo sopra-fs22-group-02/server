@@ -75,4 +75,12 @@ public class PlaceManager {
                   String.format("You have already created a place. Therefore, the place could not be created!"));
       }
   }
+
+  public void deletePlace(int userId, int placeId) {
+      List<Place> usersPlaces = placeRepository.findByUserId(userId);
+      for (Place place : usersPlaces) {
+          placeRepository.delete(placeRepository.findByPlaceId(placeId));
+      }
+  }
+
 }
