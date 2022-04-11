@@ -1,8 +1,16 @@
 package ch.uzh.ifi.hase.soprafs22.controller;
 
+import ch.uzh.ifi.hase.soprafs22.entity.User;
+import ch.uzh.ifi.hase.soprafs22.entity.Place;
+import ch.uzh.ifi.hase.soprafs22.rest.dto.PlaceGetDTO;
+import ch.uzh.ifi.hase.soprafs22.rest.dto.PlacePostDTO;
+import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperPlace;
 import ch.uzh.ifi.hase.soprafs22.service.PlaceManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class PlaceController {
@@ -22,17 +30,32 @@ public class PlaceController {
     }
 
     @PostMapping("/places/{userId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void createPlace(@PathVariable int userId){
+    @ResponseStatus(HttpStatus.CREATED)
+    public PlaceGetDTO createPlace(@RequestBody PlacePostDTO placePostDTO, @PathVariable int userId){
+        // convert API place to internal representation
+        Place placeInput = DTOMapperPlace.INSTANCE.convertPlacePostDTOtoEntity(placePostDTO);
 
+        // create place
+        Place createdPlace = placeManager.createPlace(placeInput);
+
+        // convert internal representation of place back to API
+        return DTOMapperPlace.INSTANCE.convertEntityToPlaceGetDTO(createdPlace);
     }
 
 /** GET endpoints */
 
     @GetMapping("/places/{userId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void getAllPlacesForUser(@PathVariable int userId){
+    @ResponseStatus(HttpStatus.OK)
+    public List<PlaceGetDTO> getAllPlacesForUser(@PathVariable int userId){
+        // fetch places in the internal representation
+        List<Place> places = placeManager.getAllPlacesForUser(userId);
+        List<PlaceGetDTO> placeGetDTOs = new ArrayList<>();
 
+        //convert each place to the API representation
+        for (Place place : places) {
+            placeGetDTOs.add(DTOMapperPlace.INSTANCE.convertEntityToPlaceGetDTO(place));
+        }
+        return placeGetDTOs;
     }
 
     @GetMapping("/places/{userId}/{placeId}/events")

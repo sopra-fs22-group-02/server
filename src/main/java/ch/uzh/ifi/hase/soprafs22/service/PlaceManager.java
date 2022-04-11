@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -34,7 +35,19 @@ public class PlaceManager {
       return this.placeRepository.findAll();
   }
 
-  public Place createPlace(Place newPlace){
+  public List<Place> getAllPlacesForUser(int userId){
+      List<Place> allPlaces = getPlaces();
+      List<Place> usersPlaces = new ArrayList<>();
+
+      for (Place place : allPlaces) {
+          if (place.getProvider().getUserId() == userId) {
+              usersPlaces.add(place);
+          }
+      }
+      return usersPlaces;
+  }
+
+  public Place createPlace(Place newPlace) {
 
       checkIfPlaceExists(newPlace);
 
@@ -46,12 +59,12 @@ public class PlaceManager {
   }
 
   private void checkIfPlaceExists(Place placeToBeCreated) {
-      Place placeById = placeRepository.findByPlaceId(placeToBeCreated.getPlaceId());
+      Place placeByProvider = placeRepository.findByProvider(placeToBeCreated.getProvider());
 
-      String baseErrorMessage = "The %s provided %s not unique. Therefore, the place could not be created!";
-      if (placeById != null) {
+      String baseErrorMessage = "You have already created a place. Therefore, the place could not be created!";
+      if (placeByProvider != null) {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                  String.format(baseErrorMessage, "place", "is"));
-       }
+                  String.format(baseErrorMessage));
+      }
   }
 }
