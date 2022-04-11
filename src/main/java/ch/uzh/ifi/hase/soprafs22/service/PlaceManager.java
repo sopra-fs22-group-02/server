@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.service;
 
+import ch.uzh.ifi.hase.soprafs22.entity.Location;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
@@ -83,4 +84,36 @@ public class PlaceManager {
       }
   }
 
+  public Place updatePlace(Place placeUpdated, int userId, int placeId) {
+      // check that if user wants to update location to NULL (meaning he leaves the field empty)
+      if(placeUpdated.getLocation() == null){
+          throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                  "Location cannot be NULL!");
+      }
+      // find place by ID
+      Place UpdatePlace = placeRepository.findByPlaceId(placeId);
+
+      // throw exception if place doesn't exist
+      if(UpdatePlace == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                  "The place was not found!");
+      }
+
+      //String UpdatedName = placeUpdated.getName();
+      Location UpdatedLocation = placeUpdated.getLocation();
+      //String UpdatedAddress = placeUpdated.getAddress();
+      String UpdatedDescription = placeUpdated.getDescription();
+      String UpdatedPictureOfThePlace = placeUpdated.getPictureOfThePlace();
+      //List<SleepEvent> UpdatedSleepEvents = placeUpdated.getSleepEvents();
+
+      //UpdatePlace.setName(UpdatedName);
+      UpdatePlace.setLocation(UpdatedLocation);
+      //UpdatePlace.setAddress(UpdatedAddress);
+      UpdatePlace.setDescription(UpdatedDescription);
+      UpdatePlace.setPictureOfThePlace(UpdatedPictureOfThePlace);
+      //UpdatePlace.setSleepEvents(UpdatedSleepEvents);
+
+      return UpdatePlace;
+
+  }
 }
