@@ -1,9 +1,18 @@
 package ch.uzh.ifi.hase.soprafs22.controller;
 
+import ch.uzh.ifi.hase.soprafs22.service.PlaceManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 public class PlaceController {
+
+    private final PlaceManager placeManager;
+
+    PlaceController(PlaceManager placeManager){
+        this.placeManager = placeManager;
+    }
+
 /** POST endpoints */
 
     @PostMapping("/places/{userId}/{placeId}")
