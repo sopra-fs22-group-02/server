@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs22.service;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
+import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 
 @Service
@@ -26,9 +25,12 @@ public class PlaceManager {
 
   private final PlaceRepository placeRepository;
 
+  private final UserRepository userRepository;
+
   @Autowired
-  public PlaceManager(@Qualifier("placeRepository") PlaceRepository placeRepository) {
+  public PlaceManager(@Qualifier("placeRepository") PlaceRepository placeRepository, UserRepository userRepository) {
     this.placeRepository = placeRepository;
+      this.userRepository = userRepository;
   }
 
   public List<Place> getPlaces(){
@@ -36,6 +38,8 @@ public class PlaceManager {
   }
 
   public List<Place> getAllPlacesForUser(int userId){
+      User userById = userRepository.findByUserId(userId);
+
       List<Place> allPlaces = getPlaces();
       List<Place> usersPlaces = new ArrayList<>();
 
@@ -43,6 +47,11 @@ public class PlaceManager {
           if (place.getProvider().getUserId() == userId) {
               usersPlaces.add(place);
           }
+      }
+
+      if (userById == null) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "The user provided is not found!");
       }
       return usersPlaces;
   }
@@ -61,10 +70,9 @@ public class PlaceManager {
   private void checkIfPlaceExists(Place placeToBeCreated) {
       Place placeByProvider = placeRepository.findByProvider(placeToBeCreated.getProvider());
 
-      String baseErrorMessage = "You have already created a place. Therefore, the place could not be created!";
       if (placeByProvider != null) {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                  String.format(baseErrorMessage));
+                  String.format("You have already created a place. Therefore, the place could not be created!"));
       }
   }
 }
