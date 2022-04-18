@@ -4,6 +4,8 @@ import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlaceGetDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlacePostDTO;
+import ch.uzh.ifi.hase.soprafs22.rest.dto.UserGetDTO;
+import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperPlace;
 import ch.uzh.ifi.hase.soprafs22.service.PlaceManager;
 import org.springframework.http.HttpStatus;
@@ -29,9 +31,9 @@ public class PlaceController {
 
     }
 
-    @PostMapping("/places/{userId}")
+    @PostMapping("/places")
     @ResponseStatus(HttpStatus.CREATED)
-    public PlaceGetDTO createPlace(@RequestBody PlacePostDTO placePostDTO, @PathVariable int userId){
+    public PlaceGetDTO createPlace(@RequestBody PlacePostDTO placePostDTO){
         // convert API place to internal representation
         Place placeInput = DTOMapperPlace.INSTANCE.convertPlacePostDTOtoEntity(placePostDTO);
 
@@ -43,6 +45,22 @@ public class PlaceController {
     }
 
 /** GET endpoints */
+
+    @GetMapping("/places")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<PlaceGetDTO> getPlaces() {
+        // fetch all places in the internal representation
+        List<Place> places = placeManager.getPlaces();
+        List<PlaceGetDTO> placeGetDTOs = new ArrayList<>();
+
+        // convert each place to the API representation
+        for (Place place : places) {
+            placeGetDTOs.add(DTOMapperPlace.INSTANCE.convertEntityToPlaceGetDTO(place));
+        }
+        return placeGetDTOs;
+    }
+
 
     @GetMapping("/places/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -74,8 +92,8 @@ public class PlaceController {
 
     @DeleteMapping("/places/{userId}/{placeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePlace(@PathVariable int userId, @PathVariable int placeId){
-        placeManager.deletePlace(userId, placeId);
+    public void deletePlace(@PathVariable User provider, @PathVariable int placeId){
+        placeManager.deletePlace(provider, placeId);
     }
 
     @DeleteMapping("/places/{userId}/{placeId}/events/{eventId}")

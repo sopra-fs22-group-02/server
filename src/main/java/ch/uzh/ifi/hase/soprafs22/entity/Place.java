@@ -1,20 +1,32 @@
 package ch.uzh.ifi.hase.soprafs22.entity;
 
 import ch.uzh.ifi.hase.soprafs22.constant.Campus;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-public class Place {
+@Entity
+@Table(name = "Place")
+public class Place implements Serializable {
+
     private static final int serialVersionUID = 1;
 
     @Id
     @GeneratedValue
     private int placeId;
+
+    @OneToOne
     private User provider;
+
+    @OneToOne
     private Location location;
+
+    @Column
     private String description;
+
+    @Column
     private String pictureOfThePlace;
     //private List<SleepEvent> sleepEvents;
 

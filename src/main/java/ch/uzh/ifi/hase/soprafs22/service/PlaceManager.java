@@ -77,11 +77,9 @@ public class PlaceManager {
       }
   }
 
-  public void deletePlace(int userId, int placeId) {
-      List<Place> usersPlaces = placeRepository.findByUserId(userId);
-      for (Place place : usersPlaces) {
+  public void deletePlace(User provider, int placeId) {
           placeRepository.delete(placeRepository.findByPlaceId(placeId));
-      }
+
   }
 
   public Place updatePlace(Place placeUpdated, int userId, int placeId) {

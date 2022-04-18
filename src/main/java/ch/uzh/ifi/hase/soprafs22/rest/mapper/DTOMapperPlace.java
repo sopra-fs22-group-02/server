@@ -23,8 +23,9 @@ public interface DTOMapperPlace {
 
   DTOMapperPlace INSTANCE = Mappers.getMapper(DTOMapperPlace.class);
 
-  @Mapping(source = "provider", target = "provider")
-  @Mapping(source = "location", target = "location")
+  //@Mapping(source = "provider", target = "provider")
+  //@Mapping(source = "location", target = "location")
+    @Mapping(source = "description", target = "description")
   Place convertPlacePostDTOtoEntity(PlacePostDTO placePostDTO);
 
   @Mapping(source = "placeId", target = "placeId")

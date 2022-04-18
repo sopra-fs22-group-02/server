@@ -2,11 +2,32 @@ package ch.uzh.ifi.hase.soprafs22.entity;
 
 import ch.uzh.ifi.hase.soprafs22.constant.Campus;
 
-public class Location {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "Location")
+public class Location implements Serializable {
+
+    private static final int serialVersionUID = 1;
+
+    @Column
     private String postCode;
+
     //private Coordinate coordinates;
+
+    @Column
     private Campus closestCampus;
+
+    @Column
     private int distanceToClosestCampus;
+
+    // for now, the address is the primary key of Location.
+    // maybe we should add a "LocationID" instead of using this as primary key.
+    @Id
     private String address;
 
 /** getters and setters */
