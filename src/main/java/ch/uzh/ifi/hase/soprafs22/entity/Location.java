@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Location")
+@Table(name = "LOCATION")
 public class Location implements Serializable {
 
     private static final int serialVersionUID = 1;

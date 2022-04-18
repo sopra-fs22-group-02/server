@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "Place")
+@Table(name = "PLACE")
 public class Place implements Serializable {
 
     private static final int serialVersionUID = 1;
