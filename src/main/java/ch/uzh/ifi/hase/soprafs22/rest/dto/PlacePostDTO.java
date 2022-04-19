@@ -5,16 +5,16 @@ import ch.uzh.ifi.hase.soprafs22.entity.User;
 
 public class PlacePostDTO {
 
-    private User provider;
+    private int providerId;
     //private Location location;
     private String description;
 
-    public User getProvider(){
-        return provider;
+    public int getProviderId(){
+        return providerId;
     }
 
-    public void setProvider(User provider){
-        this.provider = provider;
+    public void setProviderId(int providerId){
+        this.providerId = providerId;
     }
 
     /*public Location getLocation(){

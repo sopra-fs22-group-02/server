@@ -6,7 +6,7 @@ import ch.uzh.ifi.hase.soprafs22.entity.User;
 public class PlaceGetDTO {
 
     private int placeId;
-    private User provider;
+    private int providerId;
     private Location location;
     private String description;
     private String pictureOfThePlace;
@@ -20,12 +20,12 @@ public class PlaceGetDTO {
         this.placeId = placeId;
     }
 
-    public User getProvider(){
-        return provider;
+    public int getProviderId(){
+        return providerId;
     }
 
-    public void setProvider(User provider){
-        this.provider = provider;
+    public void setProviderId(int providerId){
+        this.providerId = providerId;
     }
 
     public Location getLocation(){

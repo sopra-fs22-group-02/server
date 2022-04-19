@@ -11,14 +11,14 @@ import java.util.List;
 @Table(name = "PLACE")
 public class Place implements Serializable {
 
-    private static final int serialVersionUID = 1;
+    private static final long serialVersionUID = 1;
 
     @Id
     @GeneratedValue
     private int placeId;
 
-    @OneToOne
-    private User provider;
+    @Column
+    private int providerId;
 
     @OneToOne
     private Location location;
@@ -40,12 +40,12 @@ public class Place implements Serializable {
         this.placeId = placeId;
     }
 
-    public User getProvider(){
-        return provider;
+    public int getProviderId(){
+        return providerId;
     }
 
-    public void setProvider(User provider){
-        this.provider = provider;
+    public void setProviderId(int provider){
+        this.providerId = providerId;
     }
 
     public Location getLocation(){

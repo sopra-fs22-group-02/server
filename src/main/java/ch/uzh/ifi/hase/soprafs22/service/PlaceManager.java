@@ -45,7 +45,7 @@ public class PlaceManager {
       List<Place> usersPlaces = new ArrayList<>();
 
       for (Place place : allPlaces) {
-          if (place.getProvider().getUserId() == userId) {
+          if (place.getProviderId() == userId) {
               usersPlaces.add(place);
           }
       }
@@ -69,7 +69,7 @@ public class PlaceManager {
   }
 
   private void checkIfPlaceExists(Place placeToBeCreated) {
-      Place placeByProvider = placeRepository.findByProvider(placeToBeCreated.getProvider());
+      Place placeByProvider = placeRepository.findByProviderId(placeToBeCreated.getProviderId());
 
       if (placeByProvider != null) {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,

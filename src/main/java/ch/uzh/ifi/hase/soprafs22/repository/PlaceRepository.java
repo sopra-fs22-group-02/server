@@ -11,5 +11,5 @@ import java.util.List;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     Place findByPlaceId(int placeId);
 
-    Place findByProvider(User provider);
+    Place findByProviderId(int providerId);
 }
