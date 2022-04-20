@@ -17,7 +17,7 @@ public class Place implements Serializable {
     @GeneratedValue
     private int placeId;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private int providerId;
 
     @OneToOne
@@ -44,7 +44,7 @@ public class Place implements Serializable {
         return providerId;
     }
 
-    public void setProviderId(int provider){
+    public void setProviderId(int providerId){
         this.providerId = providerId;
     }
 

@@ -77,17 +77,17 @@ public class PlaceManager {
       }
   }
 
-  public void deletePlace(User provider, int placeId) {
+  public void deletePlace(int placeId) {
           placeRepository.delete(placeRepository.findByPlaceId(placeId));
 
   }
 
-  public Place updatePlace(Place placeUpdated, int userId, int placeId) {
+  public Place updatePlace(Place placeUpdated, int placeId) {
       // check that if user wants to update location to NULL (meaning he leaves the field empty)
-      if(placeUpdated.getLocation() == null){
+      /*if(placeUpdated.getLocation() == null){
           throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                   "Location cannot be NULL!");
-      }
+      }*/
       // find place by ID
       Place UpdatePlace = placeRepository.findByPlaceId(placeId);
 

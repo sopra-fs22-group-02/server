@@ -90,10 +90,10 @@ public class PlaceController {
 
 /** DELETE endpoints */
 
-    @DeleteMapping("/places/{userId}/{placeId}")
+    @DeleteMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePlace(@PathVariable User provider, @PathVariable int placeId){
-        placeManager.deletePlace(provider, placeId);
+    public void deletePlace(@PathVariable int placeId){
+        placeManager.deletePlace(placeId);
     }
 
     @DeleteMapping("/places/{userId}/{placeId}/events/{eventId}")
@@ -104,11 +104,11 @@ public class PlaceController {
 
 /** PUT endpoints */
 
-    @PutMapping("/places/{userId}/{placeId}")
+    @PutMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
-    public PlaceGetDTO updatePlace(@RequestBody Place placeUpdates, @PathVariable int userId, @PathVariable int placeId){
+    public PlaceGetDTO updatePlace(@RequestBody Place placeUpdates, @PathVariable int placeId){
         // update place
-        Place updatedPlace = placeManager.updatePlace(placeUpdates, userId, placeId);
+        Place updatedPlace = placeManager.updatePlace(placeUpdates, placeId);
 
         // convert internal representation of place back to API
         return DTOMapperPlace.INSTANCE.convertEntityToPlaceGetDTO(updatedPlace);
