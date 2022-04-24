@@ -17,7 +17,7 @@ public interface DTOMapperSleepEvent {
   @Mapping(source = "startTime", target = "startTime")
   @Mapping(source = "endTime", target = "endTime")
   @Mapping(source = "comment", target = "comment")
-  SleepEvent convertSleepEventPostDTOtoEntity(SleepEventPostDTO placePostDTO);
+  SleepEvent convertSleepEventPostDTOtoEntity(SleepEventPostDTO sleepEventPostDTO);
 
   @Mapping(source = "eventId", target = "eventId")
   @Mapping(source = "applicants", target = "applicants")
