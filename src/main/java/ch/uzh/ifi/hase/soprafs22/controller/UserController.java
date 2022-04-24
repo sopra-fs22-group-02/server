@@ -56,7 +56,7 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(loggedInUser);
     }
 
-    @PostMapping("/users/{userId}/logout")
+    @PostMapping("/users/{username}/logout")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO logout(@PathVariable int userId){
