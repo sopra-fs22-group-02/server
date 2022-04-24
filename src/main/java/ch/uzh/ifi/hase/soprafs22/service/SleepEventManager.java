@@ -73,4 +73,24 @@ public class SleepEventManager {
 
         return newSleepEvent;
     }
+
+    public List<SleepEvent> getAllSleepEventsForPlace(int placeId){
+        Place place = placeRepository.findByPlaceId(placeId);
+
+        if(place == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This place does not exist!");
+        }
+
+        return place.getSleepEvents();
+    }
+
+    public SleepEvent findSleepEventById(int eventId){
+        SleepEvent sleepEvent =sleepEventRepository.findByEventId(eventId);
+        if(sleepEvent == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep event does not exist!");
+        }
+        return sleepEvent;
+    }
 }
