@@ -28,7 +28,10 @@ public class Place implements Serializable {
 
     @Column
     private String pictureOfThePlace;
-    //private List<SleepEvent> sleepEvents;
+
+    @OneToMany
+    private List<SleepEvent> sleepEvents;
+
 
 /** getters and setters */
 
@@ -72,11 +75,12 @@ public class Place implements Serializable {
         this.pictureOfThePlace = pictureOfThePlace;
     }
 
-    /*public List<SleepEvent> getSleepEvents(){
+    public List<SleepEvent> getSleepEvents(){
         return sleepEvents;
     }
 
-    public void setSleepEvents(List<SleepEvent> sleepEvents){
-        this.sleepEvents = sleepEvents;
-    }*/
+    public void addSleepEvents(SleepEvent newSleepEvent){
+        this.sleepEvents.add(newSleepEvent);
+    }
+
 }

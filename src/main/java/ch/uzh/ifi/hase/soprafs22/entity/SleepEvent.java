@@ -3,26 +3,45 @@ import ch.uzh.ifi.hase.soprafs22.constant.EventState;
 import ch.uzh.ifi.hase.soprafs22.constant.Gender;
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 
-public class SleepEvent {
-    private static final int serialVersionUID = 1;
+@Entity
+@Table(name = "SLEEPEVENT")
+public class SleepEvent implements Serializable {
+
+    private static final long serialVersionUID = 1;
 
     @Id
     @GeneratedValue
     private int eventId;
+
+    @OneToMany
     private List<User> applicants;
+
+    @OneToOne
     private User confirmedApplicant;
+
+    @Column
     private LocalDate startDate;
+
+    @Column
     private LocalDate endDate;
+
+    @Column
     private LocalTime startTime;
+
+    @Column
     private LocalTime endTime;
+
+    @Column
     private EventState state;
+
+    @Column
     private String comment;
 
 

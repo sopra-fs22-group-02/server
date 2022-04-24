@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs22.entity.Location;
-import ch.uzh.ifi.hase.soprafs22.entity.User;
+import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
+
+import java.util.List;
 
 public class PlaceGetDTO {
 
@@ -10,7 +12,7 @@ public class PlaceGetDTO {
     private Location location;
     private String description;
     private String pictureOfThePlace;
-    //private List<SleepEvent> sleepEvents;
+    private List<SleepEvent> sleepEvents;
 
     public int getPlaceId(){
         return placeId;
@@ -52,11 +54,11 @@ public class PlaceGetDTO {
         this.pictureOfThePlace = pictureOfThePlace;
     }
 
-    /*public List<SleepEvent> getSleepEvents(){
+    public List<SleepEvent> getSleepEvents(){
         return sleepEvents;
     }
 
     public void setSleepEvents(List<SleepEvent> sleepEvents){
         this.sleepEvents = sleepEvents;
-    }*/
+    }
 }

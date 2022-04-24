@@ -1,13 +1,16 @@
 package ch.uzh.ifi.hase.soprafs22.controller;
 
-import ch.uzh.ifi.hase.soprafs22.entity.User;
+import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlaceGetDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlacePostDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapper;
+import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventGetDTO;
+import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventPostDTO;
+import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperSleepEvent;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperPlace;
 import ch.uzh.ifi.hase.soprafs22.service.PlaceManager;
+import ch.uzh.ifi.hase.soprafs22.service.SleepEventManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,21 +21,31 @@ import java.util.List;
 public class PlaceController {
 
     private final PlaceManager placeManager;
+    private final SleepEventManager sleepEventManager;
 
-    PlaceController(PlaceManager placeManager){
+    @Autowired
+    PlaceController(PlaceManager placeManager, SleepEventManager sleepEventManager){
         this.placeManager = placeManager;
+        this.sleepEventManager = sleepEventManager;
     }
 
-/** POST endpoints */
+    /** POST endpoints */
 
-    @PostMapping("/places/{userId}/{placeId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void createSleepEvent(@PathVariable int userId, @PathVariable int placeId){
+    @PostMapping("/places/{placeId}/events")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public SleepEventGetDTO createSleepEvent(@PathVariable int placeId, @RequestBody SleepEventPostDTO sleepEventPostDTO){
+        SleepEvent newSleepEvent = DTOMapperSleepEvent.INSTANCE.convertSleepEventPostDTOtoEntity(sleepEventPostDTO);
 
+        SleepEvent createdSleepEvent = sleepEventManager.createSleepEvent(placeId, newSleepEvent);
+
+        return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(createdSleepEvent);
     }
+
 
     @PostMapping("/places")
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public PlaceGetDTO createPlace(@RequestBody PlacePostDTO placePostDTO){
         // convert API place to internal representation
         Place placeInput = DTOMapperPlace.INSTANCE.convertPlacePostDTOtoEntity(placePostDTO);
