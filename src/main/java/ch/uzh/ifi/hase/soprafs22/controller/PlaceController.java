@@ -2,10 +2,9 @@ package ch.uzh.ifi.hase.soprafs22.controller;
 
 import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.PlaceGetDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.PlacePostDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventGetDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventPostDTO;
+import ch.uzh.ifi.hase.soprafs22.entity.User;
+import ch.uzh.ifi.hase.soprafs22.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperSleepEvent;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperPlace;
 import ch.uzh.ifi.hase.soprafs22.service.PlaceManager;
@@ -89,16 +88,30 @@ public class PlaceController {
         return placeGetDTOs;
     }
 
-    @GetMapping("/places/{userId}/{placeId}/events")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void getAllSleepEventsForPlace(@PathVariable int userId, @PathVariable int placeId){
+    @GetMapping("/places/{placeId}/events")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<SleepEventGetDTO> getAllSleepEventsForPlace(@PathVariable int placeId){
+        // fetch all sleep events for this place in the internal representation
+        List<SleepEvent> sleepEvents = sleepEventManager.getAllSleepEventsForPlace(placeId);
+        List<SleepEventGetDTO> sleepEventGetDTOs = new ArrayList<>();
 
+        // convert each sleep event to the API representation
+        for (SleepEvent sleepEvent : sleepEvents) {
+            sleepEventGetDTOs.add(DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(sleepEvent));
+        }
+        return sleepEventGetDTOs;
     }
 
-    @GetMapping("/places/{userId}/{placeId}/events/{eventId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void getSleepEvent (@PathVariable int userId, @PathVariable int placeId, @PathVariable int eventId){
+    @GetMapping("/places/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public SleepEventGetDTO getSleepEvent (@PathVariable int eventId) {
+        // fetch sleep event by id in the internal representation
+        SleepEvent sleepEvent = sleepEventManager.findSleepEventById(eventId);
 
+        // convert user to the API representation
+        return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(sleepEvent);
     }
 
 /** DELETE endpoints */
