@@ -18,7 +18,8 @@ public class SleepEvent {
     private int eventId;
     private List<User> applicants;
     private User confirmedApplicant;
-    private LocalDate date;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private LocalTime startTime;
     private LocalTime endTime;
     private EventState state;
@@ -49,12 +50,20 @@ public class SleepEvent {
         this.confirmedApplicant = confirmedApplicant;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public LocalTime getStartTime() {
@@ -88,7 +97,6 @@ public class SleepEvent {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
 
     public void addApplicant(User applicantToBeAdded){
         applicants.add(applicantToBeAdded);
