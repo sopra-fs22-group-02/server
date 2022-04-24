@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Table(name = "USER")
 public class User implements Serializable {
 
-  private static final int serialVersionUID = 1;
+  private static final long serialVersionUID = 1;
 
     @Id
     @GeneratedValue

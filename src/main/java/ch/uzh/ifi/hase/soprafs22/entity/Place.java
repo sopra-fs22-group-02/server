@@ -1,0 +1,82 @@
+package ch.uzh.ifi.hase.soprafs22.entity;
+
+import ch.uzh.ifi.hase.soprafs22.constant.Campus;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
+
+@Entity
+@Table(name = "PLACE")
+public class Place implements Serializable {
+
+    private static final long serialVersionUID = 1;
+
+    @Id
+    @GeneratedValue
+    private int placeId;
+
+    @Column(nullable = false, unique = true)
+    private int providerId;
+
+    @OneToOne
+    private Location location;
+
+    @Column
+    private String description;
+
+    @Column
+    private String pictureOfThePlace;
+    //private List<SleepEvent> sleepEvents;
+
+/** getters and setters */
+
+    public int getPlaceId(){
+        return placeId;
+    }
+
+    public void setPlaceId(int placeId){
+        this.placeId = placeId;
+    }
+
+    public int getProviderId(){
+        return providerId;
+    }
+
+    public void setProviderId(int providerId){
+        this.providerId = providerId;
+    }
+
+    public Location getLocation(){
+        return location;
+    }
+
+    public void setLocation(Location location){
+        this.location = location;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
+    }
+
+    public String getPictureOfThePlace(){
+        return pictureOfThePlace;
+    }
+
+    public void setPictureOfThePlace(String pictureOfThePlace){
+        this.pictureOfThePlace = pictureOfThePlace;
+    }
+
+    /*public List<SleepEvent> getSleepEvents(){
+        return sleepEvents;
+    }
+
+    public void setSleepEvents(List<SleepEvent> sleepEvents){
+        this.sleepEvents = sleepEvents;
+    }*/
+}
