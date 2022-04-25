@@ -20,6 +20,8 @@ public interface DTOMapperSleepEvent {
   SleepEvent convertSleepEventPostDTOtoEntity(SleepEventPostDTO placePostDTO);
 
   @Mapping(source = "eventId", target = "eventId")
+  @Mapping(source = "providerId", target = "providerId")
+  @Mapping(source = "placeId", target = "placeId")
   @Mapping(source = "applicants", target = "applicants")
   @Mapping(source = "confirmedApplicant", target = "confirmedApplicant")
   @Mapping(source = "startDate", target = "startDate")

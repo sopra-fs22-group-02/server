@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class SleepEventPostDTO {
+
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;

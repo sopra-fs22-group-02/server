@@ -34,7 +34,7 @@ public class SleepEventManager {
         this.sleepEventRepository = sleepEventRepository;
     }
 
-    public SleepEvent createSleepEvent(int placeId, SleepEvent newSleepEvent) {
+    public SleepEvent createSleepEvent(int providerId, int placeId, SleepEvent newSleepEvent) {
 
         // find place to which the new sleep event belongs
         Place correspondingPlace = placeRepository.findByPlaceId(placeId);
@@ -62,6 +62,8 @@ public class SleepEventManager {
                     "The sleep event is too long (max 12 hours)!");
         }
 
+        newSleepEvent.setProviderId(providerId);
+        newSleepEvent.setPlaceId(placeId);
         // set event state
         newSleepEvent.setState(EventState.AVAILABLE);
 
@@ -92,5 +94,33 @@ public class SleepEventManager {
                     "This sleep event does not exist!");
         }
         return sleepEvent;
+    }
+
+    public void deleteSleepEvent(int eventId){
+        SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
+        sleepEventRepository.delete(eventToBeDeleted);
+    }
+
+    public SleepEvent updateSleepEvent(int userId, int eventId, SleepEvent updates){
+        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+
+        if(eventToBeUpdated == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep event does not exist!");
+        }
+
+        // only the provider is allowed to modify an event
+        if(userId != eventToBeUpdated.getProviderId()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "You are not the provider of this sleep event and therefore cannot edit it!");
+        }
+
+        eventToBeUpdated.setStartDate(updates.getStartDate());
+        eventToBeUpdated.setEndDate(updates.getEndDate());
+        eventToBeUpdated.setStartTime(updates.getStartTime());
+        eventToBeUpdated.setEndTime(updates.getEndTime());
+        eventToBeUpdated.setComment(updates.getComment());
+
+        return eventToBeUpdated;
     }
 }

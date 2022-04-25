@@ -20,25 +20,31 @@ public class SleepEvent implements Serializable {
     @GeneratedValue
     private int eventId;
 
+    @Column(nullable = false)
+    int providerId;
+
+    @Column (nullable = false)
+    int placeId;
+
     @OneToMany
     private List<User> applicants;
 
     @OneToOne
     private User confirmedApplicant;
 
-    @Column
+    @Column(nullable = false)
     private LocalDate startDate;
 
-    @Column
+    @Column(nullable = false)
     private LocalDate endDate;
 
-    @Column
+    @Column(nullable = false)
     private LocalTime startTime;
 
-    @Column
+    @Column(nullable = false)
     private LocalTime endTime;
 
-    @Column
+    @Column(nullable = false)
     private EventState state;
 
     @Column
@@ -52,6 +58,18 @@ public class SleepEvent implements Serializable {
     }
 
     public void setEventId(int eventId) {this.eventId = eventId;}
+
+    public int getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(int providerId) {this.providerId = providerId;}
+
+    public int getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(int placeId) {this.placeId = placeId;}
 
     public List<User> getApplicants() {
         return applicants;
