@@ -29,7 +29,7 @@ public class SleepEventManager {
     private final SleepEventRepository sleepEventRepository;
 
     @Autowired
-    public SleepEventManager(@Qualifier("placeRepository") PlaceRepository placeRepository, @Qualifier("sleepEventRepository") SleepEventRepository sleepEventRepository) {
+    public SleepEventManager(@Qualifier("placeRepository") PlaceRepository placeRepository, SleepEventRepository sleepEventRepository) {
         this.placeRepository = placeRepository;
         this.sleepEventRepository = sleepEventRepository;
     }
@@ -57,7 +57,7 @@ public class SleepEventManager {
         // make sure the sleep event <= 12 hours
         long timeDifference = startThisEvent.until(endThisEvent, ChronoUnit.HOURS);
 
-        if(timeDifference > 12l){
+        if(timeDifference > 12L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too long (max 12 hours)!");
         }
@@ -98,7 +98,17 @@ public class SleepEventManager {
 
     public void deleteSleepEvent(int eventId){
         SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
-        sleepEventRepository.delete(eventToBeDeleted);
+
+        if(eventToBeDeleted == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep does not exist and can therefore not be deleted!");
+        }
+
+        Place place = placeRepository.findByPlaceId(eventToBeDeleted.getPlaceId());
+        List<SleepEvent> listSleepEvents = place.getSleepEvents();
+
+        listSleepEvents.removeIf(event -> event.getEventId() == eventId);
+        sleepEventRepository.delete(sleepEventRepository.findByEventId(eventId));
     }
 
     public SleepEvent updateSleepEvent(int userId, int eventId, SleepEvent updates){

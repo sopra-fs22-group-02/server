@@ -21,10 +21,10 @@ public class SleepEvent implements Serializable {
     private int eventId;
 
     @Column(nullable = false)
-    int providerId;
+    private int providerId;
 
     @Column (nullable = false)
-    int placeId;
+    private int placeId;
 
     @OneToMany
     private List<User> applicants;
