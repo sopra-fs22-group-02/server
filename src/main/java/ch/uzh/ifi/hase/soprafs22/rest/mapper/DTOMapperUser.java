@@ -18,9 +18,9 @@ import org.mapstruct.factory.Mappers;
  * creating information (POST).
  */
 @Mapper
-public interface DTOMapper {
+public interface DTOMapperUser {
 
-  DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
+  DTOMapperUser INSTANCE = Mappers.getMapper(DTOMapperUser.class);
 
   @Mapping(source = "email", target = "email")
   @Mapping(source = "username", target = "username")

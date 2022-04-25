@@ -20,8 +20,14 @@ public class Place implements Serializable {
     @Column(nullable = false, unique = true)
     private int providerId;
 
-    @OneToOne
-    private Location location;
+    @Column(nullable = false)
+    private String name;
+
+    @Column
+    private String address;
+
+    @Column
+    private Campus closestCampus;
 
     @Column
     private String description;
@@ -51,12 +57,28 @@ public class Place implements Serializable {
         this.providerId = providerId;
     }
 
-    public Location getLocation(){
-        return location;
+    public String getName(){
+        return name;
     }
 
-    public void setLocation(Location location){
-        this.location = location;
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String  getAddress(){
+        return address;
+    }
+
+    public void setAddress(String address){
+        this.address = address;
+    }
+
+    public Campus getClosestCampus(){
+        return closestCampus;
+    }
+
+    public void setClosestCampus(Campus closestCampus){
+        this.closestCampus = closestCampus;
     }
 
     public String getDescription(){
