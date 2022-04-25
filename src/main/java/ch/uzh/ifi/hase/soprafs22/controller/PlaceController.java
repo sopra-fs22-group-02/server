@@ -1,13 +1,11 @@
 package ch.uzh.ifi.hase.soprafs22.controller;
 
-import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlaceGetDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlacePostDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperPlace;
 import ch.uzh.ifi.hase.soprafs22.service.PlaceManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,20 +17,16 @@ public class PlaceController {
 
     private final PlaceManager placeManager;
 
+    @Autowired
     PlaceController(PlaceManager placeManager){
         this.placeManager = placeManager;
     }
 
-/** POST endpoints */
-
-    @PostMapping("/places/{userId}/{placeId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void createSleepEvent(@PathVariable int userId, @PathVariable int placeId){
-
-    }
+    /** POST endpoints */
 
     @PostMapping("/places")
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public PlaceGetDTO createPlace(@RequestBody PlacePostDTO placePostDTO){
         // convert API place to internal representation
         Place placeInput = DTOMapperPlace.INSTANCE.convertPlacePostDTOtoEntity(placePostDTO);
@@ -76,30 +70,12 @@ public class PlaceController {
         return placeGetDTOs;
     }
 
-    @GetMapping("/places/{userId}/{placeId}/events")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void getAllSleepEventsForPlace(@PathVariable int userId, @PathVariable int placeId){
-
-    }
-
-    @GetMapping("/places/{userId}/{placeId}/events/{eventId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void getSleepEvent (@PathVariable int userId, @PathVariable int placeId, @PathVariable int eventId){
-
-    }
-
 /** DELETE endpoints */
 
     @DeleteMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePlace(@PathVariable int placeId){
         placeManager.deletePlace(placeId);
-    }
-
-    @DeleteMapping("/places/{userId}/{placeId}/events/{eventId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void deleteSleepEvent(@PathVariable int userId, @PathVariable int placeId, @PathVariable int eventId){
-
     }
 
 /** PUT endpoints */
@@ -112,11 +88,5 @@ public class PlaceController {
 
         // convert internal representation of place back to API
         return DTOMapperPlace.INSTANCE.convertEntityToPlaceGetDTO(updatedPlace);
-    }
-
-    @PutMapping("/places/{userId}/{placeId}/events/{eventId}")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void updateSleepEvent(@PathVariable int userId, @PathVariable int placeId, @PathVariable int eventId){
-
     }
 }

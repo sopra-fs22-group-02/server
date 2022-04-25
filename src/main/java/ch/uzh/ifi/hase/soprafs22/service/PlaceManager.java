@@ -97,19 +97,15 @@ public class PlaceManager {
                   "The place was not found!");
       }
 
-      //String UpdatedName = placeUpdated.getName();
-      Location UpdatedLocation = placeUpdated.getLocation();
-      //String UpdatedAddress = placeUpdated.getAddress();
+      String UpdatedName = placeUpdated.getName();
+      String UpdatedAddress = placeUpdated.getAddress();
       String UpdatedDescription = placeUpdated.getDescription();
       String UpdatedPictureOfThePlace = placeUpdated.getPictureOfThePlace();
-      //List<SleepEvent> UpdatedSleepEvents = placeUpdated.getSleepEvents();
 
-      //UpdatePlace.setName(UpdatedName);
-      UpdatePlace.setLocation(UpdatedLocation);
-      //UpdatePlace.setAddress(UpdatedAddress);
+      UpdatePlace.setName(UpdatedName);
+      UpdatePlace.setAddress(UpdatedAddress);
       UpdatePlace.setDescription(UpdatedDescription);
       UpdatePlace.setPictureOfThePlace(UpdatedPictureOfThePlace);
-      //UpdatePlace.setSleepEvents(UpdatedSleepEvents);
 
       return UpdatePlace;
 

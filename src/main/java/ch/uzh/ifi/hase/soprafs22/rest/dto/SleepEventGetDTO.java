@@ -9,6 +9,8 @@ import java.util.List;
 
 public class SleepEventGetDTO {
     private int eventId;
+    private int providerId;
+    private int placeId;
     private List<User> applicants;
     private User confirmedApplicant;
     private LocalDate startDate;
@@ -24,6 +26,18 @@ public class SleepEventGetDTO {
     }
 
     public void setEventId(int eventId) {this.eventId = eventId;}
+
+    public int getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(int providerId) {this.providerId = providerId;}
+
+    public int getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(int placeId) {this.placeId = placeId;}
 
     public List<User> getApplicants() {
         return applicants;

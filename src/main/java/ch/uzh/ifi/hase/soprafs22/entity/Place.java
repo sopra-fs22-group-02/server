@@ -20,15 +20,24 @@ public class Place implements Serializable {
     @Column(nullable = false, unique = true)
     private int providerId;
 
-    @OneToOne
-    private Location location;
+    @Column(nullable = false)
+    private String name;
+
+    @Column
+    private String address;
+
+    @Column
+    private Campus closestCampus;
 
     @Column
     private String description;
 
     @Column
     private String pictureOfThePlace;
-    //private List<SleepEvent> sleepEvents;
+
+    @OneToMany
+    private List<SleepEvent> sleepEvents;
+
 
 /** getters and setters */
 
@@ -48,12 +57,28 @@ public class Place implements Serializable {
         this.providerId = providerId;
     }
 
-    public Location getLocation(){
-        return location;
+    public String getName(){
+        return name;
     }
 
-    public void setLocation(Location location){
-        this.location = location;
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String  getAddress(){
+        return address;
+    }
+
+    public void setAddress(String address){
+        this.address = address;
+    }
+
+    public Campus getClosestCampus(){
+        return closestCampus;
+    }
+
+    public void setClosestCampus(Campus closestCampus){
+        this.closestCampus = closestCampus;
     }
 
     public String getDescription(){
@@ -72,11 +97,12 @@ public class Place implements Serializable {
         this.pictureOfThePlace = pictureOfThePlace;
     }
 
-    /*public List<SleepEvent> getSleepEvents(){
+    public List<SleepEvent> getSleepEvents(){
         return sleepEvents;
     }
 
-    public void setSleepEvents(List<SleepEvent> sleepEvents){
-        this.sleepEvents = sleepEvents;
-    }*/
+    public void addSleepEvents(SleepEvent newSleepEvent){
+        this.sleepEvents.add(newSleepEvent);
+    }
+
 }
