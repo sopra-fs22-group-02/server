@@ -94,11 +94,6 @@ public class UserService {
   }
 
   public User updateUser(User userUpdated, int id) {
-      /*// check that if user wants to update username to NULL (meaning he leaves the field empty)
-      if (userUpdated.getUsername() == null) {
-          throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                  "Username cannot be NULL! If you do not want to change your username, just enter your current one");
-      }*/
       // find user by ID
       User UpdateUser = userRepository.findByUserId(id);
 
@@ -107,20 +102,6 @@ public class UserService {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                   "The user was not found!");
       }
-
-      /*String UpdatedUsername = userUpdated.getUsername();
-      LocalDate UpdatedDateOfBirth = userUpdated.getDateOfBirth();
-
-      // check if username already exists or not -> to make sure that the username will stay unique
-      if(userRepository.findByUsername(userUpdated.getUsername()) != null){
-          // username already exists
-          // -> check if it's the user itself or another user
-          checkIfTokenIsEqual(userUpdated, id);
-      }
-      // keep username and date of birth up to date
-      UpdateUser.setUsername(UpdatedUsername);
-      UpdateUser.setDateOfBirth(UpdatedDateOfBirth);*/
-
       return UpdateUser;
   }
 
