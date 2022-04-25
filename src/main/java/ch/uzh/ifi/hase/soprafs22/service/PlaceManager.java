@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.service;
 
-import ch.uzh.ifi.hase.soprafs22.entity.Location;
+import ch.uzh.ifi.hase.soprafs22.constant.Campus;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
@@ -99,11 +99,13 @@ public class PlaceManager {
 
       String UpdatedName = placeUpdated.getName();
       String UpdatedAddress = placeUpdated.getAddress();
+      Campus UpdatedClosestCampus = placeUpdated.getClosestCampus();
       String UpdatedDescription = placeUpdated.getDescription();
       String UpdatedPictureOfThePlace = placeUpdated.getPictureOfThePlace();
 
       UpdatePlace.setName(UpdatedName);
       UpdatePlace.setAddress(UpdatedAddress);
+      UpdatePlace.setClosestCampus(UpdatedClosestCampus);
       UpdatePlace.setDescription(UpdatedDescription);
       UpdatePlace.setPictureOfThePlace(UpdatedPictureOfThePlace);
 
