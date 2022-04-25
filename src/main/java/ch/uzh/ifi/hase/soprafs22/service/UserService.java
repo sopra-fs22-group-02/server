@@ -102,6 +102,17 @@ public class UserService {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                   "The user was not found!");
       }
+
+      String UpdatedFirstName = userUpdated.getFirstName();
+      String UpdatedLastName = userUpdated.getLastName();
+      String UpdatedUsername = userUpdated.getUsername();
+      String UpdatedBio = userUpdated.getBio();
+
+      UpdateUser.setFirstName(UpdatedFirstName);
+      UpdateUser.setLastName(UpdatedLastName);
+      UpdateUser.setUsername(UpdatedUsername);
+      UpdateUser.setBio(UpdatedBio);
+
       return UpdateUser;
   }
 
