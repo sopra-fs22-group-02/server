@@ -36,6 +36,7 @@ public class SleepEventController {
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(createdSleepEvent);
     }
 
+<<<<<<< HEAD
     @PostMapping("/places/{userId}/events/{eventId}/accept")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -43,6 +44,16 @@ public class SleepEventController {
         SleepEvent confirmSleepEvent = sleepEventManager.confirmSleepEvent(userId, eventId);
 
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(confirmSleepEvent);
+=======
+    @PostMapping("/places/{userId}/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public SleepEventGetDTO addApplicantToList(@PathVariable int userId, @PathVariable int eventId){
+
+        SleepEvent updatedSleepEvent = sleepEventManager.addApplicant(userId, eventId);
+
+        return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(updatedSleepEvent);
+>>>>>>> origin/sleep_event_applicants
     }
 
 /** GET endpoints */
@@ -81,6 +92,12 @@ public class SleepEventController {
         sleepEventManager.deleteSleepEvent(eventId);
     }
 
+    @DeleteMapping("/places/{userId}/events/{eventId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void removeApplicantFromList(@PathVariable int userId, @PathVariable int eventId){ sleepEventManager.removeApplicant(userId, eventId); }
+
+    /** PUT endpoints */
 
     @PutMapping("/places/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
