@@ -2,9 +2,11 @@ package ch.uzh.ifi.hase.soprafs22.service;
 
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
 import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
+import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
 import ch.uzh.ifi.hase.soprafs22.repository.SleepEventRepository;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
+import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +29,13 @@ public class SleepEventManager {
 
     private final PlaceRepository placeRepository;
     private final SleepEventRepository sleepEventRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public SleepEventManager(@Qualifier("placeRepository") PlaceRepository placeRepository, SleepEventRepository sleepEventRepository) {
+    public SleepEventManager(@Qualifier("placeRepository") PlaceRepository placeRepository, SleepEventRepository sleepEventRepository, UserRepository userRepository) {
         this.placeRepository = placeRepository;
         this.sleepEventRepository = sleepEventRepository;
+        this.userRepository = userRepository;
     }
 
     public SleepEvent createSleepEvent(int providerId, int placeId, SleepEvent newSleepEvent) {
@@ -74,6 +78,38 @@ public class SleepEventManager {
         correspondingPlace.addSleepEvents(newSleepEvent);
 
         return newSleepEvent;
+    }
+
+    public SleepEvent confirmSleepEvent(int userId, int eventId) {
+        // find user by Id
+        User userById = userRepository.findByUserId(userId);
+
+        // find SleepEvent by Id
+        SleepEvent confirmSleepEvent = sleepEventRepository.findByEventId(eventId);
+
+        List<User> applicants = confirmSleepEvent.getApplicants();
+        Boolean confirmedApplicantIsInList = Boolean.FALSE;
+        for (User applicant : applicants) {
+            if (applicant.getUserId() == userId) {
+                confirmedApplicantIsInList = Boolean.TRUE;
+                break;
+            }
+        }
+
+        if (confirmedApplicantIsInList == Boolean.FALSE) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "The applicant you want to accept has not applied for this sleep event!");
+        }
+
+        if(userById == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This user who you wanted to accept does not exist!");
+        }
+
+        confirmSleepEvent.setConfirmedApplicant(userById);
+        confirmSleepEvent.setState(EventState.UNAVAILABLE);
+
+        return confirmSleepEvent;
     }
 
     public List<SleepEvent> getAllSleepEventsForPlace(int placeId){

@@ -36,6 +36,15 @@ public class SleepEventController {
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(createdSleepEvent);
     }
 
+    @PostMapping("/places/{userId}/events/{eventId}/accept")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public SleepEventGetDTO confirmedApplicant(@PathVariable int userId, @PathVariable int eventId){
+        SleepEvent confirmSleepEvent = sleepEventManager.confirmSleepEvent(userId, eventId);
+
+        return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(confirmSleepEvent);
+    }
+
 /** GET endpoints */
 
     @GetMapping("/places/{placeId}/events")
