@@ -38,6 +38,7 @@ public class SleepEventController {
 
 /** GET endpoints */
 
+    // fetch all the events within one place
     @GetMapping("/places/{placeId}/events")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -53,6 +54,7 @@ public class SleepEventController {
         return sleepEventGetDTOs;
     }
 
+    // fetch one specific event
     @GetMapping("/places/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -74,6 +76,14 @@ public class SleepEventController {
 
 /** PUT endpoints */
 
+    // if the event has started without anyone applying, it is set to "expired, but the provider can change the start time and set it to "available" again
+    @PutMapping("/places/events/{eventId}/AVAILABLE")
+    @ResponseStatus(HttpStatus.OK)
+    public void setEventToAvailable(@PathVariable int eventId){
+        sleepEventManager.setStateToAvailable(eventId);
+    }
+
+    // update event
     @PutMapping("/places/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public SleepEventGetDTO updateSleepEvent(@PathVariable int userId, @PathVariable int eventId, @RequestBody SleepEvent sleepEventUpdates){

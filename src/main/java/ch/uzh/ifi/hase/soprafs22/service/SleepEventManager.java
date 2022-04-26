@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -96,6 +98,36 @@ public class SleepEventManager {
         return sleepEvent;
     }
 
+    @Scheduled(fixedDelay = 5000)
+    public void checkIfExpiredOrOver(){
+        List<Place> allPlaces = placeRepository.findAll();
+        // stop if there are no places at all
+        if(allPlaces.isEmpty()){return;}
+
+        // go through all places
+        for(Place place : allPlaces){
+            List<SleepEvent> allEventsOfPlace = place.getSleepEvents();
+
+            // go to next place if there are no events in this place
+            if(allEventsOfPlace.isEmpty()){break;}
+
+            // check all events of this place
+            for(SleepEvent event : allEventsOfPlace){
+                LocalDateTime startThisEvent = LocalDateTime.of(event.getStartDate(), event.getStartTime());
+                LocalDateTime endThisEvent = LocalDateTime.of(event.getEndDate(), event.getEndTime());
+
+                // set event to "expired" when it has started AND no one has applied
+                if(LocalDateTime.now().isAfter(startThisEvent) && event.getConfirmedApplicant() == null){
+                    event.setState(EventState.EXPIRED);
+                }
+                // delete event when it is over
+                if(LocalDateTime.now().isAfter(endThisEvent)){
+                    deleteSleepEvent(event.getEventId());
+                }
+            }
+        }
+    }
+
     public void deleteSleepEvent(int eventId){
         SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
 
@@ -132,5 +164,16 @@ public class SleepEventManager {
         eventToBeUpdated.setComment(updates.getComment());
 
         return eventToBeUpdated;
+    }
+
+    public void setStateToAvailable(int eventId){
+        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+
+        if(eventToBeUpdated == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep event does not exist!");
+        }
+
+        eventToBeUpdated.setState(EventState.AVAILABLE);
     }
 }
