@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -87,6 +88,7 @@ public class SleepEventManager {
         // find SleepEvent by Id
         SleepEvent confirmSleepEvent = sleepEventRepository.findByEventId(eventId);
 
+        // check if the applicant that^s about to be accepted actually applied for this sleep event
         List<User> applicants = confirmSleepEvent.getApplicants();
         Boolean confirmedApplicantIsInList = Boolean.FALSE;
         for (User applicant : applicants) {
@@ -106,8 +108,12 @@ public class SleepEventManager {
                     "This user who you wanted to accept does not exist!");
         }
 
+        // set confirmed applicant
         confirmSleepEvent.setConfirmedApplicant(userById);
+        // change event state to unavailable for other users
         confirmSleepEvent.setState(EventState.UNAVAILABLE);
+        // reset applicant list in sleep event
+        confirmSleepEvent.setApplicants(Collections.emptyList());
 
         return confirmSleepEvent;
     }
