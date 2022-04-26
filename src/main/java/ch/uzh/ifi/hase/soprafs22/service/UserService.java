@@ -83,14 +83,28 @@ public class UserService {
       return userByUsername;
   }
 
-  public User logout(int userId){
+  public User logout(String username){
       // find user by userId
-      User userById = userRepository.findByUserId(userId);
+      User userByUsername = userRepository.findByUsername(username);
 
       // update status
-      userById.setStatus(UserStatus.OFFLINE);
+      userByUsername.setStatus(UserStatus.OFFLINE);
 
-      return userById;
+      return userByUsername;
+  }
+
+  private void checkIfTokenIsEqual(User userToBeUpdated, int userId){
+      User userFrontEnd = userRepository.findByUserId(userId);
+
+      // check if there's a user in the database with the same username
+      User userWithSameUsernameInDatabase = userRepository.findByUsername(userToBeUpdated.getUsername());
+
+      // check if user with same username is the user itself or another user
+      if(!Objects.equals(userFrontEnd.getToken(), userWithSameUsernameInDatabase.getToken())) {
+          String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be updated!";
+          throw new ResponseStatusException(HttpStatus.CONFLICT,
+                  String.format(baseErrorMessage, "username", "is"));
+      }
   }
 
   public User updateUser(User userUpdated, int id) {
@@ -103,14 +117,22 @@ public class UserService {
                   "The user was not found!");
       }
 
+      // check if username already exists in database -> make sure username stays unique
+      if((userRepository.findByUsername(userUpdated.getUsername()) != null)) {
+          // username already exists --> check if it's the user itself of another user
+          checkIfTokenIsEqual(userUpdated, id);
+      }
+
       String UpdatedFirstName = userUpdated.getFirstName();
       String UpdatedLastName = userUpdated.getLastName();
       String UpdatedUsername = userUpdated.getUsername();
+      String UpdatedPassword = userUpdated.getPassword();
       String UpdatedBio = userUpdated.getBio();
 
       UpdateUser.setFirstName(UpdatedFirstName);
       UpdateUser.setLastName(UpdatedLastName);
       UpdateUser.setUsername(UpdatedUsername);
+      UpdateUser.setPassword(UpdatedPassword);
       UpdateUser.setBio(UpdatedBio);
 
       return UpdateUser;

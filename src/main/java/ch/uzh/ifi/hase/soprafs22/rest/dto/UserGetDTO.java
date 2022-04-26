@@ -1,11 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs22.constant.Gender;
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 public class UserGetDTO {
 
@@ -15,7 +10,6 @@ public class UserGetDTO {
     private String firstName;
     private String lastName;
     private String password;
-    private Gender gender;
     private UserStatus status;
     private String token;
     private String bio;
@@ -67,14 +61,6 @@ public class UserGetDTO {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
     }
 
     public UserStatus getStatus() {

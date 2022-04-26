@@ -59,8 +59,8 @@ public class UserController {
     @PostMapping("/users/{username}/logout")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO logout(@PathVariable int userId){
-        User loggedOutUser = userService.logout(userId);
+    public UserGetDTO logout(@PathVariable String username){
+        User loggedOutUser = userService.logout(username);
 
         return DTOMapperUser.INSTANCE.convertEntityToUserGetDTO(loggedOutUser);
     }
@@ -88,8 +88,7 @@ public class UserController {
         User user = userService.findUserById(userId);
 
         //convert user to the API representation
-        UserGetDTO foundUser = DTOMapperUser.INSTANCE.convertEntityToUserGetDTO(user);
-        return foundUser;
+        return DTOMapperUser.INSTANCE.convertEntityToUserGetDTO(user);
     }
 
     @GetMapping("/users/{userId}/notifications")

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.entity;
 
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
-import ch.uzh.ifi.hase.soprafs22.constant.Gender;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -40,9 +39,6 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private String password;
-
-    @Column
-    private Gender gender;
 
     @Column(nullable = false)
     private UserStatus status;
@@ -102,14 +98,6 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
     }
 
     public UserStatus getStatus() {
