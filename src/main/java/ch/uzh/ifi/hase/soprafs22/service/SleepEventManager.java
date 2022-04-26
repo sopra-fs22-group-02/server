@@ -168,6 +168,17 @@ public class SleepEventManager {
                     "You are not the provider of this sleep event and therefore cannot edit it!");
         }
 
+        // make sure new time slot < 12h
+        LocalDateTime startUpdated = LocalDateTime.of(eventToBeUpdated.getStartDate(), eventToBeUpdated.getStartTime());
+        LocalDateTime endUpdated = LocalDateTime.of(eventToBeUpdated.getEndDate(), eventToBeUpdated.getEndTime());
+
+        long timeDifference = startUpdated.until(endUpdated, ChronoUnit.HOURS);
+
+        if(timeDifference > 12L){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "The sleep event is too long (max 12 hours) and can therefore not be updated!");
+        }
+
         eventToBeUpdated.setStartDate(updates.getStartDate());
         eventToBeUpdated.setEndDate(updates.getEndDate());
         eventToBeUpdated.setStartTime(updates.getStartTime());
