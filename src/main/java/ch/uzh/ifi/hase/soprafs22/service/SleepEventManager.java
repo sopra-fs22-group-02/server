@@ -184,12 +184,4 @@ public class SleepEventManager {
         eventToBeUpdated.addApplicant(applicant);
         return eventToBeUpdated;
     }
-
-    public void removeApplicant(int userId, int eventId){
-        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
-        User applicant = userRepository.findByUserId(userId);
-
-        eventToBeUpdated.removeApplicant(applicant);
-    }
-
 }
