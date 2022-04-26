@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
 import ch.uzh.ifi.hase.soprafs22.repository.SleepEventRepository;
 import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
+import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -78,6 +80,43 @@ public class SleepEventManager {
         correspondingPlace.addSleepEvents(newSleepEvent);
 
         return newSleepEvent;
+    }
+
+    public SleepEvent confirmSleepEvent(int userId, int eventId) {
+        // find user by Id
+        User userById = userRepository.findByUserId(userId);
+
+        // find SleepEvent by Id
+        SleepEvent confirmSleepEvent = sleepEventRepository.findByEventId(eventId);
+
+        // check if the applicant that^s about to be accepted actually applied for this sleep event
+        List<User> applicants = confirmSleepEvent.getApplicants();
+        Boolean confirmedApplicantIsInList = Boolean.FALSE;
+        for (User applicant : applicants) {
+            if (applicant.getUserId() == userId) {
+                confirmedApplicantIsInList = Boolean.TRUE;
+                break;
+            }
+        }
+
+        if (confirmedApplicantIsInList == Boolean.FALSE) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "The applicant you want to accept has not applied for this sleep event!");
+        }
+
+        if(userById == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This user who you wanted to accept does not exist!");
+        }
+
+        // set confirmed applicant
+        confirmSleepEvent.setConfirmedApplicant(userById);
+        // change event state to unavailable for other users
+        confirmSleepEvent.setState(EventState.UNAVAILABLE);
+        // reset applicant list in sleep event
+        confirmSleepEvent.setApplicants(Collections.emptyList());
+
+        return confirmSleepEvent;
     }
 
     public List<SleepEvent> getAllSleepEventsForPlace(int placeId){
@@ -145,12 +184,4 @@ public class SleepEventManager {
         eventToBeUpdated.addApplicant(applicant);
         return eventToBeUpdated;
     }
-
-    public void removeApplicant(int userId, int eventId){
-        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
-        User applicant = userRepository.findByUserId(userId);
-
-        eventToBeUpdated.removeApplicant(applicant);
-    }
-
 }
