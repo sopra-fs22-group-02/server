@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
 import ch.uzh.ifi.hase.soprafs22.repository.SleepEventRepository;
+import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.slf4j.Logger;
@@ -175,4 +176,20 @@ public class SleepEventManager {
 
         return eventToBeUpdated;
     }
+
+    public SleepEvent addApplicant(int userId, int eventId){
+        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+        User applicant = userRepository.findByUserId(userId);
+
+        eventToBeUpdated.addApplicant(applicant);
+        return eventToBeUpdated;
+    }
+
+    public void removeApplicant(int userId, int eventId){
+        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+        User applicant = userRepository.findByUserId(userId);
+
+        eventToBeUpdated.removeApplicant(applicant);
+    }
+
 }

@@ -81,7 +81,6 @@ public class SleepEventController {
         sleepEventManager.deleteSleepEvent(eventId);
     }
 
-/** PUT endpoints */
 
     @PutMapping("/places/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
