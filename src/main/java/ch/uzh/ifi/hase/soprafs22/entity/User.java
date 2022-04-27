@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Internal User Representation
@@ -51,6 +52,9 @@ public class User implements Serializable {
 
     @Column
     private String profilePicture;
+
+    @OneToMany
+    private List<Notification> myNotifications;
 
     public int getUserId() {
     return userId;
