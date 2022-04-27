@@ -22,10 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-<<<<<<< HEAD
-=======
 import java.util.ArrayList;
->>>>>>> origin/sleep_event_state
 import java.util.Collections;
 import java.util.List;
 
@@ -99,6 +96,84 @@ public class SleepEventManager {
         return newSleepEvent;
     }
 
+    public List<SleepEvent> getAllSleepEventsForPlace(int placeId){
+        Place place = placeRepository.findByPlaceId(placeId);
+
+        if(place == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This place does not exist!");
+        }
+
+        return place.getSleepEvents();
+    }
+
+    public SleepEvent findSleepEventById(int eventId){
+        SleepEvent sleepEvent =sleepEventRepository.findByEventId(eventId);
+        if(sleepEvent == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep event does not exist!");
+        }
+        return sleepEvent;
+    }
+
+    public SleepEvent updateSleepEvent(int userId, int eventId, SleepEvent updates){
+
+        //check if there's a confirmed applicant!!
+
+        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+
+        if(eventToBeUpdated == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep event does not exist!");
+        }
+
+        // only the provider is allowed to modify an event
+        if(userId != eventToBeUpdated.getProviderId()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "You are not the provider of this sleep event and therefore cannot edit it!");
+        }
+
+        eventToBeUpdated.setStartDate(updates.getStartDate());
+        eventToBeUpdated.setEndDate(updates.getEndDate());
+        eventToBeUpdated.setStartTime(updates.getStartTime());
+        eventToBeUpdated.setEndTime(updates.getEndTime());
+        eventToBeUpdated.setComment(updates.getComment());
+
+        return eventToBeUpdated;
+    }
+
+    public void deleteSleepEvent(int eventId){
+
+        //check if there's a confirmed applicant!!
+
+        SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
+
+        if(eventToBeDeleted == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep does not exist and can therefore not be deleted!");
+        }
+
+        Place place = placeRepository.findByPlaceId(eventToBeDeleted.getPlaceId());
+        List<SleepEvent> listSleepEvents = place.getSleepEvents();
+
+        listSleepEvents.removeIf(event -> event.getEventId() == eventId);
+        sleepEventRepository.delete(sleepEventRepository.findByEventId(eventId));
+    }
+
+
+    /** apply for sleep event */
+
+    public SleepEvent addApplicant(int userId, int eventId) {
+        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+        User applicant = userRepository.findByUserId(userId);
+
+        eventToBeUpdated.addApplicant(applicant);
+        return eventToBeUpdated;
+    }
+
+
+    /** accept applicant*/
+
     public SleepEvent confirmSleepEvent(int userId, int eventId) {
         // find user by Id
         User userById = userRepository.findByUserId(userId);
@@ -136,25 +211,8 @@ public class SleepEventManager {
         return confirmSleepEvent;
     }
 
-    public List<SleepEvent> getAllSleepEventsForPlace(int placeId){
-        Place place = placeRepository.findByPlaceId(placeId);
 
-        if(place == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "This place does not exist!");
-        }
-
-        return place.getSleepEvents();
-    }
-
-    public SleepEvent findSleepEventById(int eventId){
-        SleepEvent sleepEvent =sleepEventRepository.findByEventId(eventId);
-        if(sleepEvent == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "This sleep event does not exist!");
-        }
-        return sleepEvent;
-    }
+    /** methods regarding state*/
 
     @Scheduled(fixedDelay = 5000)
     public void checkIfExpiredOrOver(){
@@ -194,58 +252,6 @@ public class SleepEventManager {
         }
     }
 
-    public void deleteSleepEvent(int eventId){
-
-        //check if there's a confirmed applicant!!
-
-        SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
-
-        if(eventToBeDeleted == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "This sleep does not exist and can therefore not be deleted!");
-        }
-
-        Place place = placeRepository.findByPlaceId(eventToBeDeleted.getPlaceId());
-        List<SleepEvent> listSleepEvents = place.getSleepEvents();
-
-        listSleepEvents.removeIf(event -> event.getEventId() == eventId);
-        sleepEventRepository.delete(sleepEventRepository.findByEventId(eventId));
-    }
-
-    public SleepEvent updateSleepEvent(int userId, int eventId, SleepEvent updates){
-
-        //check if there's a confirmed applicant!!
-
-        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
-
-        if(eventToBeUpdated == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "This sleep event does not exist!");
-        }
-
-        // only the provider is allowed to modify an event
-        if(userId != eventToBeUpdated.getProviderId()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "You are not the provider of this sleep event and therefore cannot edit it!");
-        }
-
-        eventToBeUpdated.setStartDate(updates.getStartDate());
-        eventToBeUpdated.setEndDate(updates.getEndDate());
-        eventToBeUpdated.setStartTime(updates.getStartTime());
-        eventToBeUpdated.setEndTime(updates.getEndTime());
-        eventToBeUpdated.setComment(updates.getComment());
-
-        return eventToBeUpdated;
-    }
-
-<<<<<<< HEAD
-    public SleepEvent addApplicant(int userId, int eventId){
-        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
-        User applicant = userRepository.findByUserId(userId);
-
-        eventToBeUpdated.addApplicant(applicant);
-        return eventToBeUpdated;
-=======
     public void setStateToAvailable(int eventId){
         SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
 
@@ -255,6 +261,5 @@ public class SleepEventManager {
         }
 
         eventToBeUpdated.setState(EventState.AVAILABLE);
->>>>>>> origin/sleep_event_state
     }
 }
