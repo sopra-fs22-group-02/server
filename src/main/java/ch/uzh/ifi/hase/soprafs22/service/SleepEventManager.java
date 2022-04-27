@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 <<<<<<< HEAD
 =======
+import java.util.ArrayList;
 >>>>>>> origin/sleep_event_state
 import java.util.Collections;
 import java.util.List;
@@ -155,6 +156,44 @@ public class SleepEventManager {
         return sleepEvent;
     }
 
+    @Scheduled(fixedDelay = 5000)
+    public void checkIfExpiredOrOver(){
+        List<Place> allPlaces = placeRepository.findAll();
+        // stop if there are no places at all
+        if(allPlaces.isEmpty()){return;}
+
+        List<SleepEvent> toBeDeleted = new ArrayList<>();
+
+        // go through all places
+        for(Place place : allPlaces){
+            List<SleepEvent> allEventsOfPlace = place.getSleepEvents();
+
+            // go to next place if there are no events in this place
+            if(allEventsOfPlace.isEmpty()){break;}
+
+            // check all events of this place
+            for(SleepEvent event : allEventsOfPlace){
+                LocalDateTime startThisEvent = LocalDateTime.of(event.getStartDate(), event.getStartTime());
+                LocalDateTime endThisEvent = LocalDateTime.of(event.getEndDate(), event.getEndTime());
+
+                // set event to "expired" when it has started AND no one has applied
+                if(LocalDateTime.now().isAfter(startThisEvent) && event.getConfirmedApplicant() == null){
+                    event.setState(EventState.EXPIRED);
+                }
+                // delete event when it is over
+                if(LocalDateTime.now().isAfter(endThisEvent)){
+                    toBeDeleted.add(event);
+                }
+            }
+        }
+        System.out.println("toBeDeleted: " + toBeDeleted);
+
+        // go through the events that are over and delete them
+        for(SleepEvent event : toBeDeleted){
+            deleteSleepEvent(event.getEventId());
+        }
+    }
+
     public void deleteSleepEvent(int eventId){
 
         //check if there's a confirmed applicant!!
@@ -207,6 +246,15 @@ public class SleepEventManager {
         eventToBeUpdated.addApplicant(applicant);
         return eventToBeUpdated;
 =======
+    public void setStateToAvailable(int eventId){
+        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+
+        if(eventToBeUpdated == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This sleep event does not exist!");
+        }
+
+        eventToBeUpdated.setState(EventState.AVAILABLE);
 >>>>>>> origin/sleep_event_state
     }
 }

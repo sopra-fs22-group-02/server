@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 <<<<<<< HEAD
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 =======
+import org.springframework.scheduling.annotation.EnableScheduling;
 >>>>>>> origin/sleep_event_state
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -21,9 +22,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 <<<<<<< HEAD
 @EnableWebSocketMessageBroker
 =======
+@EnableScheduling
 >>>>>>> origin/sleep_event_state
 public class Application {
 
+  public static void main(String[] args) { SpringApplication.run(Application.class, args); }
 
   @GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
   @ResponseStatus(HttpStatus.OK)
