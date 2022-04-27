@@ -90,9 +90,9 @@ public class SleepEventController {
 
 /** DELETE endpoints */
 
-    @DeleteMapping("/places/events/{eventId}")
+    @DeleteMapping("/places/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSleepEvent(@PathVariable int eventId){ sleepEventManager.deleteSleepEvent(eventId); }
+    public void deleteSleepEvent(@PathVariable int eventId, @PathVariable int userId){ sleepEventManager.deleteSleepEvent(eventId, userId); }
 
 /** PUT endpoints */
 

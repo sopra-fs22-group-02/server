@@ -138,7 +138,7 @@ public class SleepEventManager {
                     "You are not the provider of this sleep event and therefore cannot edit it!");
         }
 
-        // make sure new time slot < 12h
+        // make sure new time slot <= 12h
         LocalDateTime startUpdated = LocalDateTime.of(updates.getStartDate(), updates.getStartTime());
         LocalDateTime endUpdated = LocalDateTime.of(updates.getEndDate(), updates.getEndTime());
 
@@ -158,7 +158,7 @@ public class SleepEventManager {
         return eventToBeUpdated;
     }
 
-    public void deleteSleepEvent(int eventId){
+    public void deleteSleepEvent(int eventId, int userId){
 
         SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
 
@@ -171,6 +171,12 @@ public class SleepEventManager {
         if(eventToBeDeleted.getConfirmedApplicant() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Since an applicant has been accepted for this sleep event, it cannot be deleted!");
+        }
+
+        // only the provider is allowed to modify an event
+        if(userId != eventToBeDeleted.getProviderId()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "You are not the provider of this sleep event and therefore cannot delete it!");
         }
 
         Place place = placeRepository.findByPlaceId(eventToBeDeleted.getPlaceId());
