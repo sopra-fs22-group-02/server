@@ -59,19 +59,17 @@ public class SleepEventManager {
             LocalDateTime startExistingEvent = LocalDateTime.of(event.getStartDate(), event.getStartTime());
             LocalDateTime endExistingEvent = LocalDateTime.of(event.getEndDate(), event.getEndTime());
 
-            if((startNewEvent.isBefore(startExistingEvent) && endNewEvent.isAfter(startExistingEvent)) ||
-                    (startNewEvent.isBefore(endExistingEvent) && endNewEvent.isAfter(endExistingEvent)) ||
-                    ((startNewEvent == startExistingEvent) && (endNewEvent == endExistingEvent)) ||
-                    ((startNewEvent == startExistingEvent) && (endNewEvent.isAfter(endExistingEvent))) ||
-                    ((startNewEvent.isBefore(startExistingEvent)) && (endNewEvent == endExistingEvent)))
+            if(((startNewEvent.isBefore(startExistingEvent)) && (endNewEvent.isAfter(startExistingEvent))) ||
+                    ((startNewEvent.isBefore(endExistingEvent)) && (endNewEvent.isAfter(endExistingEvent))) ||
+                    ((startNewEvent.equals(startExistingEvent)) && (endNewEvent.equals(endExistingEvent))) ||
+                    ((startNewEvent.equals(startExistingEvent)) && (endNewEvent.isAfter(endExistingEvent))) ||
+                    ((startNewEvent.isBefore(startExistingEvent)) && (endNewEvent.equals(endExistingEvent))) ||
+                    ((startNewEvent.isBefore(startExistingEvent)) && (endNewEvent.isAfter(endExistingEvent))) ||
+                    ((startNewEvent.isAfter(startExistingEvent)) && (endNewEvent.isBefore(endExistingEvent))))
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
                         "The new sleep event overlaps with another of your events!");
             }
-            /*if((startNewEvent == startExistingEvent) && (endNewEvent == endExistingEvent)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "The new sleep event overlaps with another of your events!");
-            }*/
         }
 
         // make sure the sleep event <= 12 hours
