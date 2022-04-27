@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +22,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+<<<<<<< HEAD
+=======
+>>>>>>> origin/sleep_event_state
 import java.util.Collections;
 import java.util.List;
 
@@ -195,11 +199,14 @@ public class SleepEventManager {
         return eventToBeUpdated;
     }
 
+<<<<<<< HEAD
     public SleepEvent addApplicant(int userId, int eventId){
         SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
         User applicant = userRepository.findByUserId(userId);
 
         eventToBeUpdated.addApplicant(applicant);
         return eventToBeUpdated;
+=======
+>>>>>>> origin/sleep_event_state
     }
 }
