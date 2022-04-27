@@ -118,13 +118,18 @@ public class SleepEventManager {
 
     public SleepEvent updateSleepEvent(int userId, int eventId, SleepEvent updates){
 
-        //check if there's a confirmed applicant!!
-
         SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
 
         if(eventToBeUpdated == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This sleep event does not exist!");
+        }
+
+        // as soon as an applicant has been accepted,
+        // the provider cannot update the event anymore
+        if(eventToBeUpdated.getConfirmedApplicant() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Since an applicant has been accepted for this sleep event, it cannot be updated anymore!");
         }
 
         // only the provider is allowed to modify an event
@@ -155,13 +160,17 @@ public class SleepEventManager {
 
     public void deleteSleepEvent(int eventId){
 
-        //check if there's a confirmed applicant!!
-
         SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
 
         if(eventToBeDeleted == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This sleep does not exist and can therefore not be deleted!");
+        }
+
+        // as soon as an applicant has been accepted, the provider cannot delete the event anymore
+        if(eventToBeDeleted.getConfirmedApplicant() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Since an applicant has been accepted for this sleep event, it cannot be deleted!");
         }
 
         Place place = placeRepository.findByPlaceId(eventToBeDeleted.getPlaceId());
@@ -259,8 +268,21 @@ public class SleepEventManager {
 
         // go through the events that are over and delete them
         for(SleepEvent event : toBeDeleted){
-            deleteSleepEvent(event.getEventId());
+            deleteExpiredSleepEvent(event.getEventId());
         }
+    }
+
+    // helper function for checkIfExpiredOrOver()
+    // cannot use deleteSleepEvent(), because an expired sleep event does have a confirmed applicant
+    // (would stop at first if), but it has to be deleted anyway, because it is over
+    private void deleteExpiredSleepEvent(int eventId){
+        SleepEvent expiredEvent = sleepEventRepository.findByEventId(eventId);
+
+        Place place = placeRepository.findByPlaceId(expiredEvent.getPlaceId());
+        List<SleepEvent> listSleepEvents = place.getSleepEvents();
+
+        listSleepEvents.removeIf(event -> event.getEventId() == eventId);
+        sleepEventRepository.delete(sleepEventRepository.findByEventId(eventId));
     }
 
     public void setStateToAvailable(int eventId){
