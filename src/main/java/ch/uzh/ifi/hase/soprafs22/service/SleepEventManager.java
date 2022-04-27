@@ -46,22 +46,34 @@ public class SleepEventManager {
         Place correspondingPlace = placeRepository.findByPlaceId(placeId);
 
         // make sure the sleep event doesn't overlap with other sleep events
+
+        // fetch all the events within this place
         List<SleepEvent> listSleepEvents = correspondingPlace.getSleepEvents();
-        LocalDateTime startThisEvent = LocalDateTime.of(newSleepEvent.getStartDate(), newSleepEvent.getStartTime());
-        LocalDateTime endThisEvent = LocalDateTime.of(newSleepEvent.getEndDate(), newSleepEvent.getEndTime());
 
+        LocalDateTime startNewEvent = LocalDateTime.of(newSleepEvent.getStartDate(), newSleepEvent.getStartTime());
+        LocalDateTime endNewEvent = LocalDateTime.of(newSleepEvent.getEndDate(), newSleepEvent.getEndTime());
+
+        // go through all the events and check whether there are overlaps
         for (SleepEvent event : listSleepEvents){
-            LocalDateTime startOtherEvent = LocalDateTime.of(event.getStartDate(), event.getStartTime());
-            LocalDateTime endOtherEvent = LocalDateTime.of(event.getEndDate(), event.getEndTime());
 
-            if(startThisEvent.isBefore(endOtherEvent) || endThisEvent.isAfter(startOtherEvent)){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "The sleep event cannot overlap with your other sleep events!");
+            LocalDateTime startExistingEvent = LocalDateTime.of(event.getStartDate(), event.getStartTime());
+            LocalDateTime endExistingEvent = LocalDateTime.of(event.getEndDate(), event.getEndTime());
+
+            if(((startNewEvent.isBefore(startExistingEvent)) && (endNewEvent.isAfter(startExistingEvent))) ||
+                    ((startNewEvent.isBefore(endExistingEvent)) && (endNewEvent.isAfter(endExistingEvent))) ||
+                    ((startNewEvent.equals(startExistingEvent)) && (endNewEvent.equals(endExistingEvent))) ||
+                    ((startNewEvent.equals(startExistingEvent)) && (endNewEvent.isAfter(endExistingEvent))) ||
+                    ((startNewEvent.isBefore(startExistingEvent)) && (endNewEvent.equals(endExistingEvent))) ||
+                    ((startNewEvent.isBefore(startExistingEvent)) && (endNewEvent.isAfter(endExistingEvent))) ||
+                    ((startNewEvent.isAfter(startExistingEvent)) && (endNewEvent.isBefore(endExistingEvent))))
+            {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "The new sleep event overlaps with another of your events!");
             }
         }
 
         // make sure the sleep event <= 12 hours
-        long timeDifference = startThisEvent.until(endThisEvent, ChronoUnit.HOURS);
+        long timeDifference = startNewEvent.until(endNewEvent, ChronoUnit.HOURS);
 
         if(timeDifference > 12L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -140,6 +152,9 @@ public class SleepEventManager {
     }
 
     public void deleteSleepEvent(int eventId){
+
+        //check if there's a confirmed applicant!!
+
         SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
 
         if(eventToBeDeleted == null){
@@ -155,6 +170,9 @@ public class SleepEventManager {
     }
 
     public SleepEvent updateSleepEvent(int userId, int eventId, SleepEvent updates){
+
+        //check if there's a confirmed applicant!!
+
         SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
 
         if(eventToBeUpdated == null){
