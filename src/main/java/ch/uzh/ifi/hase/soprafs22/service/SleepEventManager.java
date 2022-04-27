@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -104,6 +105,8 @@ public class SleepEventManager {
         // stop if there are no places at all
         if(allPlaces.isEmpty()){return;}
 
+        List<SleepEvent> toBeDeleted = new ArrayList<>();
+
         // go through all places
         for(Place place : allPlaces){
             List<SleepEvent> allEventsOfPlace = place.getSleepEvents();
@@ -122,9 +125,15 @@ public class SleepEventManager {
                 }
                 // delete event when it is over
                 if(LocalDateTime.now().isAfter(endThisEvent)){
-                    deleteSleepEvent(event.getEventId());
+                    toBeDeleted.add(event);
                 }
             }
+        }
+        System.out.println("toBeDeleted: " + toBeDeleted);
+
+        // go through the events that are over and delete them
+        for(SleepEvent event : toBeDeleted){
+            deleteSleepEvent(event.getEventId());
         }
     }
 
