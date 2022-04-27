@@ -2,6 +2,8 @@ package ch.uzh.ifi.hase.soprafs22.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "NOTIFICATION")
@@ -21,6 +23,9 @@ public class Notification implements Serializable{
 
     @OneToOne
     private User receiver;
+
+    @Column
+    private LocalDateTime creationDate;
 
 
     /** getters and setters */
@@ -55,6 +60,14 @@ public class Notification implements Serializable{
 
     public void setReceiver(User receiver){
         this.receiver = receiver;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 }
 

@@ -65,6 +65,7 @@ public class UserController {
         return DTOMapperUser.INSTANCE.convertEntityToUserGetDTO(loggedOutUser);
     }
 
+
 /** GET endpoints */
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
@@ -91,11 +92,6 @@ public class UserController {
         return DTOMapperUser.INSTANCE.convertEntityToUserGetDTO(user);
     }
 
-    @GetMapping("/users/{userId}/notifications")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void notification(@PathVariable int userId){
-
-    }
 
 /** PUT endpoints */
 
@@ -109,9 +105,4 @@ public class UserController {
         return DTOMapperUser.INSTANCE.convertEntityToUserGetDTO(updatedUser);
     }
 
-    @PutMapping("/users/{userId}/notifications")
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public void updateNotification(@PathVariable int userId){
-
-    }
 }

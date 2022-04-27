@@ -135,4 +135,12 @@ public class User implements Serializable {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
+
+    public List<Notification> getMyNotifications(){
+        return myNotifications;
+    }
+
+    public void addNotifications(Notification newNotification){
+        this.myNotifications.add(newNotification);
+    }
 }
