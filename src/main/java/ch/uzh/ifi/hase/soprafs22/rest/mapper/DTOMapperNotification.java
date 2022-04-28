@@ -24,13 +24,8 @@ public interface DTOMapperNotification {
   DTOMapperNotification INSTANCE = Mappers.getMapper(DTOMapperNotification.class);
 
   @Mapping(source = "message", target = "message")
-  @Mapping(source = "sender", target = "sender")
-  @Mapping(source = "receiver", target = "receiver")
   Notification convertNotificationPostDTOtoEntity(NotificationPostDTO notificationPostDTO);
 
-  @Mapping(source = "notificationId", target = "notificationId")
   @Mapping(source = "message", target = "message")
-  @Mapping(source = "sender", target = "sender")
-  @Mapping(source = "receiver", target = "receiver")
   NotificationGetDTO convertEntityToNotificationGetDTO(Notification notification);
 }

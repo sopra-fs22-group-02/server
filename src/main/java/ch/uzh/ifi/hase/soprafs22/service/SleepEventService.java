@@ -7,7 +7,6 @@ import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
 import ch.uzh.ifi.hase.soprafs22.repository.SleepEventRepository;
 import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
-import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class SleepEventManager {
+public class SleepEventService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final PlaceRepository placeRepository;
@@ -36,7 +33,7 @@ public class SleepEventManager {
     private final UserRepository userRepository;
 
     @Autowired
-    public SleepEventManager(@Qualifier("placeRepository") PlaceRepository placeRepository, SleepEventRepository sleepEventRepository, UserRepository userRepository) {
+    public SleepEventService(@Qualifier("placeRepository") PlaceRepository placeRepository, SleepEventRepository sleepEventRepository, UserRepository userRepository) {
         this.placeRepository = placeRepository;
         this.sleepEventRepository = sleepEventRepository;
         this.userRepository = userRepository;
@@ -75,9 +72,9 @@ public class SleepEventManager {
         }
 
         // make sure the sleep event <= 12 hours
-        long timeDifference = startNewEvent.until(endNewEvent, ChronoUnit.HOURS);
+        long timeDifference = startNewEvent.until(endNewEvent, ChronoUnit.MINUTES);
 
-        if(timeDifference > 12L){
+        if(timeDifference > 720L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too long (max 12 hours)!");
         }
@@ -142,9 +139,9 @@ public class SleepEventManager {
         LocalDateTime startUpdated = LocalDateTime.of(updates.getStartDate(), updates.getStartTime());
         LocalDateTime endUpdated = LocalDateTime.of(updates.getEndDate(), updates.getEndTime());
 
-        long timeDifference = startUpdated.until(endUpdated, ChronoUnit.HOURS);
+        long timeDifference = startUpdated.until(endUpdated, ChronoUnit.MINUTES);
 
-        if(timeDifference > 12L){
+        if(timeDifference > 720L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too long (max 12 hours) and can therefore not be updated!");
         }
@@ -207,9 +204,9 @@ public class SleepEventManager {
         // find SleepEvent by Id
         SleepEvent confirmSleepEvent = sleepEventRepository.findByEventId(eventId);
 
-        // check if the applicant that^s about to be accepted actually applied for this sleep event
+        // check if the applicant that's about to be accepted actually applied for this sleep event
         List<User> applicants = confirmSleepEvent.getApplicants();
-        Boolean confirmedApplicantIsInList = Boolean.FALSE;
+        boolean confirmedApplicantIsInList = Boolean.FALSE;
         for (User applicant : applicants) {
             if (applicant.getUserId() == userId) {
                 confirmedApplicantIsInList = Boolean.TRUE;
@@ -270,7 +267,6 @@ public class SleepEventManager {
                 }
             }
         }
-        System.out.println("toBeDeleted: " + toBeDeleted);
 
         // go through the events that are over and delete them
         for(SleepEvent event : toBeDeleted){

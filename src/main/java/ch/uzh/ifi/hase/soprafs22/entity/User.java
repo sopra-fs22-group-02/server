@@ -140,6 +140,10 @@ public class User implements Serializable {
         return myNotifications;
     }
 
+    public void setMyNotifications(List<Notification>  myNotifications){
+        this.myNotifications = myNotifications;
+    }
+
     public void addNotifications(Notification newNotification){
         this.myNotifications.add(newNotification);
     }

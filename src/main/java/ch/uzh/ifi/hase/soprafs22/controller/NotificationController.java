@@ -2,15 +2,10 @@ package ch.uzh.ifi.hase.soprafs22.controller;
 
 
 import ch.uzh.ifi.hase.soprafs22.entity.Notification;
-import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.NotificationGetDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.NotificationPostDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventGetDTO;
-import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventPostDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperNotification;
-import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperSleepEvent;
 import ch.uzh.ifi.hase.soprafs22.service.NotificationService;
-import ch.uzh.ifi.hase.soprafs22.service.SleepEventManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

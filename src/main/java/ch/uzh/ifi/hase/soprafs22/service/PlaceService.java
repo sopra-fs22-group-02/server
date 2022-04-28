@@ -20,16 +20,16 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PlaceManager {
+public class PlaceService {
 
-  private final Logger log = LoggerFactory.getLogger(PlaceManager.class);
+  private final Logger log = LoggerFactory.getLogger(PlaceService.class);
 
   private final PlaceRepository placeRepository;
 
   private final UserRepository userRepository;
 
   @Autowired
-  public PlaceManager(@Qualifier("placeRepository") PlaceRepository placeRepository, UserRepository userRepository) {
+  public PlaceService(@Qualifier("placeRepository") PlaceRepository placeRepository, UserRepository userRepository) {
     this.placeRepository = placeRepository;
       this.userRepository = userRepository;
   }
@@ -73,7 +73,7 @@ public class PlaceManager {
 
       if (placeByProvider != null) {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                  String.format("You have already created a place. Therefore, the place could not be created!"));
+                  "You have already created a place. Therefore, the place could not be created!");
       }
   }
 

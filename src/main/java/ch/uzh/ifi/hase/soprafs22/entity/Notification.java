@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs22.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,11 +17,8 @@ public class Notification implements Serializable{
     @Column
     private String message;
 
-    @OneToOne
-    private User sender;
-
-    @OneToOne
-    private User receiver;
+    @Column
+    private int receiverId;
 
     @Column
     private LocalDateTime creationDate;
@@ -46,20 +42,12 @@ public class Notification implements Serializable{
         this.message = message;
     }
 
-    public User getSender(){
-        return sender;
+    public int getReceiverId(){
+        return receiverId;
     }
 
-    public void setSender(User sender){
-        this.sender = sender;
-    }
-
-    public User getReceiver(){
-        return receiver;
-    }
-
-    public void setReceiver(User receiver){
-        this.receiver = receiver;
+    public void setReceiverId(int receiverId){
+        this.receiverId = receiverId;
     }
 
     public LocalDateTime getCreationDate() {

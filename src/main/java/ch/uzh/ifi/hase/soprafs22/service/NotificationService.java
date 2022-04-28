@@ -1,13 +1,8 @@
 package ch.uzh.ifi.hase.soprafs22.service;
 
-import ch.uzh.ifi.hase.soprafs22.constant.EventState;
 import ch.uzh.ifi.hase.soprafs22.entity.Notification;
-import ch.uzh.ifi.hase.soprafs22.entity.Place;
-import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.NotificationRepository;
-import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
-import ch.uzh.ifi.hase.soprafs22.repository.SleepEventRepository;
 import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,14 +35,16 @@ public class NotificationService {
 
     public Notification createNotification(int userId, Notification newNotification) {
 
-        // find user to which the new notification belongs
-        User correspondingUser = userRepository.findByUserId(userId);
+        // find the receiver of the message
+        User receiver = userRepository.findByUserId(userId);
+        newNotification.setCreationDate(LocalDateTime.now());
+        newNotification.setReceiverId(userId);
 
         newNotification = notificationRepository.save(newNotification);
         notificationRepository.flush();
 
-        // add notification to the users list of notifications
-        correspondingUser.addNotifications(newNotification);
+        // add notification to the receiver's list of notifications
+        receiver.addNotifications(newNotification);
 
         return newNotification;
     }
@@ -64,18 +60,45 @@ public class NotificationService {
         return user.getMyNotifications();
     }
 
-    /** method regarding state of notification*/
+    /** delete old messages*/
 
-    @Scheduled(fixedDelay = 1800000)
-    public void checkIfExpiredOrOver(Notification updatedNotification) {
-        LocalDateTime creationDate = updatedNotification.getCreationDate();
+    @Scheduled(fixedDelay = 5000)
+    public void checkIfOlderThan24h() {
+        // fetch all notifications
+        List<Notification> allNotifications = notificationRepository.findAll();
+        System.out.println("all notifications: " + allNotifications);
 
-        long timeDifference = creationDate.until(LocalDateTime.now(), ChronoUnit.HOURS);
+        // abort if there are no notifications
+        if(allNotifications.isEmpty()){return;}
 
-        if(timeDifference > 24L){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "The sleep event is too long (max 12 hours) and can therefore not be updated!");
+        List<Notification> toBeDeleted = new ArrayList<>();
+
+        // go through all the notifications
+        for(Notification notification : allNotifications){
+            // check how old the notification
+            long timeDifference = notification.getCreationDate().until(LocalDateTime.now(), ChronoUnit.MINUTES);
+            System.out.println("time difference: " + timeDifference);
+            // delete it if > 24h
+            if(timeDifference > 1440L){
+                toBeDeleted.add(notification);
+            }
         }
+
+        for(Notification notification : toBeDeleted){
+            deleteExpiredNotification(notification);
+        }
+    }
+
+    private void deleteExpiredNotification(Notification notification){
+        // find receiver
+        User receiver = userRepository.findByUserId(notification.getReceiverId());
+        // fetch all notifications within the receiver
+        List<Notification> notificationsReceiver = receiver.getMyNotifications();
+
+        // remove the notification from the receiver's notifications list
+        notificationsReceiver.removeIf(n -> n.getNotificationId() == notification.getNotificationId());
+        // remove the notification from the notification repository
+        notificationRepository.delete(notification);
     }
 
 }

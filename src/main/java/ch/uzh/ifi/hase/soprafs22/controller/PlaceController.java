@@ -4,7 +4,7 @@ import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlaceGetDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.PlacePostDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperPlace;
-import ch.uzh.ifi.hase.soprafs22.service.PlaceManager;
+import ch.uzh.ifi.hase.soprafs22.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +15,11 @@ import java.util.List;
 @RestController
 public class PlaceController {
 
-    private final PlaceManager placeManager;
+    private final PlaceService placeService;
 
     @Autowired
-    PlaceController(PlaceManager placeManager){
-        this.placeManager = placeManager;
+    PlaceController(PlaceService placeService){
+        this.placeService = placeService;
     }
 
     /** POST endpoints */
@@ -32,7 +32,7 @@ public class PlaceController {
         Place placeInput = DTOMapperPlace.INSTANCE.convertPlacePostDTOtoEntity(placePostDTO);
 
         // create place
-        Place createdPlace = placeManager.createPlace(placeInput);
+        Place createdPlace = placeService.createPlace(placeInput);
 
         // convert internal representation of place back to API
         return DTOMapperPlace.INSTANCE.convertEntityToPlaceGetDTO(createdPlace);
@@ -45,7 +45,7 @@ public class PlaceController {
     @ResponseBody
     public List<PlaceGetDTO> getPlaces() {
         // fetch all places in the internal representation
-        List<Place> places = placeManager.getPlaces();
+        List<Place> places = placeService.getPlaces();
         List<PlaceGetDTO> placeGetDTOs = new ArrayList<>();
 
         // convert each place to the API representation
@@ -60,7 +60,7 @@ public class PlaceController {
     @ResponseStatus(HttpStatus.OK)
     public List<PlaceGetDTO> getAllPlacesForUser(@PathVariable int userId){
         // fetch places in the internal representation
-        List<Place> places = placeManager.getAllPlacesForUser(userId);
+        List<Place> places = placeService.getAllPlacesForUser(userId);
         List<PlaceGetDTO> placeGetDTOs = new ArrayList<>();
 
         //convert each place to the API representation
@@ -75,7 +75,7 @@ public class PlaceController {
     @DeleteMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePlace(@PathVariable int placeId){
-        placeManager.deletePlace(placeId);
+        placeService.deletePlace(placeId);
     }
 
 /** PUT endpoints */
@@ -84,7 +84,7 @@ public class PlaceController {
     @ResponseStatus(HttpStatus.OK)
     public PlaceGetDTO updatePlace(@RequestBody Place placeUpdates, @PathVariable int placeId){
         // update place
-        Place updatedPlace = placeManager.updatePlace(placeUpdates, placeId);
+        Place updatedPlace = placeService.updatePlace(placeUpdates, placeId);
 
         // convert internal representation of place back to API
         return DTOMapperPlace.INSTANCE.convertEntityToPlaceGetDTO(updatedPlace);

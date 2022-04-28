@@ -5,7 +5,7 @@ import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventGetDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.SleepEventPostDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.mapper.DTOMapperSleepEvent;
-import ch.uzh.ifi.hase.soprafs22.service.SleepEventManager;
+import ch.uzh.ifi.hase.soprafs22.service.SleepEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +16,11 @@ import java.util.List;
 @RestController
 public class SleepEventController {
 
-    private final SleepEventManager sleepEventManager;
+    private final SleepEventService sleepEventService;
 
     @Autowired
-    SleepEventController(SleepEventManager sleepEventManager){
-        this.sleepEventManager = sleepEventManager;
+    SleepEventController(SleepEventService sleepEventService){
+        this.sleepEventService = sleepEventService;
     }
 
     /** POST endpoints */
@@ -32,7 +32,7 @@ public class SleepEventController {
     public SleepEventGetDTO createSleepEvent(@PathVariable int userId, @PathVariable int placeId, @RequestBody SleepEventPostDTO sleepEventPostDTO){
         SleepEvent newSleepEvent = DTOMapperSleepEvent.INSTANCE.convertSleepEventPostDTOtoEntity(sleepEventPostDTO);
 
-        SleepEvent createdSleepEvent = sleepEventManager.createSleepEvent(userId, placeId, newSleepEvent);
+        SleepEvent createdSleepEvent = sleepEventService.createSleepEvent(userId, placeId, newSleepEvent);
 
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(createdSleepEvent);
     }
@@ -42,7 +42,7 @@ public class SleepEventController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public SleepEventGetDTO confirmedApplicant(@PathVariable int userId, @PathVariable int eventId) {
-        SleepEvent confirmSleepEvent = sleepEventManager.confirmSleepEvent(userId, eventId);
+        SleepEvent confirmSleepEvent = sleepEventService.confirmSleepEvent(userId, eventId);
 
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(confirmSleepEvent);
     }
@@ -53,7 +53,7 @@ public class SleepEventController {
     @ResponseBody
     public SleepEventGetDTO addApplicantToList(@PathVariable int userId, @PathVariable int eventId){
 
-        SleepEvent updatedSleepEvent = sleepEventManager.addApplicant(userId, eventId);
+        SleepEvent updatedSleepEvent = sleepEventService.addApplicant(userId, eventId);
 
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(updatedSleepEvent);
     }
@@ -66,7 +66,7 @@ public class SleepEventController {
     @ResponseBody
     public List<SleepEventGetDTO> getAllSleepEventsForPlace(@PathVariable int placeId){
         // fetch all sleep events for this place in the internal representation
-        List<SleepEvent> sleepEvents = sleepEventManager.getAllSleepEventsForPlace(placeId);
+        List<SleepEvent> sleepEvents = sleepEventService.getAllSleepEventsForPlace(placeId);
         List<SleepEventGetDTO> sleepEventGetDTOs = new ArrayList<>();
 
         // convert each sleep event to the API representation
@@ -82,7 +82,7 @@ public class SleepEventController {
     @ResponseBody
     public SleepEventGetDTO getSleepEvent (@PathVariable int eventId) {
         // fetch sleep event by id in the internal representation
-        SleepEvent sleepEvent = sleepEventManager.findSleepEventById(eventId);
+        SleepEvent sleepEvent = sleepEventService.findSleepEventById(eventId);
 
         // convert user to the API representation
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(sleepEvent);
@@ -92,7 +92,7 @@ public class SleepEventController {
 
     @DeleteMapping("/places/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSleepEvent(@PathVariable int eventId, @PathVariable int userId){ sleepEventManager.deleteSleepEvent(eventId, userId); }
+    public void deleteSleepEvent(@PathVariable int eventId, @PathVariable int userId){ sleepEventService.deleteSleepEvent(eventId, userId); }
 
 /** PUT endpoints */
 
@@ -100,14 +100,14 @@ public class SleepEventController {
     @PutMapping("/places/events/{eventId}/AVAILABLE")
     @ResponseStatus(HttpStatus.OK)
     public void setEventToAvailable(@PathVariable int eventId){
-        sleepEventManager.setStateToAvailable(eventId);
+        sleepEventService.setStateToAvailable(eventId);
     }
 
     // update event
     @PutMapping("/places/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public SleepEventGetDTO updateSleepEvent(@PathVariable int userId, @PathVariable int eventId, @RequestBody SleepEvent sleepEventUpdates){
-        SleepEvent updatedSleepEvent = sleepEventManager.updateSleepEvent(userId, eventId, sleepEventUpdates);
+        SleepEvent updatedSleepEvent = sleepEventService.updateSleepEvent(userId, eventId, sleepEventUpdates);
 
         return DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(updatedSleepEvent);
     }

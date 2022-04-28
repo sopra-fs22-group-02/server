@@ -1,6 +1,9 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs22.entity.Notification;
+
+import java.util.List;
 
 public class UserGetDTO {
 
@@ -14,6 +17,7 @@ public class UserGetDTO {
     private String token;
     private String bio;
     private String profilePicture;
+    private List<Notification> myNotifications;
 
     public int getUserId() {
         return userId;
@@ -93,5 +97,13 @@ public class UserGetDTO {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<Notification> getMyNotifications(){
+        return myNotifications;
+    }
+
+    public void setMyNotifications(List<Notification>  myNotifications){
+        this.myNotifications = myNotifications;
     }
 }

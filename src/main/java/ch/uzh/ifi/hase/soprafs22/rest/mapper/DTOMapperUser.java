@@ -37,5 +37,6 @@ public interface DTOMapperUser {
   @Mapping(source = "token", target = "token")
   @Mapping(source = "bio", target = "bio")
   @Mapping(source = "profilePicture", target = "profilePicture")
+  @Mapping(source = "myNotifications", target = "myNotifications")
   UserGetDTO convertEntityToUserGetDTO(User user);
 }
