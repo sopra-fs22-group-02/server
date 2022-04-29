@@ -152,8 +152,11 @@ public class User implements Serializable {
     }
 
     public void addNotifications(Notification newNotification){
+    public void addNotifications(Notification newNotification) {
         this.myNotifications.add(newNotification);
 =======
+    }
+
     public List<SleepEvent> getMyCalendarAsApplicant() {
         return myCalendarAsApplicant;
     }
