@@ -1,8 +1,15 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
+<<<<<<< HEAD
 import ch.uzh.ifi.hase.soprafs22.entity.Notification;
 
+=======
+import ch.uzh.ifi.hase.soprafs22.entity.Calendar;
+import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
+
+import javax.persistence.OneToMany;
+>>>>>>> origin/calendar_stuff
 import java.util.List;
 
 public class UserGetDTO {
@@ -17,7 +24,12 @@ public class UserGetDTO {
     private String token;
     private String bio;
     private String profilePicture;
+<<<<<<< HEAD
     private List<Notification> myNotifications;
+=======
+    private List<SleepEvent> myCalendarAsApplicant;
+    private List<SleepEvent> myCalendarAsProvider;
+>>>>>>> origin/calendar_stuff
 
     public int getUserId() {
         return userId;
@@ -99,11 +111,28 @@ public class UserGetDTO {
         this.profilePicture = profilePicture;
     }
 
+<<<<<<< HEAD
     public List<Notification> getMyNotifications(){
         return myNotifications;
     }
 
     public void setMyNotifications(List<Notification>  myNotifications){
         this.myNotifications = myNotifications;
+=======
+    public List<SleepEvent> getMyCalendarAsApplicant() {
+        return myCalendarAsApplicant;
+    }
+
+    public void setMyCalendarAsApplicant(List<SleepEvent> myCalendarAsApplicant) {
+        this.myCalendarAsApplicant = myCalendarAsApplicant;
+    }
+
+    public List<SleepEvent> getMyCalendarAsProvider() {
+        return myCalendarAsProvider;
+    }
+
+    public void setMyCalendarAsProvider(List<SleepEvent> myCalendarAsProvider) {
+        this.myCalendarAsProvider = myCalendarAsProvider;
+>>>>>>> origin/calendar_stuff
     }
 }

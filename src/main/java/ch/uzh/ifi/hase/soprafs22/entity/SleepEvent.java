@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.entity;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
+import ch.uzh.ifi.hase.soprafs22.constant.ApplicationStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,11 +25,11 @@ public class SleepEvent implements Serializable {
     @Column (nullable = false)
     private int placeId;
 
-    @OneToMany
-    private List<User> applicants;
+    @ElementCollection
+    private List<Integer> applicants;
 
-    @OneToOne
-    private User confirmedApplicant;
+    @Column
+    private int confirmedApplicant;
 
     @Column(nullable = false)
     private LocalDate startDate;
@@ -47,6 +48,9 @@ public class SleepEvent implements Serializable {
 
     @Column
     private String comment;
+
+    @Column
+    private ApplicationStatus applicationStatus;
 
 
 /** getters and setters */
@@ -69,19 +73,19 @@ public class SleepEvent implements Serializable {
 
     public void setPlaceId(int placeId) {this.placeId = placeId;}
 
-    public List<User> getApplicants() {
+    public List<Integer> getApplicants() {
         return applicants;
     }
 
-    public void setApplicants(List<User> applicants) {
+    public void setApplicants(List<Integer> applicants) {
         this.applicants = applicants;
     }
 
-    public User getConfirmedApplicant() {
+    public Integer getConfirmedApplicant() {
         return confirmedApplicant;
     }
 
-    public void setConfirmedApplicant(User confirmedApplicant) {
+    public void setConfirmedApplicant(int confirmedApplicant) {
         this.confirmedApplicant = confirmedApplicant;
     }
 
@@ -133,11 +137,19 @@ public class SleepEvent implements Serializable {
         this.comment = comment;
     }
 
-    public void addApplicant(User applicantToBeAdded){
+    public void addApplicant(int applicantToBeAdded){
         applicants.add(applicantToBeAdded);
     }
 
-    public void removeApplicant(User applicantToBeRemoved){
+    public void removeApplicant(int applicantToBeRemoved){
         applicants.remove(applicantToBeRemoved);
+    }
+
+    public ApplicationStatus getApplicationStatus() {
+        return applicationStatus;
+    }
+
+    public void setApplicationStatus(ApplicationStatus applicationStatus) {
+        this.applicationStatus = applicationStatus;
     }
 }
