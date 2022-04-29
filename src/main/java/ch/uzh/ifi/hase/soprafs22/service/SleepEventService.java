@@ -252,19 +252,11 @@ public class SleepEventService {
         // find SleepEvent by Id
         SleepEvent confirmedSleepEvent = sleepEventRepository.findByEventId(eventId);
 
-<<<<<<< HEAD:src/main/java/ch/uzh/ifi/hase/soprafs22/service/SleepEventService.java
         // check if the applicant that's about to be accepted actually applied for this sleep event
-        List<User> applicants = confirmSleepEvent.getApplicants();
-        boolean confirmedApplicantIsInList = Boolean.FALSE;
-        for (User applicant : applicants) {
-            if (applicant.getUserId() == userId) {
-=======
-        // check if the applicant that^s about to be accepted actually applied for this sleep event
         List<Integer> applicants = confirmedSleepEvent.getApplicants();
-        Boolean confirmedApplicantIsInList = Boolean.FALSE;
+        boolean confirmedApplicantIsInList = Boolean.FALSE;
         for (int applicantId : applicants) {
             if (applicantId == userId) {
->>>>>>> origin/calendar_stuff:src/main/java/ch/uzh/ifi/hase/soprafs22/service/SleepEventManager.java
                 confirmedApplicantIsInList = Boolean.TRUE;
                 break;
             }
