@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs22.constant.ApplicationStatus;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 
@@ -11,14 +12,15 @@ public class SleepEventGetDTO {
     private int eventId;
     private int providerId;
     private int placeId;
-    private List<User> applicants;
-    private User confirmedApplicant;
+    private List<Integer> applicants;
+    private int confirmedApplicant;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
     private LocalTime endTime;
     private EventState state;
     private String comment;
+    private ApplicationStatus applicationStatus;
 
 
     public int getEventId() {
@@ -39,19 +41,19 @@ public class SleepEventGetDTO {
 
     public void setPlaceId(int placeId) {this.placeId = placeId;}
 
-    public List<User> getApplicants() {
+    public List<Integer> getApplicants() {
         return applicants;
     }
 
-    public void setApplicants(List<User> applicants) {
+    public void setApplicants(List<Integer> applicants) {
         this.applicants = applicants;
     }
 
-    public User getConfirmedApplicant() {
+    public int getConfirmedApplicant() {
         return confirmedApplicant;
     }
 
-    public void setConfirmedApplicant(User confirmedApplicant) {
+    public void setConfirmedApplicant(int confirmedApplicant) {
         this.confirmedApplicant = confirmedApplicant;
     }
 
@@ -101,5 +103,13 @@ public class SleepEventGetDTO {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public ApplicationStatus getApplicationStatus() {
+        return applicationStatus;
+    }
+
+    public void setApplicationStatus(ApplicationStatus applicationStatus) {
+        this.applicationStatus = applicationStatus;
     }
 }

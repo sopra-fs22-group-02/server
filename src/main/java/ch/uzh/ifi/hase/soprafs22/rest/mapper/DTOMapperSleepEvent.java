@@ -30,5 +30,6 @@ public interface DTOMapperSleepEvent {
   @Mapping(source = "endTime", target = "endTime")
   @Mapping(source = "state", target = "state")
   @Mapping(source = "comment", target = "comment")
+  @Mapping(source = "applicationStatus", target = "applicationStatus")
   SleepEventGetDTO convertEntityToSleepEventGetDTO(SleepEvent sleepEvent);
 }

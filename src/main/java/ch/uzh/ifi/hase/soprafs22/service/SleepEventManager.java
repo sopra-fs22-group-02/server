@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs22.service;
 
+import ch.uzh.ifi.hase.soprafs22.constant.ApplicationStatus;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
+import ch.uzh.ifi.hase.soprafs22.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
@@ -92,6 +94,10 @@ public class SleepEventManager {
 
         // add sleep event to the places list of sleep events --> sleep event is saved in database
         correspondingPlace.addSleepEvents(newSleepEvent);
+        // add sleep event to corresponding list in the provider's calendar
+        User provider = userRepository.findByUserId(providerId);
+        List<SleepEvent> calendarAsProvider = provider.getMyCalendarAsProvider();
+        calendarAsProvider.add(newSleepEvent);
 
         return newSleepEvent;
     }
@@ -173,28 +179,70 @@ public class SleepEventManager {
                     "Since an applicant has been accepted for this sleep event, it cannot be deleted!");
         }
 
-        // only the provider is allowed to modify an event
+        // only the provider is allowed to delete the event
         if(userId != eventToBeDeleted.getProviderId()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "You are not the provider of this sleep event and therefore cannot delete it!");
         }
 
+        // find the sleep event's place
         Place place = placeRepository.findByPlaceId(eventToBeDeleted.getPlaceId());
+        // fetch all the sleep events within this place
         List<SleepEvent> listSleepEvents = place.getSleepEvents();
-
+        // remove event from the place's sleep event list
         listSleepEvents.removeIf(event -> event.getEventId() == eventId);
+
+        // remove the event from the provider's calendar
+        deleteEventFromProvidersCalendar(userId, eventId);
+
+        // remove the event from the applicant's calendar
+        deleteEventFromApplicantsCalendar(eventToBeDeleted);
+
+        // remove event from sleep event repository
         sleepEventRepository.delete(sleepEventRepository.findByEventId(eventId));
     }
 
+    /** methods for updating calendar*/
+
+    // helper function for deleteSleepEvent()
+    private void deleteEventFromProvidersCalendar(int providerId, int eventId){
+        User provider = userRepository.findByUserId(providerId);
+        List<SleepEvent> calendarAsProvider = provider.getMyCalendarAsProvider();
+        calendarAsProvider.removeIf(event -> event.getEventId() == eventId);
+    }
+
+    // helper function for deleteSleepEvent()
+    private void deleteEventFromApplicantsCalendar(SleepEvent eventToBeDeletedFromCalendar){
+        List<Integer> listOfApplicants = eventToBeDeletedFromCalendar.getApplicants();
+        if(listOfApplicants != null){
+            // go through the list of applicants and remove the event from each one's calendar
+            for(int applicantId : listOfApplicants){
+                User applicant = userRepository.findByUserId(applicantId);
+                List<SleepEvent> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
+                calendarAsApplicant.removeIf(event -> event.getEventId() == eventToBeDeletedFromCalendar.getEventId());
+            }
+        }
+    }
 
     /** apply for sleep event */
 
     public SleepEvent addApplicant(int userId, int eventId) {
-        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
+        // fetch sleep event
+        SleepEvent correspondingEvent = sleepEventRepository.findByEventId(eventId);
+        // fetch the applicant
         User applicant = userRepository.findByUserId(userId);
 
-        eventToBeUpdated.addApplicant(applicant);
-        return eventToBeUpdated;
+        // add applicant to applicant list in sleep event
+        correspondingEvent.addApplicant(userId);
+
+        // update application status
+        correspondingEvent.setApplicationStatus(ApplicationStatus.PENDING);
+
+        // add sleep event to corresponding list in the applicant's calendar
+        List<SleepEvent> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
+        calendarAsApplicant.add(correspondingEvent);
+
+        return correspondingEvent;
     }
 
 
@@ -205,18 +253,19 @@ public class SleepEventManager {
         User userById = userRepository.findByUserId(userId);
 
         // find SleepEvent by Id
-        SleepEvent confirmSleepEvent = sleepEventRepository.findByEventId(eventId);
+        SleepEvent confirmedSleepEvent = sleepEventRepository.findByEventId(eventId);
 
         // check if the applicant that^s about to be accepted actually applied for this sleep event
-        List<User> applicants = confirmSleepEvent.getApplicants();
+        List<Integer> applicants = confirmedSleepEvent.getApplicants();
         Boolean confirmedApplicantIsInList = Boolean.FALSE;
-        for (User applicant : applicants) {
-            if (applicant.getUserId() == userId) {
+        for (int applicantId : applicants) {
+            if (applicantId == userId) {
                 confirmedApplicantIsInList = Boolean.TRUE;
                 break;
             }
         }
 
+        // make sure the user to be set as confirmed applicant actually applied for this event
         if (confirmedApplicantIsInList == Boolean.FALSE) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "The applicant you want to accept has not applied for this sleep event!");
@@ -228,13 +277,18 @@ public class SleepEventManager {
         }
 
         // set confirmed applicant
-        confirmSleepEvent.setConfirmedApplicant(userById);
-        // change event state to unavailable for other users
-        confirmSleepEvent.setState(EventState.UNAVAILABLE);
-        // reset applicant list in sleep event
-        confirmSleepEvent.setApplicants(Collections.emptyList());
+        confirmedSleepEvent.setConfirmedApplicant(userId);
 
-        return confirmSleepEvent;
+        // change event state to unavailable for other users
+        confirmedSleepEvent.setState(EventState.UNAVAILABLE);
+
+        // set application status to approved
+        confirmedSleepEvent.setApplicationStatus(ApplicationStatus.APPROVED);
+
+        // reset applicant list in sleep event
+        confirmedSleepEvent.setApplicants(Collections.emptyList());
+
+        return confirmedSleepEvent;
     }
 
 
@@ -260,7 +314,7 @@ public class SleepEventManager {
                 LocalDateTime startThisEvent = LocalDateTime.of(event.getStartDate(), event.getStartTime());
                 LocalDateTime endThisEvent = LocalDateTime.of(event.getEndDate(), event.getEndTime());
 
-                // set event to "expired" when it has started AND no one has applied
+                // set event to "expired" if it has started AND no one has applied
                 if(LocalDateTime.now().isAfter(startThisEvent) && event.getConfirmedApplicant() == null){
                     event.setState(EventState.EXPIRED);
                 }
@@ -274,20 +328,29 @@ public class SleepEventManager {
 
         // go through the events that are over and delete them
         for(SleepEvent event : toBeDeleted){
-            deleteExpiredSleepEvent(event.getEventId());
+            deletePastSleepEvent(event.getEventId());
         }
     }
 
     // helper function for checkIfExpiredOrOver()
     // cannot use deleteSleepEvent(), because an expired sleep event does have a confirmed applicant
     // (would stop at first if), but it has to be deleted anyway, because it is over
-    private void deleteExpiredSleepEvent(int eventId){
-        SleepEvent expiredEvent = sleepEventRepository.findByEventId(eventId);
+    private void deletePastSleepEvent(int eventId){
+        SleepEvent pastEvent = sleepEventRepository.findByEventId(eventId);
 
-        Place place = placeRepository.findByPlaceId(expiredEvent.getPlaceId());
+        Place place = placeRepository.findByPlaceId(pastEvent.getPlaceId());
         List<SleepEvent> listSleepEvents = place.getSleepEvents();
 
+        // remove the event from the place's sleep event list
         listSleepEvents.removeIf(event -> event.getEventId() == eventId);
+
+        // remove the event from the provider's calendar
+        deleteEventFromProvidersCalendar(pastEvent.getProviderId(), eventId);
+
+        // remove the event from the applicant's calendar
+        deleteEventFromApplicantsCalendar(pastEvent);
+
+        // remove event from sleep event repository
         sleepEventRepository.delete(sleepEventRepository.findByEventId(eventId));
     }
 

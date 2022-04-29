@@ -1,6 +1,11 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs22.entity.Calendar;
+import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
+
+import javax.persistence.OneToMany;
+import java.util.List;
 
 public class UserGetDTO {
 
@@ -14,6 +19,8 @@ public class UserGetDTO {
     private String token;
     private String bio;
     private String profilePicture;
+    private List<SleepEvent> myCalendarAsApplicant;
+    private List<SleepEvent> myCalendarAsProvider;
 
     public int getUserId() {
         return userId;
@@ -93,5 +100,21 @@ public class UserGetDTO {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<SleepEvent> getMyCalendarAsApplicant() {
+        return myCalendarAsApplicant;
+    }
+
+    public void setMyCalendarAsApplicant(List<SleepEvent> myCalendarAsApplicant) {
+        this.myCalendarAsApplicant = myCalendarAsApplicant;
+    }
+
+    public List<SleepEvent> getMyCalendarAsProvider() {
+        return myCalendarAsProvider;
+    }
+
+    public void setMyCalendarAsProvider(List<SleepEvent> myCalendarAsProvider) {
+        this.myCalendarAsProvider = myCalendarAsProvider;
     }
 }

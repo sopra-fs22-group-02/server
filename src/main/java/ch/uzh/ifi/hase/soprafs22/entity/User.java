@@ -54,6 +54,12 @@ public class User implements Serializable {
     private String profilePicture;
 
     @OneToMany
+    private List<SleepEvent> myCalendarAsApplicant;
+
+    @OneToMany
+    private List<SleepEvent> myCalendarAsProvider;
+
+    @OneToMany
     private List<Notification> myNotifications;
 
     public int getUserId() {
@@ -134,5 +140,21 @@ public class User implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<SleepEvent> getMyCalendarAsApplicant() {
+        return myCalendarAsApplicant;
+    }
+
+    public void setMyCalendarAsApplicant(List<SleepEvent> myCalendarAsApplicant) {
+        this.myCalendarAsApplicant = myCalendarAsApplicant;
+    }
+
+    public List<SleepEvent> getMyCalendarAsProvider() {
+        return myCalendarAsProvider;
+    }
+
+    public void setMyCalendarAsProvider(List<SleepEvent> myCalendarAsProvider) {
+        this.myCalendarAsProvider = myCalendarAsProvider;
     }
 }
