@@ -50,7 +50,7 @@ public class UserService {
     // flush() is called
     newUser = userRepository.save(newUser);
     userRepository.flush();
-
+    newUser.setStatus(UserStatus.ONLINE);
     log.debug("Created Information for User: {}", newUser);
     return newUser;
   }
