@@ -20,22 +20,29 @@ public class DTOMapperUserTest {
     UserPostDTO userPostDTO = new UserPostDTO();
     userPostDTO.setEmail("name");
     userPostDTO.setUsername("username");
+    userPostDTO.setPassword("1234");
 
     // MAP -> Create user
     User user = DTOMapperUser.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
     // check content
+    assertEquals(userPostDTO.getEmail(), user.getEmail());
     assertEquals(userPostDTO.getUsername(), user.getUsername());
+    assertEquals(userPostDTO.getPassword(), user.getPassword());
   }
 
   @Test
   public void testGetUser_fromUser_toUserGetDTO_success() {
     // create User
     User user = new User();
-    user.setFirstName("Firstname Lastname");
+    user.setEmail("hello@uzh.ch");
+    user.setFirstName("Firstname");
+    user.setLastName("Lastname");
     user.setUsername("firstname@lastname");
     user.setStatus(UserStatus.OFFLINE);
     user.setToken("1");
+    user.setBio("hi, I am a person.");
+    user.setProfilePicture("some link");
 
     // MAP -> Create UserGetDTO
     UserGetDTO userGetDTO = DTOMapperUser.INSTANCE.convertEntityToUserGetDTO(user);
@@ -43,7 +50,12 @@ public class DTOMapperUserTest {
     // check content
     assertEquals(user.getUserId(), userGetDTO.getUserId());
     assertEquals(user.getEmail(), userGetDTO.getEmail());
+    assertEquals(user.getFirstName(), userGetDTO.getFirstName());
+    assertEquals(user.getLastName(), userGetDTO.getLastName());
     assertEquals(user.getUsername(), userGetDTO.getUsername());
     assertEquals(user.getStatus(), userGetDTO.getStatus());
+    assertEquals(user.getToken(), userGetDTO.getToken());
+    assertEquals(user.getBio(), userGetDTO.getBio());
+    assertEquals(user.getProfilePicture(), userGetDTO.getProfilePicture());
   }
 }
