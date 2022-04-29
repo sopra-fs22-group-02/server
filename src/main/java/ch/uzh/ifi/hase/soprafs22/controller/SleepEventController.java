@@ -96,13 +96,6 @@ public class SleepEventController {
 
 /** PUT endpoints */
 
-    // if the event has started without anyone applying, it is set to "expired, but the provider can change the start time and set it to "available" again
-    @PutMapping("/places/events/{eventId}/AVAILABLE")
-    @ResponseStatus(HttpStatus.OK)
-    public void setEventToAvailable(@PathVariable int eventId){
-        sleepEventService.setStateToAvailable(eventId);
-    }
-
     // update event
     @PutMapping("/places/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)

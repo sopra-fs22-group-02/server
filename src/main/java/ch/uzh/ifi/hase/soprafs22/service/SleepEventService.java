@@ -130,7 +130,7 @@ public class SleepEventService {
 
         // as soon as an applicant has been accepted,
         // the provider cannot update the event anymore
-        if(eventToBeUpdated.getConfirmedApplicant() != null) {
+        if(eventToBeUpdated.getConfirmedApplicant() != 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Since an applicant has been accepted for this sleep event, it cannot be updated anymore!");
         }
@@ -152,6 +152,13 @@ public class SleepEventService {
                     "The sleep event is too long (max 12 hours) and can therefore not be updated!");
         }
 
+        // if the new start time is in the future and the event's state is currently set to "expired",
+        // the event started without anyone applying and the provider wants to reactivate the event for a later time slot
+        // therefore the state has to be set to available again
+        if((startUpdated.isAfter(LocalDateTime.now())) && (eventToBeUpdated.getState() == EventState.EXPIRED)){
+            eventToBeUpdated.setState(EventState.AVAILABLE);
+        }
+
         eventToBeUpdated.setStartDate(updates.getStartDate());
         eventToBeUpdated.setEndDate(updates.getEndDate());
         eventToBeUpdated.setStartTime(updates.getStartTime());
@@ -171,7 +178,7 @@ public class SleepEventService {
         }
 
         // as soon as an applicant has been accepted, the provider cannot delete the event anymore
-        if(eventToBeDeleted.getConfirmedApplicant() != null) {
+        if(eventToBeDeleted.getConfirmedApplicant() != 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Since an applicant has been accepted for this sleep event, it cannot be deleted!");
         }
@@ -312,7 +319,7 @@ public class SleepEventService {
                 LocalDateTime endThisEvent = LocalDateTime.of(event.getEndDate(), event.getEndTime());
 
                 // set event to "expired" if it has started AND no one has applied
-                if(LocalDateTime.now().isAfter(startThisEvent) && event.getConfirmedApplicant() == null){
+                if(LocalDateTime.now().isAfter(startThisEvent) && event.getConfirmedApplicant() == 0){
                     event.setState(EventState.EXPIRED);
                 }
                 // delete event when it is over
@@ -348,16 +355,5 @@ public class SleepEventService {
 
         // remove event from sleep event repository
         sleepEventRepository.delete(sleepEventRepository.findByEventId(eventId));
-    }
-
-    public void setStateToAvailable(int eventId){
-        SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
-
-        if(eventToBeUpdated == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "This sleep event does not exist!");
-        }
-
-        eventToBeUpdated.setState(EventState.AVAILABLE);
     }
 }
