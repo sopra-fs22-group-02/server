@@ -142,7 +142,6 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-<<<<<<< HEAD
     public List<Notification> getMyNotifications(){
         return myNotifications;
     }
@@ -151,10 +150,8 @@ public class User implements Serializable {
         this.myNotifications = myNotifications;
     }
 
-    public void addNotifications(Notification newNotification){
     public void addNotifications(Notification newNotification) {
         this.myNotifications.add(newNotification);
-=======
     }
 
     public List<SleepEvent> getMyCalendarAsApplicant() {
@@ -171,6 +168,5 @@ public class User implements Serializable {
 
     public void setMyCalendarAsProvider(List<SleepEvent> myCalendarAsProvider) {
         this.myCalendarAsProvider = myCalendarAsProvider;
->>>>>>> origin/calendar_stuff
     }
 }
