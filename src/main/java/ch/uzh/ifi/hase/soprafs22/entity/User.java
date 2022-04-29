@@ -168,9 +168,5 @@ public class User implements Serializable {
 
     public void setMyCalendarAsProvider(List<SleepEvent> myCalendarAsProvider) {
         this.myCalendarAsProvider = myCalendarAsProvider;
-<<<<<<< HEAD
-=======
-
->>>>>>> 3e75899d8f5b809307b2812cda86eb1c5672c65e
     }
 }

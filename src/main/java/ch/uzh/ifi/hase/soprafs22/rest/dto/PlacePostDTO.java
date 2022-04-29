@@ -1,8 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs22.constant.Campus;
-import ch.uzh.ifi.hase.soprafs22.entity.Location;
-import ch.uzh.ifi.hase.soprafs22.entity.User;
 
 public class PlacePostDTO {
 

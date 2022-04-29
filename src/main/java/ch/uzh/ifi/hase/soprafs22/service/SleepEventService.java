@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs22.service;
 
 import ch.uzh.ifi.hase.soprafs22.constant.ApplicationStatus;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
-import ch.uzh.ifi.hase.soprafs22.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
