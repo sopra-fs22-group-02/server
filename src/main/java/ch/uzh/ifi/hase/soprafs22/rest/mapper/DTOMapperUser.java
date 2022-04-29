@@ -37,11 +37,8 @@ public interface DTOMapperUser {
   @Mapping(source = "token", target = "token")
   @Mapping(source = "bio", target = "bio")
   @Mapping(source = "profilePicture", target = "profilePicture")
-<<<<<<< HEAD
   @Mapping(source = "myNotifications", target = "myNotifications")
-=======
   @Mapping(source = "myCalendarAsApplicant", target = "myCalendarAsApplicant")
   @Mapping(source = "myCalendarAsProvider", target = "myCalendarAsProvider")
->>>>>>> origin/calendar_stuff
   UserGetDTO convertEntityToUserGetDTO(User user);
 }

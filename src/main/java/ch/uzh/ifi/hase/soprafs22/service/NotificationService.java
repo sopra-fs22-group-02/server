@@ -66,7 +66,6 @@ public class NotificationService {
     public void checkIfOlderThan24h() {
         // fetch all notifications
         List<Notification> allNotifications = notificationRepository.findAll();
-        System.out.println("all notifications: " + allNotifications);
 
         // abort if there are no notifications
         if(allNotifications.isEmpty()){return;}
@@ -77,7 +76,6 @@ public class NotificationService {
         for(Notification notification : allNotifications){
             // check how old the notification
             long timeDifference = notification.getCreationDate().until(LocalDateTime.now(), ChronoUnit.MINUTES);
-            System.out.println("time difference: " + timeDifference);
             // delete it if > 24h
             if(timeDifference > 1440L){
                 toBeDeleted.add(notification);

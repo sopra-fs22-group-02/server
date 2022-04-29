@@ -1,8 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.service;
 
 import ch.uzh.ifi.hase.soprafs22.constant.UserStatus;
-import ch.uzh.ifi.hase.soprafs22.entity.Calendar;
-import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.slf4j.Logger;
@@ -179,22 +177,4 @@ public class UserService {
         }
       return userById;
     }
-
-    /** methods associated with calendar*/
-
-    public void addEventToCalendarAsProvider(SleepEvent event){
-
-    }
-
-    public void addEventToCalendarAsApplicant(SleepEvent event){
-
-    }
-
-    public void removeEventFromCalendarAsProvider(SleepEvent event){
-
-    }
-
-
-
-
 }

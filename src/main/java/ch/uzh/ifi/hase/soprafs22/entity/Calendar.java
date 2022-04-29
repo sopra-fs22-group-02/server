@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs22.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,11 +18,6 @@ public class Calendar implements Serializable {
 
     @OneToMany
     private List<SleepEvent> sleepEventListAsProvider;
-
-    /*public Calendar(){
-        this.sleepEventListAsProvider = new ArrayList<>();
-        this.sleepEventListAsApplicant = new ArrayList<>();
-    }*/
 
     public List<SleepEvent> getSleepEventListAsApplicant() {
         return sleepEventListAsApplicant;
