@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs22.service;
 
 import ch.uzh.ifi.hase.soprafs22.constant.ApplicationStatus;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
-import ch.uzh.ifi.hase.soprafs22.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.PlaceRepository;
@@ -244,7 +243,7 @@ public class SleepEventService {
 
         // add sleep event to corresponding list in the applicant's calendar
         //List<SleepEvent> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
-        //calendarAsApplicant.add(correspondingEvent);
+        applicant.getMyCalendarAsApplicant().add(correspondingEvent);
 
         return correspondingEvent;
     }

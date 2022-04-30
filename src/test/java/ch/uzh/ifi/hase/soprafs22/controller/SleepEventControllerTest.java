@@ -131,25 +131,25 @@ public class SleepEventControllerTest {
     event.setEventId(3);
     event.setProviderId(user.getUserId());
     event.setPlaceId(place.getPlaceId());
-    //event.setApplicants(null);
-    //event.setConfirmedApplicant(0);
-    event.setStartDate(LocalDate.of(2023,1,1));
-    event.setEndDate(LocalDate.of(2023,1,1));
-    event.setStartTime(LocalTime.of(8,0));
-    event.setEndTime(LocalTime.of(20,0));
-    //event.setState(EventState.AVAILABLE);
-    //event.setComment("some comment");
-    //event.setApplicationStatus(null);
-      System.out.println("place id in place: " + place.getPlaceId());
+    event.setApplicants(null);
+    event.setConfirmedApplicant(0);
+    event.setStartDate(null);
+    event.setEndDate(null);
+    event.setStartTime(null);
+    event.setEndTime(null);
+    event.setState(EventState.AVAILABLE);
+    event.setComment("some comment");
+    event.setApplicationStatus(null);
+      /*System.out.println("place id in place: " + place.getPlaceId());
       System.out.println("place is in sleep event: " + event.getPlaceId());
       System.out.println("user id in user: " + user.getUserId());
-      System.out.println("user id in event: " + event.getProviderId());
+      System.out.println("user id in event: " + event.getProviderId());*/
 
     SleepEventPostDTO sleepEventPostDTO = new SleepEventPostDTO();
-    sleepEventPostDTO.setStartDate(LocalDate.of(2023,1,1));
-    sleepEventPostDTO.setEndDate(LocalDate.of(2023,1,1));
-    sleepEventPostDTO.setStartTime(LocalTime.of(8,0));
-    sleepEventPostDTO.setEndTime(LocalTime.of(20,0));
+    sleepEventPostDTO.setStartDate(null);
+    sleepEventPostDTO.setEndDate(null);
+    sleepEventPostDTO.setStartTime(null);
+    sleepEventPostDTO.setEndTime(null);
     sleepEventPostDTO.setComment("some comment");
 
     given(sleepEventService.createSleepEvent(Mockito.anyInt(), Mockito.anyInt(), Mockito.any())).willReturn(event);
@@ -165,15 +165,15 @@ public class SleepEventControllerTest {
         .andExpect(jsonPath("$.eventId", is(event.getEventId())))
         .andExpect(jsonPath("$.providerId", is(event.getProviderId())))
         .andExpect(jsonPath("$.placeId", is(event.getPlaceId())))
-        //.andExpect(jsonPath("$.applicants", is(event.getApplicants())))
-        //.andExpect(jsonPath("$.confirmedApplicant", is(event.getConfirmedApplicant())))
-        .andExpect(jsonPath("$.startDate", is(event.getStartDate().toString())))
-        .andExpect(jsonPath("$.endDate", is(event.getEndDate().toString())))
+        .andExpect(jsonPath("$.applicants", is(event.getApplicants())))
+        .andExpect(jsonPath("$.confirmedApplicant", is(event.getConfirmedApplicant())))
+        .andExpect(jsonPath("$.startDate", is(event.getStartDate())))
+        .andExpect(jsonPath("$.endDate", is(event.getEndDate())))
         .andExpect(jsonPath("$.startTime", is(event.getStartTime())))
-        .andExpect(jsonPath("$.endTime", is(event.getEndTime())));
-        //.andExpect(jsonPath("$.state", is(event.getState().toString())))
-        //.andExpect(jsonPath("$.comment", is(event.getComment())));
-        //.andExpect(jsonPath("$.applicationStatus", is(event.getApplicationStatus().toString())));
+        .andExpect(jsonPath("$.endTime", is(event.getEndTime())))
+        .andExpect(jsonPath("$.state", is(event.getState().toString())))
+        .andExpect(jsonPath("$.comment", is(event.getComment())))
+        .andExpect(jsonPath("$.applicationStatus", is(event.getApplicationStatus())));
   }
     @Test
     public void acceptAnApplicant_validInput() throws Exception {

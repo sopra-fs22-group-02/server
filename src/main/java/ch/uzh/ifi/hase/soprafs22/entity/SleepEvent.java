@@ -137,8 +137,9 @@ public class SleepEvent implements Serializable {
         this.comment = comment;
     }
 
-    public void addApplicant(int applicantToBeAdded){
+    public List<Integer> addApplicant(int applicantToBeAdded){
         applicants.add(applicantToBeAdded);
+        return applicants;
     }
 
     public void removeApplicant(int applicantToBeRemoved){
