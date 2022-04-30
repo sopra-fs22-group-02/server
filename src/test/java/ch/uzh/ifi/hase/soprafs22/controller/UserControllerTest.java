@@ -40,7 +40,7 @@ public class UserControllerTest {
   @MockBean
   private UserService userService;
 
-/*  @Test
+  /*@Test
   public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
     // given
     User user = new User();
