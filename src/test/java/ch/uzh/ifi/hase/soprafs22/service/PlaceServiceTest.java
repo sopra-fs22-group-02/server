@@ -67,13 +67,27 @@ public class PlaceServiceTest {
     // given -> a first place has already been created
     placeService.createPlace(testPlace);
 
-    // when -> setup additional mocks for UserRepository
+    // when -> setup additional mocks for PlaceRepository
     Mockito.when(placeRepository.findByProviderId(Mockito.anyInt())).thenReturn(testPlace);
 
     // then -> attempt to create second place with same user -> check that an error
     // is thrown
     assertThrows(ResponseStatusException.class, () -> placeService.createPlace(testPlace));
   }
+
+  @Test
+  public void deletePlace_validInputs_success() {
+      // given
+      placeService.createPlace(testPlace);
+
+      // when
+      Mockito.when(placeRepository.findByProviderId(Mockito.anyInt())).thenReturn(testPlace);
+      placeService.deletePlace(testPlace.getPlaceId());
+
+      // then
+      assertNull(placeRepository.findByPlaceId(testPlace.getPlaceId()));
+  }
+
 
   @Test
   public void updatePlace_IdNotFound_throwsException() {
