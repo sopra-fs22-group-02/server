@@ -27,7 +27,7 @@ public class NotificationController {
 
     // create a notification and putting it into the list of the users notifications
     @PostMapping("/users/{userId}/notifications")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public NotificationGetDTO createNotification(@PathVariable int userId, @RequestBody NotificationPostDTO notificationPostDTO){
         Notification newNotification = DTOMapperNotification.INSTANCE.convertNotificationPostDTOtoEntity(notificationPostDTO);
 

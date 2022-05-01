@@ -61,7 +61,7 @@ public class SleepEventServiceIntegrationTest {
     public void setup() {
         //fetch all users
         List<User> allUsers = userRepository.findAll();
-        // clean every user's calendars
+        // clear every user's calendars
         for(User user : allUsers){
             user.setMyCalendarAsApplicant(Collections.emptyList());
             user.setMyCalendarAsProvider(Collections.emptyList());
@@ -69,7 +69,7 @@ public class SleepEventServiceIntegrationTest {
 
         //fetch all places
         List<Place> allPlaces = placeRepository.findAll();
-        // clean every place's sleep event list
+        // clear every place's sleep event list
         for(Place place: allPlaces){
             place.setSleepEvents(Collections.emptyList());
         }
