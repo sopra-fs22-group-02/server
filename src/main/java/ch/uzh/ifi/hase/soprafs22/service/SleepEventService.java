@@ -242,8 +242,8 @@ public class SleepEventService {
         correspondingEvent.setApplicationStatus(ApplicationStatus.PENDING);
 
         // add sleep event to corresponding list in the applicant's calendar
-        List<SleepEvent> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
-        calendarAsApplicant.add(correspondingEvent);
+        //List<SleepEvent> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
+        applicant.getMyCalendarAsApplicant().add(correspondingEvent);
 
         return correspondingEvent;
     }

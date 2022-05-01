@@ -101,6 +101,10 @@ public class Place implements Serializable {
         return sleepEvents;
     }
 
+    public void setSleepEvents(List<SleepEvent> sleepEvents){
+        this.sleepEvents = sleepEvents;
+    }
+
     public void addSleepEvents(SleepEvent newSleepEvent){
         this.sleepEvents.add(newSleepEvent);
     }
