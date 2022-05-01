@@ -92,8 +92,8 @@ public class SleepEventService {
         correspondingPlace.addSleepEvents(newSleepEvent);
         // add sleep event to corresponding list in the provider's calendar
         User provider = userRepository.findByUserId(providerId);
-        List<SleepEvent> calendarAsProvider = provider.getMyCalendarAsProvider();
-        calendarAsProvider.add(newSleepEvent);
+        List<Integer> calendarAsProvider = provider.getMyCalendarAsProvider();
+        calendarAsProvider.add(newSleepEvent.getEventId());
 
         return newSleepEvent;
     }
@@ -210,8 +210,8 @@ public class SleepEventService {
     // helper function for deleteSleepEvent()
     private void deleteEventFromProvidersCalendar(int providerId, int eventId){
         User provider = userRepository.findByUserId(providerId);
-        List<SleepEvent> calendarAsProvider = provider.getMyCalendarAsProvider();
-        calendarAsProvider.removeIf(event -> event.getEventId() == eventId);
+        List<Integer> calendarAsProvider = provider.getMyCalendarAsProvider();
+        calendarAsProvider.removeIf(Id -> Id == eventId);
     }
 
     // helper function for deleteSleepEvent()
@@ -221,8 +221,8 @@ public class SleepEventService {
             // go through the list of applicants and remove the event from each one's calendar
             for(int applicantId : listOfApplicants){
                 User applicant = userRepository.findByUserId(applicantId);
-                List<SleepEvent> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
-                calendarAsApplicant.removeIf(event -> event.getEventId() == eventToBeDeletedFromCalendar.getEventId());
+                List<Integer> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
+                calendarAsApplicant.removeIf(Id -> Id == eventToBeDeletedFromCalendar.getEventId());
             }
         }
     }
@@ -236,16 +236,22 @@ public class SleepEventService {
         User applicant = userRepository.findByUserId(userId);
 
         // add applicant to applicant list in sleep event
-        correspondingEvent.addApplicant(userId);
+        correspondingEvent.getApplicants().add(userId);
 
         // update application status
         correspondingEvent.setApplicationStatus(ApplicationStatus.PENDING);
 
         // add sleep event to corresponding list in the applicant's calendar
         //List<SleepEvent> calendarAsApplicant = applicant.getMyCalendarAsApplicant();
-        applicant.getMyCalendarAsApplicant().add(correspondingEvent);
+        //applicant.getMyCalendarAsApplicant().add(correspondingEvent);
+        //calendarAsApplicant.add(correspondingEvent);
+        addEventToApplicantsCalendar(applicant, eventId);
 
         return correspondingEvent;
+    }
+
+    private void addEventToApplicantsCalendar(User applicant, int eventId){
+        applicant.getMyCalendarAsApplicant().add(eventId);
     }
 
 

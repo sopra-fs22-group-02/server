@@ -53,11 +53,11 @@ public class User implements Serializable {
     @Column
     private String profilePicture;
 
-    @OneToMany
-    private List<SleepEvent> myCalendarAsApplicant;
+    @ElementCollection
+    private List<Integer> myCalendarAsApplicant;
 
-    @OneToMany
-    private List<SleepEvent> myCalendarAsProvider;
+    @ElementCollection
+    private List<Integer> myCalendarAsProvider;
 
     @OneToMany
     private List<Notification> myNotifications;
@@ -154,19 +154,19 @@ public class User implements Serializable {
         this.myNotifications.add(newNotification);
     }
 
-    public List<SleepEvent> getMyCalendarAsApplicant() {
+    public List<Integer> getMyCalendarAsApplicant() {
         return myCalendarAsApplicant;
     }
 
-    public void setMyCalendarAsApplicant(List<SleepEvent> myCalendarAsApplicant) {
+    public void setMyCalendarAsApplicant(List<Integer> myCalendarAsApplicant) {
         this.myCalendarAsApplicant = myCalendarAsApplicant;
     }
 
-    public List<SleepEvent> getMyCalendarAsProvider() {
+    public List<Integer> getMyCalendarAsProvider() {
         return myCalendarAsProvider;
     }
 
-    public void setMyCalendarAsProvider(List<SleepEvent> myCalendarAsProvider) {
+    public void setMyCalendarAsProvider(List<Integer> myCalendarAsProvider) {
         this.myCalendarAsProvider = myCalendarAsProvider;
     }
 }

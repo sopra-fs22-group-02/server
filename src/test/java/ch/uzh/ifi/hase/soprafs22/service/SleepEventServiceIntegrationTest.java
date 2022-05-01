@@ -763,7 +763,7 @@ public class SleepEventServiceIntegrationTest {
         SleepEvent createdEvent = sleepEventService.createSleepEvent(createdProvider.getUserId(), createdPlace.getPlaceId(), testEvent);
         User createdApplicant = userService.createUser(applicant);
         // shouldn't be necessary! happens in addApplicant()
-        createdApplicant.setMyCalendarAsApplicant(Collections.singletonList(createdEvent));
+        createdApplicant.setMyCalendarAsApplicant(Collections.singletonList(createdEvent.getEventId()));
 
         // when
         SleepEvent updatedEvent = sleepEventService.addApplicant(createdApplicant.getUserId(), createdEvent.getEventId());
@@ -772,7 +772,7 @@ public class SleepEventServiceIntegrationTest {
         assertEquals(createdEvent.getEventId(), updatedEvent.getEventId());
         assertEquals(createdApplicant.getUserId(), updatedEvent.getApplicants().get(0));
         assertEquals(ApplicationStatus.PENDING, updatedEvent.getApplicationStatus());
-        assertEquals(createdApplicant.getMyCalendarAsApplicant().get(0).getEventId(), updatedEvent.getEventId());
+        assertEquals(createdApplicant.getMyCalendarAsApplicant().get(0), updatedEvent.getEventId());
     }
 
     @Test
@@ -871,7 +871,7 @@ public class SleepEventServiceIntegrationTest {
         User createdApplicant = userService.createUser(applicant);
         testEvent.setApplicants(Collections.singletonList(createdApplicant.getUserId()));
         SleepEvent createdEvent = sleepEventService.createSleepEvent(createdProvider.getUserId(), createdPlace.getPlaceId(), testEvent);
-        createdApplicant.setMyCalendarAsApplicant(Collections.singletonList(createdEvent));
+        createdApplicant.setMyCalendarAsApplicant(Collections.singletonList(createdEvent.getEventId()));
 
         // when
         sleepEventService.checkIfExpiredOrOver();

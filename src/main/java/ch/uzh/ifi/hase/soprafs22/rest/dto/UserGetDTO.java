@@ -19,8 +19,8 @@ public class UserGetDTO {
     private String bio;
     private String profilePicture;
     private List<Notification> myNotifications;
-    private List<SleepEvent> myCalendarAsApplicant;
-    private List<SleepEvent> myCalendarAsProvider;
+    private List<Integer> myCalendarAsApplicant;
+    private List<Integer> myCalendarAsProvider;
 
     public int getUserId() {
         return userId;
@@ -110,19 +110,19 @@ public class UserGetDTO {
         this.myNotifications = myNotifications;
     }
 
-    public List<SleepEvent> getMyCalendarAsApplicant() {
+    public List<Integer> getMyCalendarAsApplicant() {
         return myCalendarAsApplicant;
     }
 
-    public void setMyCalendarAsApplicant(List<SleepEvent> myCalendarAsApplicant) {
+    public void setMyCalendarAsApplicant(List<Integer> myCalendarAsApplicant) {
         this.myCalendarAsApplicant = myCalendarAsApplicant;
     }
 
-    public List<SleepEvent> getMyCalendarAsProvider() {
+    public List<Integer> getMyCalendarAsProvider() {
         return myCalendarAsProvider;
     }
 
-    public void setMyCalendarAsProvider(List<SleepEvent> myCalendarAsProvider) {
+    public void setMyCalendarAsProvider(List<Integer> myCalendarAsProvider) {
         this.myCalendarAsProvider = myCalendarAsProvider;
     }
 }
