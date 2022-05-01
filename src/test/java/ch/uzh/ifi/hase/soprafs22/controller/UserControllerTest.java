@@ -47,10 +47,13 @@ public class UserControllerTest {
   @MockBean
   private UserService userService;
 
+<<<<<<< HEAD
   @Test
   public void givenUsers_whenGetAllUsers_thenReturnJsonArray() throws Exception {
+=======
   /*@Test
   public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
+>>>>>>> origin/sleep_event_tests
     // given
     User user = new User();
     user.setEmail("xyz@uzh.ch");
