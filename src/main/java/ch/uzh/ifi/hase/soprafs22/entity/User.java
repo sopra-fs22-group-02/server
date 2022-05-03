@@ -59,7 +59,7 @@ public class User implements Serializable {
     @OneToMany
     private List<SleepEvent> myCalendarAsProvider;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Notification> myNotifications;
 
     public int getUserId() {

@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -512,7 +513,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
 
-    /*@Test
+    @Test
     public void getAllSleepEventsForPlace_success() {
         // given
         assertNull(userRepository.findByUserId(1));
@@ -576,7 +577,7 @@ public class SleepEventServiceIntegrationTest {
         // then
         assertEquals(createdEvent.getEventId(), foundEvent.getEventId());
         assertEquals(anotherCreatedEvent.getEventId(), anotherFoundEvent.getEventId());
-    }*/
+    }
 
     @Test
     public void findSleepEventById_success() {

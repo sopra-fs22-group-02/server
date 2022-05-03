@@ -35,7 +35,7 @@ public class Place implements Serializable {
     @Column
     private String pictureOfThePlace;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<SleepEvent> sleepEvents;
 
 
