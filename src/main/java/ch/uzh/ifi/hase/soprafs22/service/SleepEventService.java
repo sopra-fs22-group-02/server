@@ -279,14 +279,24 @@ public class SleepEventService {
                     "This user who you wanted to accept does not exist!");
         }
 
+        
         // set confirmed applicant
         confirmedSleepEvent.setConfirmedApplicant(userId);
-
+        
         // change event state to unavailable for other users
         confirmedSleepEvent.setState(EventState.UNAVAILABLE);
-
+        
         // set application status to approved
         confirmedSleepEvent.setApplicationStatus(ApplicationStatus.APPROVED);
+
+        // remove the chosen applicant from the candidates list, so the event remains in his cal
+        applicants.remove(Integer.valueOf(userId));
+
+        // update sleep event applicants list with the declined candidates (excluding the confirmed one)
+        confirmedSleepEvent.setApplicants(applicants);
+
+        // delete the events from the other candidates calendars
+        deleteEventFromApplicantsCalendar(confirmedSleepEvent);
 
         // reset applicant list in sleep event
         confirmedSleepEvent.setApplicants(Collections.emptyList());
