@@ -231,7 +231,16 @@ public class SleepEventService {
 
     public SleepEvent addApplicant(int userId, int eventId) {
         // fetch sleep event
+
+
         SleepEvent correspondingEvent = sleepEventRepository.findByEventId(eventId);
+
+        // TODO: Constrain => Should only be possible if in the available state
+        if(correspondingEvent.getApplicationStatus() == ApplicationStatus.APPROVED) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                "You cannot apply to an event which already has been approved.");
+        }
+
         // fetch the applicant
         User applicant = userRepository.findByUserId(userId);
 
