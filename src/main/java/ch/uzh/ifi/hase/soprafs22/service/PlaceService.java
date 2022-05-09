@@ -83,13 +83,20 @@ public class PlaceService {
   }
 
   public Place updatePlace(Place placeUpdated, int placeId) {
-      // check that if user wants to update location to NULL (meaning he leaves the field empty)
-      /*if(placeUpdated.getLocation() == null){
-          throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                  "Location cannot be NULL!");
-      }*/
       // find place by ID
       Place UpdatePlace = placeRepository.findByPlaceId(placeId);
+
+      // check that if user wants to update address to NULL (meaning he leaves the field empty)
+      if (UpdatePlace.getAddress() == null) {
+          throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                  "The address of the place cannot be NULL!");
+      }
+
+      // check that if user wants to update name to NULL (meaning he leaves the field empty)
+      if (UpdatePlace.getName() == null) {
+          throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                  "The name of the place cannot be NULL!");
+      }
 
       // throw exception if place doesn't exist
       if(UpdatePlace == null){

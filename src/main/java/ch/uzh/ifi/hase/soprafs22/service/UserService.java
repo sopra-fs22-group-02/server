@@ -109,6 +109,17 @@ public class UserService {
   }
 
   public User updateUser(User userUpdated, int id) {
+      // check that if user wants to update username to NULL (meaning he leaves the field empty)
+      if(userUpdated.getUsername() == null){
+          throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                  "Username cannot be NULL! If you do not want to change your username, just enter your current one");
+      }
+      // check that if user wants to update password to NULL (meaning he leaves the field empty)
+      if(userUpdated.getPassword() == null){
+          throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                  "Password cannot be NULL! If you do not want to change your password, just enter your current one");
+      }
+
       // find user by ID
       User UpdateUser = userRepository.findByUserId(id);
 
