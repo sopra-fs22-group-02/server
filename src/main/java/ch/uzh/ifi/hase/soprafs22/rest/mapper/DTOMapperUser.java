@@ -32,7 +32,6 @@ public interface DTOMapperUser {
   @Mapping(source = "username", target = "username")
   @Mapping(source = "firstName", target = "firstName")
   @Mapping(source = "lastName", target = "lastName")
-  @Mapping(source = "password", target = "password")
   @Mapping(source = "status", target = "status")
   @Mapping(source = "token", target = "token")
   @Mapping(source = "bio", target = "bio")

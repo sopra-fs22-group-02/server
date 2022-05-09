@@ -13,7 +13,6 @@ public class UserGetDTO {
     private String username;
     private String firstName;
     private String lastName;
-    private String password;
     private UserStatus status;
     private String token;
     private String bio;
@@ -60,14 +59,6 @@ public class UserGetDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public UserStatus getStatus() {
