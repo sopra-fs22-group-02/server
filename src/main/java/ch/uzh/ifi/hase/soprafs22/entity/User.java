@@ -53,10 +53,10 @@ public class User implements Serializable {
     @Column
     private String profilePicture;
 
-    @OneToMany
+    @ManyToMany
     private List<SleepEvent> myCalendarAsApplicant;
 
-    @OneToMany
+    @ManyToMany
     private List<SleepEvent> myCalendarAsProvider;
 
     @OneToMany
