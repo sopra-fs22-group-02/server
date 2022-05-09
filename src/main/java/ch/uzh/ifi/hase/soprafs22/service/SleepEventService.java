@@ -75,6 +75,11 @@ public class SleepEventService {
         // make sure the sleep event <= 12 hours
         long timeDifference = startNewEvent.until(endNewEvent, ChronoUnit.MINUTES);
 
+        if(timeDifference < 60L){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "The sleep event is too short (min 1 hour) and can therefore not be updated!");
+        }
+
         if(timeDifference > 720L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too long (max 12 hours)!");
@@ -145,6 +150,11 @@ public class SleepEventService {
         LocalDateTime endUpdated = LocalDateTime.of(updates.getEndDate(), updates.getEndTime());
 
         long timeDifference = startUpdated.until(endUpdated, ChronoUnit.MINUTES);
+
+        if(timeDifference < 60L){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "The sleep event is too short (min 1 hour) and can therefore not be updated!");
+        }
 
         if(timeDifference > 720L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
