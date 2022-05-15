@@ -86,6 +86,11 @@ public class PlaceService {
       // find place by ID
       Place UpdatePlace = placeRepository.findByPlaceId(placeId);
 
+      // throw exception if place doesn't exist
+      if(UpdatePlace == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                  "The place was not found!");
+      }
       // check that if user wants to update address to NULL (meaning he leaves the field empty)
       if (UpdatePlace.getAddress() == null) {
           throw new ResponseStatusException(HttpStatus.FORBIDDEN,
@@ -98,11 +103,7 @@ public class PlaceService {
                   "The name of the place cannot be NULL!");
       }
 
-      // throw exception if place doesn't exist
-      if(UpdatePlace == null){
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                  "The place was not found!");
-      }
+
 
       String UpdatedName = placeUpdated.getName();
       String UpdatedAddress = placeUpdated.getAddress();

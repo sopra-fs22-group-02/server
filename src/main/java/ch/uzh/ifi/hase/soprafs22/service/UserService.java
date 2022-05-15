@@ -109,6 +109,15 @@ public class UserService {
   }
 
   public User updateUser(User userUpdated, int id) {
+      // find user by ID
+      User UpdateUser = userRepository.findByUserId(id);
+
+      // throw exception if user doesn't exist
+      if (UpdateUser == null) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                  "The user was not found!");
+      }
+
       // check that if user wants to update username to NULL (meaning he leaves the field empty)
       if(userUpdated.getUsername() == null){
           throw new ResponseStatusException(HttpStatus.FORBIDDEN,
@@ -120,14 +129,6 @@ public class UserService {
                   "Password cannot be NULL! If you do not want to change your password, just enter your current one");
       }
 
-      // find user by ID
-      User UpdateUser = userRepository.findByUserId(id);
-
-      // throw exception if user doesn't exist
-      if (UpdateUser == null) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                  "The user was not found!");
-      }
 
       // check if username already exists in database -> make sure username stays unique
       if((userRepository.findByUsername(userUpdated.getUsername()) != null)) {
