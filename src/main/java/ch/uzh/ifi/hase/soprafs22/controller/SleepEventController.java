@@ -76,6 +76,22 @@ public class SleepEventController {
         return sleepEventGetDTOs;
     }
 
+    // fetch all available sleep events
+    @GetMapping("/places/{placeId}/events/available")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<SleepEventGetDTO> getAllAvailableSleepEvents(@PathVariable int placeId){
+        // fetch all sleep events for this place in the internal representation
+        List<SleepEvent> sleepEvents = sleepEventService.getAllAvailableSleepEventsForPlace(placeId);
+        List<SleepEventGetDTO> sleepEventGetDTOs = new ArrayList<>();
+
+        // convert each sleep event to the API representation
+        for (SleepEvent sleepEvent : sleepEvents) {
+            sleepEventGetDTOs.add(DTOMapperSleepEvent.INSTANCE.convertEntityToSleepEventGetDTO(sleepEvent));
+        }
+        return sleepEventGetDTOs;
+    }
+
     // fetch one specific event
     @GetMapping("/places/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)

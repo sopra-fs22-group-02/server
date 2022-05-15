@@ -114,6 +114,26 @@ public class SleepEventService {
         return place.getSleepEvents();
     }
 
+    public List<SleepEvent> getAllAvailableSleepEventsForPlace(int placeId){
+        Place place = placeRepository.findByPlaceId(placeId);
+
+        if(place == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This place does not exist!");
+        }
+
+        List<SleepEvent> availableEvents = new ArrayList<>();
+        List<SleepEvent> eventsForPlace = place.getSleepEvents();
+
+        for(SleepEvent event : eventsForPlace){
+            if(event.getState() == EventState.AVAILABLE){
+                availableEvents.add(event);
+            }
+        }
+
+        return availableEvents;
+    }
+
     public SleepEvent findSleepEventById(int eventId){
         SleepEvent sleepEvent =sleepEventRepository.findByEventId(eventId);
         if(sleepEvent == null){
