@@ -94,7 +94,17 @@ public class NotificationService {
         List<Notification> notificationsReceiver = receiver.getMyNotifications();
 
         // remove the notification from the receiver's notifications list
-        notificationsReceiver.removeIf(n -> n.getNotificationId() == notification.getNotificationId());
+        // by making a new list only containing non-expired notifications
+        //notificationsReceiver.removeIf(n -> n.getNotificationId() == notification.getNotificationId());
+        List<Notification> notificationsReceiverUpdated = new ArrayList<>();
+        for(Notification n : notificationsReceiver){
+            if(n.getNotificationId() != notification.getNotificationId()){
+                notificationsReceiverUpdated.add(n);
+            }
+        }
+
+        // update the receiver's notification list
+        receiver.setMyNotifications(notificationsReceiverUpdated);
         // remove the notification from the notification repository
         notificationRepository.delete(notification);
     }
