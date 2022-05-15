@@ -43,8 +43,6 @@ public class SleepEventServiceTest {
     private UserService userService;
 
     private SleepEvent testEvent;
-    private SleepEvent pastEvent;
-    private SleepEvent expiredEvent;
     private Place testPlace;
     private User testUser;
     private User anotherTestUser;
