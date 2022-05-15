@@ -856,7 +856,7 @@ public class SleepEventServiceIntegrationTest {
         testEvent.setConfirmedApplicant(0);
         testEvent.setStartDate(LocalDate.now());
         testEvent.setEndDate(LocalDate.now());
-        testEvent.setStartTime(LocalTime.now().minusHours(1));
+        testEvent.setStartTime(LocalTime.now().minusHours(2));
         testEvent.setEndTime(LocalTime.now().minusMinutes(1));
         testEvent.setState(EventState.AVAILABLE);
         testEvent.setComment("some comment");

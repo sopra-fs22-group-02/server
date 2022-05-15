@@ -70,7 +70,6 @@ public class UserControllerTest {
         .andExpect(jsonPath("$", hasSize(1)))
         .andExpect(jsonPath("$[0].email", is(user.getEmail())))
         .andExpect(jsonPath("$[0].username", is(user.getUsername())))
-        .andExpect(jsonPath("$[0].password", is(user.getPassword())))
         .andExpect(jsonPath("$[0].status", is(user.getStatus().toString())));
   }
 
@@ -103,7 +102,6 @@ public class UserControllerTest {
         .andExpect(jsonPath("$.userId", is(user.getUserId())))
         .andExpect(jsonPath("$.email", is(user.getEmail())))
         .andExpect(jsonPath("$.username", is(user.getUsername())))
-        .andExpect(jsonPath("$.password", is(user.getPassword())))
         .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
   }
 
@@ -192,7 +190,6 @@ public class UserControllerTest {
               .andExpect(jsonPath("$.userId", is(user.getUserId())))
               .andExpect(jsonPath("$.email", is(user.getEmail())))
               .andExpect(jsonPath("$.username", is(user.getUsername())))
-              .andExpect(jsonPath("$.password", is(user.getPassword())))
               .andExpect(jsonPath("$.token", is(user.getToken())))
               .andExpect(jsonPath("$.status", is(user.getStatus().toString())))
               .andExpect(jsonPath("$.bio", is(user.getBio())))
@@ -232,7 +229,6 @@ public class UserControllerTest {
               .andExpect(jsonPath("$.firstName", is(user.getFirstName())))
               .andExpect(jsonPath("$.lastName", is(user.getLastName())))
               .andExpect(jsonPath("$.username", is(user.getUsername())))
-              .andExpect(jsonPath("$.password", is(user.getPassword())))
               .andExpect(jsonPath("$.status", is(user.getStatus().toString())))
               .andExpect(jsonPath("$.token", is(user.getToken())));
   }
