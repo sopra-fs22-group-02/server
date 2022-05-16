@@ -92,13 +92,13 @@ public class PlaceService {
                   "The place was not found!");
       }
       // check that if user wants to update address to NULL (meaning he leaves the field empty)
-      if (UpdatePlace.getAddress() == null) {
+      if (placeUpdated.getAddress() == null) {
           throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                   "The address of the place cannot be NULL!");
       }
 
       // check that if user wants to update name to NULL (meaning he leaves the field empty)
-      if (UpdatePlace.getName() == null) {
+      if (placeUpdated.getName() == null) {
           throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                   "The name of the place cannot be NULL!");
       }

@@ -88,6 +88,18 @@ public class PlaceServiceTest {
       assertNull(placeRepository.findByPlaceId(testPlace.getPlaceId()));
   }
 
+  @Test
+  public void updatePlace_validInputs_success() {
+      // given
+      Place createdPlace = placeService.createPlace(testPlace);
+
+      // when -> setup additional mocks for PlaceRepository
+      Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+      createdPlace.setAddress("Oerlikonerstrasse 1");
+      placeService.updatePlace(createdPlace, Mockito.anyInt());
+
+      assertEquals(testPlace.getAddress(), createdPlace.getAddress());
+  }
 
   @Test
   public void updatePlace_IdNotFound_throwsException() {
@@ -95,6 +107,32 @@ public class PlaceServiceTest {
       Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(null);
 
       // then -> attempt to find the place by id -> check that an error
+      // is thrown
+      assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(testPlace, Mockito.anyInt()));
+  }
+
+  @Test
+  public void updatePlace_UpdateAddressToNull_throwsException() {
+      // given
+      placeService.createPlace(testPlace);
+
+      // when -> setup additional mocks for PlaceRepository
+      Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+      testPlace.setAddress(null);
+      // then -> attempt to update the place -> check that an error
+      // is thrown
+      assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(testPlace, Mockito.anyInt()));
+  }
+
+  @Test
+  public void updatePlace_UpdateNameToNull_throwsException() {
+      // given
+      placeService.createPlace(testPlace);
+
+      // when -> setup additional mocks for PlaceRepository
+      Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+      testPlace.setName(null);
+      // then -> attempt to update the place -> check that an error
       // is thrown
       assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(testPlace, Mockito.anyInt()));
   }

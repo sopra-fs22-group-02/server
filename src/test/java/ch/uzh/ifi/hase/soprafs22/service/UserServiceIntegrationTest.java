@@ -5,16 +5,12 @@ import ch.uzh.ifi.hase.soprafs22.entity.User;
 import ch.uzh.ifi.hase.soprafs22.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -259,6 +255,46 @@ public class UserServiceIntegrationTest {
       assertNull(userRepository.findByUserId(1));
 
       assertThrows(ResponseStatusException.class, () -> userService.updateUser(null, 1));
+  }
+
+  // test if 403 (FORBIDDEN) is thrown when trying to update username to NULL
+  @Test
+  public void updateUser_UpdateUsernameToNull_throwsException() {
+      // given
+      User testUser = new User();
+      testUser.setEmail("firstname.lastname@uzh.ch");
+      testUser.setUsername("testUsername");
+      testUser.setPassword("password");
+      testUser.setBio("hello my name is Peter.");
+      testUser.setProfilePicture("some link");
+      User createdUser = userService.createUser(testUser);
+
+      createdUser.setUsername(null);
+      createdUser.setPassword("1234");
+      createdUser.setBio("I am from Switzerland.");
+      createdUser.setProfilePicture("some other link");
+
+      assertThrows(ResponseStatusException.class, () -> userService.updateUser(createdUser, 1));
+  }
+
+  // test if 403 (FORBIDDEN) is thrown when trying to update password to NULL
+  @Test
+  public void updateUser_UpdatePasswordToNull_throwsException() {
+      // given
+      User testUser = new User();
+      testUser.setEmail("firstname.lastname@uzh.ch");
+      testUser.setUsername("testUsername");
+      testUser.setPassword("password");
+      testUser.setBio("hello my name is Peter.");
+      testUser.setProfilePicture("some link");
+      User createdUser = userService.createUser(testUser);
+
+      createdUser.setUsername("someUsername");
+      createdUser.setPassword(null);
+      createdUser.setBio("I am from Switzerland.");
+      createdUser.setProfilePicture("some other link");
+
+      assertThrows(ResponseStatusException.class, () -> userService.updateUser(createdUser, 1));
   }
 
   @Test
