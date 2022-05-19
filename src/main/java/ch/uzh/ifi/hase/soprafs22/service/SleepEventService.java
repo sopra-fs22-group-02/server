@@ -357,11 +357,7 @@ public class SleepEventService {
             List<SleepEvent> allEventsOfPlace = place.getSleepEvents();
 
             // go to next place if there are no events in this place
-<<<<<<< HEAD
-            if(allEventsOfPlace.isEmpty()){continue;}
-=======
             if(allEventsOfPlace == null){continue;}
->>>>>>> origin/SleepEventServiceTest_refactor
 
             // check all events of this place
             for(SleepEvent event : allEventsOfPlace){

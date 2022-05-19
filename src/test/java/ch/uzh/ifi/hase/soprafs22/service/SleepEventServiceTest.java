@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs22.service;
 
-import ch.uzh.ifi.hase.soprafs22.constant.Campus;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
@@ -40,7 +39,6 @@ public class SleepEventServiceTest {
 
     private SleepEvent testEvent;
     private Place testPlace;
-    private SleepEvent expiredEvent;
     private User testUser;
     private List<SleepEvent> events;
 
@@ -99,7 +97,6 @@ public class SleepEventServiceTest {
 
     }
 
-    /** problem with for loop in createSleepEvent() in the following 8 tests */
 
     @Test
     public void createSleepEvent_validInputs_success() {
@@ -127,6 +124,7 @@ public class SleepEventServiceTest {
         assertEquals(newEvent.getComment(), createdEvent.getComment());
     }
 
+
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case1_throwsException() {
         // attempt to create a second event with a (partially) overlapping time frame
@@ -144,6 +142,7 @@ public class SleepEventServiceTest {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
 
+
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case2_throwsException() {
         // attempt to create a second event with a (partially) overlapping time frame
@@ -160,6 +159,7 @@ public class SleepEventServiceTest {
         // check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
+
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case3_throwsException() {
@@ -179,6 +179,7 @@ public class SleepEventServiceTest {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
 
+
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case4_throwsException() {
         // attempt to create a second event with a (partially) overlapping time frame
@@ -195,6 +196,7 @@ public class SleepEventServiceTest {
         // check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
+
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case5_throwsException() {
@@ -213,6 +215,7 @@ public class SleepEventServiceTest {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
 
+
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case6_throwsException() {
         // attempt to create a second event with a (partially) overlapping time frame
@@ -229,6 +232,7 @@ public class SleepEventServiceTest {
         // check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
+
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case7_throwsException() {
@@ -247,8 +251,7 @@ public class SleepEventServiceTest {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
 
-    //problem: SingletonList cannot be returned by findByPlaceId(), findByPlaceId() should return Place
-    // solution: not mock function that is being tested, not compare lists of objects, but the ids of the objects
+
     @Test
     public void getAllSleepEventsForPlace_success() {
         // when
@@ -258,6 +261,7 @@ public class SleepEventServiceTest {
         assertEquals(testPlace.getSleepEvents().get(0).getEventId(), returnedEvents.get(0).getEventId());
         assertEquals(testPlace.getSleepEvents().get(1).getEventId(), returnedEvents.get(1).getEventId());
     }
+
 
     @Test
     public void findSleepEventById_success() {
@@ -292,7 +296,7 @@ public class SleepEventServiceTest {
         assertEquals(testEvent2.getComment(), updatedEvent.getComment());
     }
 
-    // problem with list.add(int)
+
     @Test
     public void addApplicant_success() {
         User testUser2 = new User();
@@ -318,7 +322,7 @@ public class SleepEventServiceTest {
         assertEquals(testEvent.getApplicants().get(1), updatedEvent.getApplicants().get(1));
     }
 
-    // problem with for loop
+
     @Test
     public void confirmSleepEvent_success() {
         // when
@@ -344,7 +348,7 @@ public class SleepEventServiceTest {
         assertEquals(testEvent.getConfirmedApplicant(), updatedEvent.getConfirmedApplicant());
     }
 
-    // problem with for loop in checkIfExpiredOrOver()
+
     @Test
     public void checkIfExpiredOrOver_setToExpired() {
         User testUser2 = new User();
@@ -358,7 +362,7 @@ public class SleepEventServiceTest {
         places.add(testPlace);
         places.add(anotherTestPlace);
 
-        expiredEvent = new SleepEvent();
+        SleepEvent expiredEvent = new SleepEvent();
         expiredEvent.setEventId(5);
         expiredEvent.setProviderId(1);
         expiredEvent.setPlaceId(2);
