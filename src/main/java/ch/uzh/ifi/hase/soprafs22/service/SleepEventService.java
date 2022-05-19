@@ -264,6 +264,7 @@ public class SleepEventService {
         // fetch sleep event
         SleepEvent correspondingEvent = sleepEventRepository.findByEventId(eventId);
 
+        // one can only apply for an available event
         if(correspondingEvent.getApplicationStatus() == ApplicationStatus.APPROVED) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                 "You cannot apply to an event which already has been approved.");
@@ -356,7 +357,7 @@ public class SleepEventService {
         for(Place place : allPlaces){
             List<SleepEvent> allEventsOfPlace = place.getSleepEvents();
 
-            // go to next place if there are no events in this place
+            // go to next place if there are no events in this placeRe
             if(allEventsOfPlace == null){continue;}
 
             // check all events of this place

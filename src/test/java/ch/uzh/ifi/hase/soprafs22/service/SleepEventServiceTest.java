@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs22.service;
 
+import ch.uzh.ifi.hase.soprafs22.constant.ApplicationStatus;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
 import ch.uzh.ifi.hase.soprafs22.entity.Place;
 import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
@@ -92,7 +93,6 @@ public class SleepEventServiceTest {
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(testUser);
         Mockito.when(placeRepository.save(Mockito.any())).thenReturn(testPlace);
         Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser);
-        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
         Mockito.when(sleepEventRepository.findByEventId(Mockito.anyInt())).thenReturn(testEvent);
 
     }
@@ -110,6 +110,7 @@ public class SleepEventServiceTest {
         newEvent.setComment("some other comment");
 
         Mockito.when(sleepEventRepository.save(Mockito.any())).thenReturn(newEvent);
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
         // when
         SleepEvent createdEvent = sleepEventService.createSleepEvent(testUser.getUserId(), testPlace.getPlaceId(), newEvent);
 
@@ -127,6 +128,8 @@ public class SleepEventServiceTest {
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case1_throwsException() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // attempt to create a second event with a (partially) overlapping time frame
         SleepEvent overlappingEvent = new SleepEvent();
         overlappingEvent.setEventId(13);
@@ -145,6 +148,8 @@ public class SleepEventServiceTest {
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case2_throwsException() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // attempt to create a second event with a (partially) overlapping time frame
         SleepEvent overlappingEvent = new SleepEvent();
         overlappingEvent.setEventId(13);
@@ -163,6 +168,8 @@ public class SleepEventServiceTest {
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case3_throwsException() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // attempt to create a second event with a (partially) overlapping time frame
         SleepEvent overlappingEvent = new SleepEvent();
         overlappingEvent.setEventId(13);
@@ -182,6 +189,8 @@ public class SleepEventServiceTest {
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case4_throwsException() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // attempt to create a second event with a (partially) overlapping time frame
         SleepEvent overlappingEvent = new SleepEvent();
         overlappingEvent.setEventId(13);
@@ -200,6 +209,8 @@ public class SleepEventServiceTest {
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case5_throwsException() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // attempt to create a second event with a (partially) overlapping time frame
         SleepEvent overlappingEvent = new SleepEvent();
         overlappingEvent.setEventId(13);
@@ -218,6 +229,8 @@ public class SleepEventServiceTest {
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case6_throwsException() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // attempt to create a second event with a (partially) overlapping time frame
         SleepEvent overlappingEvent = new SleepEvent();
         overlappingEvent.setEventId(13);
@@ -236,6 +249,8 @@ public class SleepEventServiceTest {
 
     @Test
     public void createSleepEvent_overlapWithOtherEvent_case7_throwsException() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // attempt to create a second event with a (partially) overlapping time frame
         SleepEvent overlappingEvent = new SleepEvent();
         overlappingEvent.setEventId(13);
@@ -251,15 +266,58 @@ public class SleepEventServiceTest {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(overlappingEvent.getProviderId(), overlappingEvent.getPlaceId(), overlappingEvent));
     }
 
+    @Test
+    public void createSleepEvent_tooShort() {
+        // given
+        SleepEvent newEvent = new SleepEvent();
+        newEvent.setEventId(12);
+        newEvent.setStartDate(LocalDate.of(2022, 11, 1));
+        newEvent.setEndDate(LocalDate.of(2022, 11, 1));
+        newEvent.setStartTime(LocalTime.of(22, 0));
+        newEvent.setEndTime(LocalTime.of(22, 30));
+        newEvent.setComment("some comment");
+
+        Mockito.when(sleepEventRepository.save(Mockito.any())).thenReturn(newEvent);
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
+        // when
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(testUser.getUserId(), testPlace.getPlaceId(), newEvent));
+    }
+
+    @Test
+    public void createSleepEvent_tooLong() {
+        // given
+        SleepEvent newEvent = new SleepEvent();
+        newEvent.setEventId(12);
+        newEvent.setStartDate(LocalDate.of(2022, 11, 1));
+        newEvent.setEndDate(LocalDate.of(2022, 11, 2));
+        newEvent.setStartTime(LocalTime.of(22, 0));
+        newEvent.setEndTime(LocalTime.of(11, 0));
+        newEvent.setComment("some comment");
+
+        Mockito.when(sleepEventRepository.save(Mockito.any())).thenReturn(newEvent);
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
+        // when
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.createSleepEvent(testUser.getUserId(), testPlace.getPlaceId(), newEvent));
+    }
+
 
     @Test
     public void getAllSleepEventsForPlace_success() {
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
         // when
         List<SleepEvent> returnedEvents = sleepEventService.getAllSleepEventsForPlace(testPlace.getPlaceId());
 
         // then
         assertEquals(testPlace.getSleepEvents().get(0).getEventId(), returnedEvents.get(0).getEventId());
         assertEquals(testPlace.getSleepEvents().get(1).getEventId(), returnedEvents.get(1).getEventId());
+    }
+
+    @Test
+    public void getAllSleepEventsForPlace_placeDoesNotExist() {
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.getAllSleepEventsForPlace(20));
     }
 
 
@@ -296,6 +354,84 @@ public class SleepEventServiceTest {
         assertEquals(testEvent2.getComment(), updatedEvent.getComment());
     }
 
+    @Test
+    public void updateSleep_alreadyApproved() {
+        // given
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        SleepEvent eventToBeUpdated = new SleepEvent();
+        eventToBeUpdated.setEventId(20);
+        eventToBeUpdated.setProviderId(1);
+        eventToBeUpdated.setPlaceId(2);
+        eventToBeUpdated.setApplicants(Collections.emptyList());
+        eventToBeUpdated.setConfirmedApplicant(5);
+        eventToBeUpdated.setStartDate(LocalDate.of(2022, 8, 1));
+        eventToBeUpdated.setEndDate(LocalDate.of(2022, 8, 2));
+        eventToBeUpdated.setStartTime(LocalTime.of(22, 0));
+        eventToBeUpdated.setEndTime(LocalTime.of(8, 0));
+        eventToBeUpdated.setState(EventState.UNAVAILABLE);
+        eventToBeUpdated.setComment("some comment");
+        eventToBeUpdated.setApplicationStatus(ApplicationStatus.APPROVED);
+
+        SleepEvent testEvent2 = new SleepEvent();
+        testEvent2.setStartDate(LocalDate.of(2024, 1, 1));
+        testEvent2.setEndDate(LocalDate.of(2024, 1, 2));
+        testEvent2.setStartTime(LocalTime.of(22, 0));
+        testEvent2.setEndTime(LocalTime.of(8, 0));
+        testEvent2.setComment("some new comment");
+
+        Mockito.when(sleepEventRepository.findByEventId(Mockito.anyInt())).thenReturn(eventToBeUpdated);
+
+        // then
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.updateSleepEvent(eventToBeUpdated.getProviderId(), eventToBeUpdated.getPlaceId(), testEvent2));
+    }
+
+    @Test
+    public void updateSleep_notProvider() {
+        // given
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        SleepEvent testEvent2 = new SleepEvent();
+        testEvent2.setStartDate(LocalDate.of(2024, 1, 1));
+        testEvent2.setEndDate(LocalDate.of(2024, 1, 2));
+        testEvent2.setStartTime(LocalTime.of(22, 0));
+        testEvent2.setEndTime(LocalTime.of(8, 0));
+        testEvent2.setComment("some new comment");
+
+        // then
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.updateSleepEvent(testUser2.getUserId(), testEvent.getPlaceId(), testEvent2));
+    }
+
+    @Test
+    public void updateSleep_tooShort() {
+        // given
+        SleepEvent testEvent2 = new SleepEvent();
+        testEvent2.setStartDate(LocalDate.of(2024, 1, 1));
+        testEvent2.setEndDate(LocalDate.of(2024, 1, 1));
+        testEvent2.setStartTime(LocalTime.of(22, 0));
+        testEvent2.setEndTime(LocalTime.of(22, 30));
+        testEvent2.setComment("some new comment");
+
+        // then
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.updateSleepEvent(testEvent.getProviderId(), testEvent.getPlaceId(), testEvent2));
+    }
+    @Test
+    public void updateSleep_tooLong() {
+        // given
+        SleepEvent testEvent2 = new SleepEvent();
+        testEvent2.setStartDate(LocalDate.of(2024, 1, 1));
+        testEvent2.setEndDate(LocalDate.of(2024, 1, 2));
+        testEvent2.setStartTime(LocalTime.of(22, 0));
+        testEvent2.setEndTime(LocalTime.of(11, 0));
+        testEvent2.setComment("some new comment");
+
+        // then
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.updateSleepEvent(testEvent.getProviderId(), testEvent.getPlaceId(), testEvent2));
+    }
+
+
 
     @Test
     public void addApplicant_success() {
@@ -313,13 +449,50 @@ public class SleepEventServiceTest {
         testUser3.setMyCalendarAsApplicant(events);
 
         testEvent.setApplicants(listApplicants);
-        //Mockito.when(testEvent.addApplicant(Mockito.anyInt())).thenReturn(testEvent.getApplicants());
+
         // when
         SleepEvent updatedEvent = sleepEventService.addApplicant(testUser3.getUserId(), testEvent.getEventId());
 
         // then
         assertEquals(testEvent.getApplicants().get(0), updatedEvent.getApplicants().get(0));
         assertEquals(testEvent.getApplicants().get(1), updatedEvent.getApplicants().get(1));
+    }
+
+    @Test
+    public void addApplicant_eventApproved() {
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        User testUser3 = new User();
+        testUser3.setUserId(6);
+
+        Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser3);
+
+        List<Integer> listApplicants = new ArrayList<>();
+        listApplicants.add(testUser2.getUserId());
+
+        testUser3.setMyCalendarAsApplicant(events);
+
+        testEvent.setApplicants(listApplicants);
+
+        SleepEvent approvedEvent = new SleepEvent();
+        approvedEvent.setEventId(20);
+        approvedEvent.setProviderId(1);
+        approvedEvent.setPlaceId(2);
+        approvedEvent.setApplicants(Collections.emptyList());
+        approvedEvent.setConfirmedApplicant(5);
+        approvedEvent.setStartDate(LocalDate.of(2022, 8, 1));
+        approvedEvent.setEndDate(LocalDate.of(2022, 8, 2));
+        approvedEvent.setStartTime(LocalTime.of(22, 0));
+        approvedEvent.setEndTime(LocalTime.of(8, 0));
+        approvedEvent.setState(EventState.UNAVAILABLE);
+        approvedEvent.setComment("some comment");
+        approvedEvent.setApplicationStatus(ApplicationStatus.APPROVED);
+
+        Mockito.when(sleepEventRepository.findByEventId(Mockito.anyInt())).thenReturn(approvedEvent);
+
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.addApplicant(testUser3.getUserId(), approvedEvent.getEventId()));
+
     }
 
 
@@ -346,6 +519,30 @@ public class SleepEventServiceTest {
 
         // then
         assertEquals(testEvent.getConfirmedApplicant(), updatedEvent.getConfirmedApplicant());
+    }
+
+
+    @Test
+    public void confirmSleepEvent_applicantHasNotApplied() {
+        // when
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        User testUser3 = new User();
+        testUser3.setUserId(6);
+
+        Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser3);
+
+        List<Integer> listApplicants = new ArrayList<>();
+        // only user2 is added to the list of applicants
+        listApplicants.add(testUser2.getUserId());
+
+        testUser3.setMyCalendarAsApplicant(events);
+
+        testEvent.setApplicants(listApplicants);
+
+        // then
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.confirmSleepEvent(testUser3.getUserId(), testEvent.getEventId()));
     }
 
 
