@@ -39,13 +39,9 @@ public class SleepEventServiceTest {
     private SleepEventService sleepEventService;
 
     private SleepEvent testEvent;
-<<<<<<< HEAD
     private Place testPlace;
-=======
     private SleepEvent expiredEvent;
->>>>>>> origin/SleepEventServiceTest_refactor
     private User testUser;
-    private Place testPlace;
     private List<SleepEvent> events;
 
     @BeforeEach
