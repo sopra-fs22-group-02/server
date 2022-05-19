@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.lang.Long;
@@ -71,9 +72,9 @@ public class SleepEventControllerTest {
       event.setPlaceId(3);
       event.setApplicants(null);
       event.setConfirmedApplicant(0);
-      event.setStartDate(LocalDate.ofEpochDay(2023-01-01));
+      event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
       event.setStartTime(LocalTime.parse("08:00:00"));
-      event.setEndDate(LocalDate.ofEpochDay(2023-01-01));
+      event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
       event.setEndTime(LocalTime.parse("20:00:00"));
       event.setState(EventState.AVAILABLE);
       event.setComment("some comment");
@@ -196,9 +197,9 @@ public class SleepEventControllerTest {
         event.setPlaceId(3);
         event.setApplicants(null);
         event.setConfirmedApplicant(2);
-        event.setStartDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
         event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
-        event.setEndDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
         event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
         event.setState(EventState.UNAVAILABLE);
         event.setApplicationStatus(ApplicationStatus.APPROVED);
@@ -247,9 +248,9 @@ public class SleepEventControllerTest {
         event.setPlaceId(3);
         event.setApplicants(Collections.singletonList(2));
         event.setConfirmedApplicant(2);
-        event.setStartDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
         event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
-        event.setEndDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
         event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
         event.setState(EventState.AVAILABLE);
         event.setApplicationStatus(ApplicationStatus.PENDING);
@@ -286,9 +287,9 @@ public class SleepEventControllerTest {
         event.setPlaceId(2);
         event.setApplicants(null);
         event.setConfirmedApplicant(0);
-        event.setStartDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
         event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
-        event.setEndDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
         event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
         event.setState(EventState.AVAILABLE);
         event.setComment("some comment");
@@ -318,6 +319,47 @@ public class SleepEventControllerTest {
     }
 
     @Test
+    public void getAllAvailableEventsOfOnePlace_validInput() throws Exception {
+        // given
+        SleepEvent event = new SleepEvent();
+        event.setEventId(3);
+        event.setProviderId(1);
+        event.setPlaceId(2);
+        event.setApplicants(null);
+        event.setConfirmedApplicant(0);
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
+        event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
+        event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
+        event.setState(EventState.AVAILABLE);
+        event.setComment("some comment");
+
+        List<SleepEvent> allSleepEventOfThisPlace = new ArrayList<>();
+        allSleepEventOfThisPlace.add(event);
+
+        given(sleepEventService.getAllAvailableSleepEventsForPlace(Mockito.anyInt())).willReturn(allSleepEventOfThisPlace);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/places/2/events/available")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].eventId", is(event.getEventId())))
+                .andExpect(jsonPath("$[0].providerId", is(event.getProviderId())))
+                .andExpect(jsonPath("$[0].placeId", is(event.getPlaceId())))
+                .andExpect(jsonPath("$[0].applicants", is(event.getApplicants())))
+                .andExpect(jsonPath("$[0].confirmedApplicant", is(event.getConfirmedApplicant())))
+                .andExpect(jsonPath("$[0].startDate", is(event.getStartDate().toString())))
+                .andExpect(jsonPath("$[0].startTime", is(event.getStartTime().format(dtf))))
+                .andExpect(jsonPath("$[0].endDate", is(event.getEndDate().toString())))
+                .andExpect(jsonPath("$[0].endTime", is(event.getEndTime().format(dtf))))
+                .andExpect(jsonPath("$[0].state", is(event.getState().toString())))
+                .andExpect(jsonPath("$[0].comment", is(event.getComment())));
+    }
+
+    @Test
     public void getSingleEvent_validInput() throws Exception {
         // given
         SleepEvent event = new SleepEvent();
@@ -325,9 +367,9 @@ public class SleepEventControllerTest {
         event.setPlaceId(3);
         event.setApplicants(null);
         event.setConfirmedApplicant(0);
-        event.setStartDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
         event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
-        event.setEndDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
         event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
         event.setState(EventState.AVAILABLE);
         event.setComment("some comment");
@@ -363,17 +405,17 @@ public class SleepEventControllerTest {
         event.setPlaceId(2);
         event.setApplicants(null);
         event.setConfirmedApplicant(0);
-        event.setStartDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
         event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
-        event.setEndDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
         event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
         event.setState(EventState.AVAILABLE);
         event.setComment("some comment");
 
         SleepEvent eventUpdates = new SleepEvent();
-        event.setStartDate(LocalDate.ofEpochDay(2023-01-02));
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-2));
         event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
-        event.setEndDate(LocalDate.ofEpochDay(2023-01-02));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-2));
         event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
         event.setState(EventState.AVAILABLE);
         event.setComment("some comment");
@@ -410,9 +452,9 @@ public class SleepEventControllerTest {
         event.setPlaceId(2);
         event.setApplicants(null);
         event.setConfirmedApplicant(0);
-        event.setStartDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
         event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
-        event.setEndDate(LocalDate.ofEpochDay(2023-01-01));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
         event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
         event.setState(EventState.AVAILABLE);
         event.setComment("some comment");

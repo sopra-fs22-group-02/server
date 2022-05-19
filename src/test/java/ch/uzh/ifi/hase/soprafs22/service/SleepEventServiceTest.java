@@ -39,6 +39,7 @@ public class SleepEventServiceTest {
     private SleepEventService sleepEventService;
 
     private SleepEvent testEvent;
+    private SleepEvent anotherTestEvent;
     private Place testPlace;
     private User testUser;
     private List<SleepEvent> events;
@@ -69,7 +70,7 @@ public class SleepEventServiceTest {
         testEvent.setComment("some comment");
         testEvent.setApplicationStatus(null);
 
-        SleepEvent anotherTestEvent = new SleepEvent();
+        anotherTestEvent = new SleepEvent();
         anotherTestEvent.setEventId(11);
         anotherTestEvent.setProviderId(1);
         anotherTestEvent.setPlaceId(2);
@@ -318,6 +319,44 @@ public class SleepEventServiceTest {
     @Test
     public void getAllSleepEventsForPlace_placeDoesNotExist() {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.getAllSleepEventsForPlace(20));
+    }
+
+    @Test
+    public void getAllAvailableSleepEventsForPlace_success() {
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        SleepEvent unavailableEvent = new SleepEvent();
+        unavailableEvent.setEventId(12);
+        unavailableEvent.setProviderId(1);
+        unavailableEvent.setPlaceId(2);
+        unavailableEvent.setApplicants(null);
+        unavailableEvent.setConfirmedApplicant(5);
+        unavailableEvent.setStartDate(LocalDate.of(2023, 1, 13));
+        unavailableEvent.setEndDate(LocalDate.of(2023, 1, 14));
+        unavailableEvent.setStartTime(LocalTime.of(22, 0));
+        unavailableEvent.setEndTime(LocalTime.of(8, 0));
+        unavailableEvent.setState(EventState.UNAVAILABLE);
+        unavailableEvent.setComment("some other comment");
+        unavailableEvent.setApplicationStatus(ApplicationStatus.APPROVED);
+
+        events.add(unavailableEvent);
+        testPlace.setSleepEvents(events);
+
+        Mockito.when(placeRepository.findByPlaceId(Mockito.anyInt())).thenReturn(testPlace);
+
+        // when
+        List<SleepEvent> returnedEvents = sleepEventService.getAllAvailableSleepEventsForPlace(testPlace.getPlaceId());
+
+        // then
+        assertEquals(2, returnedEvents.size());
+        assertEquals(testEvent.getEventId(), returnedEvents.get(0).getEventId());
+        assertEquals(anotherTestEvent.getEventId(), returnedEvents.get(1).getEventId());
+    }
+
+    @Test
+    public void getAllAvailableSleepEventsForPlace_placeDoesNotExist() {
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.getAllAvailableSleepEventsForPlace(20));
     }
 
 

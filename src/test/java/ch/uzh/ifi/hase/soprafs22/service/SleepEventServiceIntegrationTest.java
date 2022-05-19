@@ -661,6 +661,81 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
+    public void getAllAvailableSleepEventsForPlace_success() {
+        // given
+        assertNull(userRepository.findByUserId(1));
+        assertNull(placeRepository.findByPlaceId(2));
+        assertNull(sleepEventRepository.findByEventId(3));
+
+        User testUser = new User();
+        testUser.setUsername("username");
+        testUser.setEmail("username@uzh.ch");
+        testUser.setPassword("password");
+
+        User testUser2 = new User();
+        testUser2.setUsername("username2");
+        testUser2.setEmail("username2@uzh.ch");
+        testUser2.setPassword("password");
+
+        Place testPlace = new Place();
+        testPlace.setProviderId(1);
+        testPlace.setName("testName");
+        testPlace.setAddress("Universitätsstrasse 1");
+        testPlace.setClosestCampus(Campus.CENTER);
+        testPlace.setDescription("this is my room.");
+        testPlace.setPictureOfThePlace("some link");
+
+        SleepEvent testEvent = new SleepEvent();
+        testEvent.setStartDate(LocalDate.of(2023, 1, 1));
+        testEvent.setEndDate(LocalDate.of(2023, 1, 2));
+        testEvent.setStartTime(LocalTime.of(22, 0));
+        testEvent.setEndTime(LocalTime.of(8, 0));
+        testEvent.setComment("some comment");
+
+        SleepEvent testEvent2 = new SleepEvent();
+        testEvent2.setStartDate(LocalDate.of(2024, 1, 1));
+        testEvent2.setEndDate(LocalDate.of(2024, 1, 2));
+        testEvent2.setStartTime(LocalTime.of(22, 0));
+        testEvent2.setEndTime(LocalTime.of(8, 0));
+        testEvent2.setComment("some comment");
+
+        SleepEvent testEvent3 = new SleepEvent();
+        testEvent3.setStartDate(LocalDate.of(2024, 2, 1));
+        testEvent3.setEndDate(LocalDate.of(2024, 2, 2));
+        testEvent3.setStartTime(LocalTime.of(22, 0));
+        testEvent3.setEndTime(LocalTime.of(8, 0));
+        testEvent3.setComment("some comment");
+
+        User createdUser = userService.createUser(testUser);
+        User createdUser2 = userService.createUser(testUser2);
+        Place createdPlace = placeService.createPlace(testPlace);
+        SleepEvent availableEvent = sleepEventService.createSleepEvent(createdUser.getUserId(), createdPlace.getPlaceId(), testEvent);
+        SleepEvent otherAvailableEvent = sleepEventService.createSleepEvent(createdUser.getUserId(), createdPlace.getPlaceId(), testEvent2);
+        SleepEvent unavailableEvent = sleepEventService.createSleepEvent(createdUser.getUserId(), createdPlace.getPlaceId(), testEvent3);
+        sleepEventService.addApplicant(createdUser2.getUserId(), unavailableEvent.getEventId());
+        sleepEventService.confirmSleepEvent(createdUser2.getUserId(), unavailableEvent.getEventId());
+
+        // when
+        List<SleepEvent> foundEvents = sleepEventService.getAllAvailableSleepEventsForPlace(createdPlace.getPlaceId());
+
+        // then
+        assertEquals(2, foundEvents.size());
+        assertEquals(availableEvent.getEventId(), foundEvents.get(0).getEventId());
+        assertEquals(otherAvailableEvent.getEventId(), foundEvents.get(1).getEventId());
+    }
+
+    @Test
+    public void getAllAvailableSleepEventsForPlace_placeDoesNotExist() {
+        // given
+        assertNull(userRepository.findByUserId(1));
+        assertNull(placeRepository.findByPlaceId(2));
+        assertNull(sleepEventRepository.findByEventId(3));
+
+        // check that an error is thrown
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.getAllAvailableSleepEventsForPlace(1));
+    }
+
+    @Test
     public void findSleepEventById_success() {
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
