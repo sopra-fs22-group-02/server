@@ -261,11 +261,8 @@ public class SleepEventService {
 
     public SleepEvent addApplicant(int userId, int eventId) {
         // fetch sleep event
-
-
         SleepEvent correspondingEvent = sleepEventRepository.findByEventId(eventId);
 
-        // TODO: Constrain => Should only be possible if in the available state
         if(correspondingEvent.getApplicationStatus() == ApplicationStatus.APPROVED) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                 "You cannot apply to an event which already has been approved.");
@@ -359,7 +356,7 @@ public class SleepEventService {
             List<SleepEvent> allEventsOfPlace = place.getSleepEvents();
 
             // go to next place if there are no events in this place
-            if(allEventsOfPlace.isEmpty()){continue;}
+            if(allEventsOfPlace == null){continue;}
 
             // check all events of this place
             for(SleepEvent event : allEventsOfPlace){

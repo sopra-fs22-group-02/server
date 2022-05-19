@@ -38,14 +38,7 @@ public class SleepEventServiceTest {
     @InjectMocks
     private SleepEventService sleepEventService;
 
-    @InjectMocks
-    private PlaceService placeService;
-
-    @InjectMocks
-    private UserService userService;
-
     private SleepEvent testEvent;
-    private SleepEvent pastEvent;
     private SleepEvent expiredEvent;
     private User testUser;
     private Place testPlace;
@@ -62,7 +55,6 @@ public class SleepEventServiceTest {
         testPlace = new Place();
         testPlace.setPlaceId(2);
         testPlace.setProviderId(1);
-        testPlace.setSleepEvents(Collections.singletonList(testEvent));
 
         testEvent = new SleepEvent();
         testEvent.setEventId(10);
@@ -300,24 +292,16 @@ public class SleepEventServiceTest {
         assertEquals(testEvent2.getComment(), updatedEvent.getComment());
     }
 
-    // problem with mock of findByEventId()
-    /*@Test
-    public void deleteSleep_success() {
-        // when
-        sleepEventService.deleteSleepEvent(testEvent.getEventId(), testEvent.getProviderId());
-
-        // then
-        assertNull(sleepEventRepository.findByEventId(testEvent.getEventId()));
-    }*/
-
     // problem with list.add(int)
-    /*@Test
+    @Test
     public void addApplicant_success() {
         User testUser2 = new User();
         testUser2.setUserId(5);
 
         User testUser3 = new User();
         testUser3.setUserId(6);
+
+        Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser3);
 
         List<Integer> listApplicants = new ArrayList<>();
         listApplicants.add(testUser2.getUserId());
@@ -332,46 +316,48 @@ public class SleepEventServiceTest {
         // then
         assertEquals(testEvent.getApplicants().get(0), updatedEvent.getApplicants().get(0));
         assertEquals(testEvent.getApplicants().get(1), updatedEvent.getApplicants().get(1));
-    }*/
+    }
 
     // problem with for loop
-    /*@Test
+    @Test
     public void confirmSleepEvent_success() {
         // when
-        SleepEvent updatedEvent = sleepEventService.confirmSleepEvent(anotherTestUser.getUserId(), testEvent.getEventId());
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        User testUser3 = new User();
+        testUser3.setUserId(6);
+
+        Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser3);
+
+        List<Integer> listApplicants = new ArrayList<>();
+        listApplicants.add(testUser2.getUserId());
+        listApplicants.add(testUser3.getUserId());
+
+        testUser3.setMyCalendarAsApplicant(events);
+
+        testEvent.setApplicants(listApplicants);
+
+        SleepEvent updatedEvent = sleepEventService.confirmSleepEvent(testUser3.getUserId(), testEvent.getEventId());
 
         // then
         assertEquals(testEvent.getConfirmedApplicant(), updatedEvent.getConfirmedApplicant());
-    }*/
+    }
 
     // problem with for loop in checkIfExpiredOrOver()
-    /*@Test
-    public void checkIfExpiredOrOver_deleteEvent() {
-        pastEvent = new SleepEvent();
-        pastEvent.setEventId(5);
-        pastEvent.setProviderId(1);
-        pastEvent.setPlaceId(2);
-        pastEvent.setApplicants(null);
-        pastEvent.setConfirmedApplicant(0);
-        pastEvent.setStartDate(LocalDate.now());
-        pastEvent.setEndDate(LocalDate.now());
-        pastEvent.setStartTime(LocalTime.now().minusHours(1));
-        pastEvent.setEndTime(LocalTime.now().minusMinutes(1));
-        pastEvent.setState(EventState.AVAILABLE);
-        pastEvent.setComment("some comment");
-        pastEvent.setApplicationStatus(null);
-
-        Mockito.when(placeRepository.findAll()).thenReturn(Collections.singletonList(testPlace));
-        // when
-        sleepEventService.checkIfExpiredOrOver();
-
-        // then
-        assertNull(sleepEventRepository.findByEventId(pastEvent.getEventId()));
-    }*/
-
-    // problem with for loop in checkIfExpiredOrOver()
-    /*@Test
+    @Test
     public void checkIfExpiredOrOver_setToExpired() {
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        Place anotherTestPlace = new Place();
+        anotherTestPlace.setPlaceId(3);
+        anotherTestPlace.setProviderId(1);
+
+        List<Place> places = new ArrayList<>();
+        places.add(testPlace);
+        places.add(anotherTestPlace);
+
         expiredEvent = new SleepEvent();
         expiredEvent.setEventId(5);
         expiredEvent.setProviderId(1);
@@ -386,11 +372,16 @@ public class SleepEventServiceTest {
         expiredEvent.setComment("some comment");
         expiredEvent.setApplicationStatus(null);
 
-        Mockito.when(placeRepository.findAll()).thenReturn(Collections.singletonList(testPlace));
+        // update events
+        events.add(expiredEvent);
+        // update the sleep events list of testPlace
+        testPlace.setSleepEvents(events);
+
+        Mockito.when(placeRepository.findAll()).thenReturn(places);
         // when
         sleepEventService.checkIfExpiredOrOver();
 
         // then
         assertEquals(EventState.EXPIRED, expiredEvent.getState());
-    }*/
+    }
 }

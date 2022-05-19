@@ -120,7 +120,6 @@ public class UserControllerTest {
       UserGetDTO userGetDTO = new UserGetDTO();
       userGetDTO.setEmail("xyz@uzh.ch");
       userGetDTO.setUsername("username");
-      userGetDTO.setPassword("1234");
 
       given(userService.login(user.getUsername(), createdUser)).willReturn(user);
 
@@ -177,7 +176,6 @@ public class UserControllerTest {
       userGetDTO.setFirstName("Peter");
       userGetDTO.setLastName("Muster");
       userGetDTO.setUsername("testUsername");
-      userGetDTO.setPassword("1234");
       userGetDTO.setBio("hello");
       userGetDTO.setProfilePicture("some link");
 
