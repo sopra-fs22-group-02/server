@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class NotificationServiceTest {
     Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser);
   }
 
-  /** problem with user.addNotifications()*/
+
   @Test
   public void createNotification_validInputs_success() {
     // when
@@ -82,9 +81,7 @@ public class NotificationServiceTest {
     assertEquals(testNotification.getCreationDate(), createdNotification.getCreationDate());
   }
 
-  /**SingletonList cannot be returned by findByUserId()
-   findByUserId() should return User*/
-  // solution: not mock function that is being tested, not compare lists of objects, but the ids of the objects
+
   @Test
   public void getAllNotificationsForUser_success() {
       // when
@@ -94,37 +91,4 @@ public class NotificationServiceTest {
       assertEquals(testUser.getMyNotifications().get(0).getNotificationId(), allNotificationsForUser.get(0).getNotificationId());
       assertEquals(testUser.getMyNotifications().get(1).getNotificationId(), allNotificationsForUser.get(1).getNotificationId());
   }
-
-//solution: properly prepare all the objects needed,
-    @Test
-    public void checkIfOlderThan24h_deleteNotification() {
-        // given
-        Notification oldNotification = new Notification();
-        oldNotification.setNotificationId(6);
-        oldNotification.setMessage("some message");
-        oldNotification.setReceiverId(1);
-        oldNotification.setCreationDate(LocalDateTime.now().minusHours(25));
-
-        Notification otherOldNotification = new Notification();
-        otherOldNotification.setNotificationId(7);
-        otherOldNotification.setMessage("some other message");
-        otherOldNotification.setReceiverId(1);
-        otherOldNotification.setCreationDate(LocalDateTime.now().minusHours(30));
-
-        List<Notification> myOldNotifications = new ArrayList<>();
-        myOldNotifications.add(oldNotification);
-        myOldNotifications.add(otherOldNotification);
-
-        // update
-        // the test user's notifications in order to only contain old notifications
-        testUser.setMyNotifications(myOldNotifications);
-
-        Mockito.when(notificationRepository.findAll()).thenReturn(myOldNotifications);
-        // when
-        notificationService.checkIfOlderThan24h();
-
-        // then
-        assertNull(notificationRepository.findByNotificationId(oldNotification.getNotificationId()));
-        assertEquals(Collections.emptyList(), testUser.getMyNotifications());
-    }
 }
