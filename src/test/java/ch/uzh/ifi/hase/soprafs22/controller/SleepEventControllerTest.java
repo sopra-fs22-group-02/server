@@ -360,6 +360,73 @@ public class SleepEventControllerTest {
     }
 
     @Test
+    public void getAllAvailableEvents_validInput() throws Exception {
+        // given
+        SleepEvent event = new SleepEvent();
+        event.setEventId(3);
+        event.setProviderId(1);
+        event.setPlaceId(2);
+        event.setApplicants(null);
+        event.setConfirmedApplicant(0);
+        event.setStartDate(LocalDate.ofEpochDay(2023-1-1));
+        event.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
+        event.setEndDate(LocalDate.ofEpochDay(2023-1-1));
+        event.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
+        event.setState(EventState.AVAILABLE);
+        event.setComment("some comment");
+
+        User user = new User();
+        user.setUserId(5);
+        user.setEmail("firstname.lastname@uzh.ch");
+        user.setUsername("username");
+        user.setFirstName("firstname");
+        user.setLastName("lastname");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ONLINE);
+        user.setToken("1");
+        user.setBio("Hi there, I'm a student at UZH!");
+        user.setProfilePicture("some link");
+
+        SleepEvent event2 = new SleepEvent();
+        event2.setEventId(4);
+        event2.setProviderId(1);
+        event2.setPlaceId(2);
+        event2.setApplicants(null);
+        event2.setConfirmedApplicant(5);
+        event2.setStartDate(LocalDate.ofEpochDay(2023-1-1));
+        event2.setStartTime(LocalTime.parse((LocalTime.now().format(dtf))));
+        event2.setEndDate(LocalDate.ofEpochDay(2023-1-1));
+        event2.setEndTime(LocalTime.parse((LocalTime.now().format(dtf))));
+        event2.setState(EventState.UNAVAILABLE);
+        event2.setComment("some comment");
+
+        List<SleepEvent> allAvailableSleepEvents = new ArrayList<>();
+        allAvailableSleepEvents.add(event);
+
+        given(sleepEventService.getAllAvailableSleepEvents()).willReturn(allAvailableSleepEvents);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/places/events/available")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].eventId", is(event.getEventId())))
+                .andExpect(jsonPath("$[0].providerId", is(event.getProviderId())))
+                .andExpect(jsonPath("$[0].placeId", is(event.getPlaceId())))
+                .andExpect(jsonPath("$[0].applicants", is(event.getApplicants())))
+                .andExpect(jsonPath("$[0].confirmedApplicant", is(event.getConfirmedApplicant())))
+                .andExpect(jsonPath("$[0].startDate", is(event.getStartDate().toString())))
+                .andExpect(jsonPath("$[0].startTime", is(event.getStartTime().format(dtf))))
+                .andExpect(jsonPath("$[0].endDate", is(event.getEndDate().toString())))
+                .andExpect(jsonPath("$[0].endTime", is(event.getEndTime().format(dtf))))
+                .andExpect(jsonPath("$[0].state", is(event.getState().toString())))
+                .andExpect(jsonPath("$[0].comment", is(event.getComment())));
+    }
+
+    @Test
     public void getSingleEvent_validInput() throws Exception {
         // given
         SleepEvent event = new SleepEvent();

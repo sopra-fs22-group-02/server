@@ -135,6 +135,19 @@ public class SleepEventService {
         return availableEvents;
     }
 
+    public List<SleepEvent> getAllAvailableSleepEvents(){
+        List<SleepEvent> allEvents = sleepEventRepository.findAll();
+        List<SleepEvent> availableEvents = new ArrayList<>();
+
+        for(SleepEvent event : allEvents){
+            if(event.getState() == EventState.AVAILABLE){
+                availableEvents.add(event);
+            }
+        }
+
+        return availableEvents;
+    }
+
     public SleepEvent findSleepEventById(int eventId){
         SleepEvent sleepEvent =sleepEventRepository.findByEventId(eventId);
         if(sleepEvent == null){
