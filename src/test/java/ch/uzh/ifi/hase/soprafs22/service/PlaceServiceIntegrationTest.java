@@ -113,7 +113,7 @@ public class PlaceServiceIntegrationTest {
       assertTrue(placeService.getPlaces().isEmpty());
   }
 
-    @Test
+  @Test
   public void updatePlace_IdNotFound_throwsException() {
       assertNull(placeRepository.findByPlaceId(1));
 
@@ -150,5 +150,47 @@ public class PlaceServiceIntegrationTest {
       assertEquals(createdPlace, testPlace);
   }
 
+  @Test
+  public void updatePlace_UpdateAddressToNull_throwsException() {
+      assertNull(placeRepository.findByPlaceId(1));
 
+      Place testPlace = new Place();
+      testPlace.setName("testName");
+      testPlace.setAddress("Universitätsstrasse 1");
+      testPlace.setClosestCampus(Campus.CENTER);
+      testPlace.setDescription("this is my room.");
+      testPlace.setPictureOfThePlace("some link");
+      Place createdPlace = placeService.createPlace(testPlace);
+
+      createdPlace.setName("another testname");
+      createdPlace.setAddress(null);
+      createdPlace.setClosestCampus(Campus.OERLIKON);
+      createdPlace.setDescription("this is my other room.");
+      createdPlace.setPictureOfThePlace("some other link");
+
+      // check that an error is thrown
+      assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(createdPlace, 1));
+  }
+
+  @Test
+  public void updatePlace_UpdateNameToNull_throwsException() {
+      assertNull(placeRepository.findByPlaceId(1));
+
+      Place testPlace = new Place();
+      testPlace.setName("testName");
+      testPlace.setAddress("Universitätsstrasse 1");
+      testPlace.setClosestCampus(Campus.CENTER);
+      testPlace.setDescription("this is my room.");
+      testPlace.setPictureOfThePlace("some link");
+      Place createdPlace = placeService.createPlace(testPlace);
+
+      createdPlace.setName(null);
+      createdPlace.setAddress("Oerlikonerstrasse 1");
+      createdPlace.setClosestCampus(Campus.OERLIKON);
+      createdPlace.setDescription("this is my other room.");
+      createdPlace.setPictureOfThePlace("some other link");
+
+      // check that an error is thrown
+      assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(createdPlace, 1));
+  }
 }

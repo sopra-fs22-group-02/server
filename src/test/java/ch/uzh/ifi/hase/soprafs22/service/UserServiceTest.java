@@ -204,6 +204,28 @@ public class UserServiceTest {
       assertThrows(ResponseStatusException.class, () -> userService.updateUser(testUser, Mockito.anyInt()));
   }
 
+  // test if 403 (FORBIDDEN) is thrown when trying to update username to NULL
+  @Test
+  public void updateUser_UpdateUsernameToNull_throwsException() {
+      // when -> setup additional mocks for UserRepository
+      Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser);
+      testUser.setUsername(null);
+      // then -> attempt to update the user  -> check that an error
+      // is thrown
+      assertThrows(ResponseStatusException.class, () -> userService.updateUser(testUser, Mockito.anyInt()));
+  }
+
+  // test if 403 (FORBIDDEN) is thrown when trying to update password to NULL
+  @Test
+  public void updateUser_UpdatePasswordToNull_throwsException() {
+      // when -> setup additional mocks for UserRepository
+      Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser);
+      testUser.setPassword(null);
+      // then -> attempt to update the user -> check that an error
+      // is thrown
+      assertThrows(ResponseStatusException.class, () -> userService.updateUser(testUser, Mockito.anyInt()));
+  }
+
   @Test
   public void updateUser_validInputs_success() {
       // given
