@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -265,6 +266,19 @@ public class SleepEventService {
 
 
         SleepEvent correspondingEvent = sleepEventRepository.findByEventId(eventId);
+        // TODO: check if the userId equals providerId, if it does, throw exception bc provider cant apply for own sleepevent
+
+        if(userId == correspondingEvent.getProviderId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You cannot apply to an event which you created.");
+        }
+
+        // TODO: check if user has already applied for this sleepevent -> check if userId is in "applicants" (the list).
+
+        if(correspondingEvent.getApplicants().contains(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You have already applied for this SleepEvent.");
+        }
 
         // TODO: Constrain => Should only be possible if in the available state
         if(correspondingEvent.getApplicationStatus() == ApplicationStatus.APPROVED) {
@@ -298,6 +312,12 @@ public class SleepEventService {
         // find SleepEvent by Id
         SleepEvent confirmedSleepEvent = sleepEventRepository.findByEventId(eventId);
 
+        // TODO: check if confirmedApplicant is NULL or 0 so that no one can accept more than one applicant
+        if(confirmedSleepEvent.getConfirmedApplicant() != 0){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "An applicant was already confirmed, you cannot accept more than one applicant.");
+        }
+
         // check if the applicant that's about to be accepted actually applied for this sleep event
         List<Integer> applicants = confirmedSleepEvent.getApplicants();
         boolean confirmedApplicantIsInList = Boolean.FALSE;
@@ -313,7 +333,8 @@ public class SleepEventService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "The applicant you want to accept has not applied for this sleep event!");
         }
-
+        // check for the very unlikely case where someone applies for an event and then deletes his account before the
+        // provider could accept her/him
         if(userById == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This user who you wanted to accept does not exist!");
