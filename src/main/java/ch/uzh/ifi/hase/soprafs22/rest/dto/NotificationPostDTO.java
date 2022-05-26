@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
-import java.time.LocalDateTime;
 
 public class NotificationPostDTO {
 
@@ -8,6 +7,7 @@ public class NotificationPostDTO {
 
 
     /** getters and setters */
+
     public String getMessage(){
         return message;
     }

@@ -21,6 +21,8 @@ public class UserGetDTO {
     private List<SleepEvent> myCalendarAsApplicant;
     private List<SleepEvent> myCalendarAsProvider;
 
+/** getters and setters */
+
     public int getUserId() {
         return userId;
     }

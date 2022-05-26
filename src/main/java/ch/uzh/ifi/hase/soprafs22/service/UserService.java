@@ -36,10 +36,6 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public List<User> getUsers() {
-    return this.userRepository.findAll();
-  }
-
   public User createUser(User newUser) {
     newUser.setToken(UUID.randomUUID().toString());
     newUser.setStatus(UserStatus.ONLINE);
@@ -84,7 +80,7 @@ public class UserService {
   }
 
   public User logout(String username){
-      // find user by userId
+      // find user by username
       User userByUsername = userRepository.findByUsername(username);
 
       // update status
@@ -93,19 +89,8 @@ public class UserService {
       return userByUsername;
   }
 
-  // helper function for updateUser()
-  private void checkIfTokenIsEqual(User userToBeUpdated, int userId){
-      User userFrontEnd = userRepository.findByUserId(userId);
-
-      // check if there's a user in the database with the same username
-      User userWithSameUsernameInDatabase = userRepository.findByUsername(userToBeUpdated.getUsername());
-
-      // check if user with same username is the user itself or another user
-      if(!Objects.equals(userFrontEnd.getToken(), userWithSameUsernameInDatabase.getToken())) {
-          String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be updated!";
-          throw new ResponseStatusException(HttpStatus.CONFLICT,
-                  String.format(baseErrorMessage, "username", "is"));
-      }
+  public List<User> getUsers() {
+      return this.userRepository.findAll();
   }
 
   public User updateUser(User userUpdated, int id) {
@@ -152,16 +137,8 @@ public class UserService {
   }
 
 
-  /**
-   * This is a helper method that will check the uniqueness criteria of the
-   * username and the name
-   * defined in the User entity. The method will do nothing if the input is unique
-   * and throw an error otherwise.
-   *
-   * @param userToBeCreated
-   * @throws org.springframework.web.server.ResponseStatusException
-   * @see User
-   */
+  /** helper methods */
+
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
     User userByEmail = userRepository.findByEmail(userToBeCreated.getEmail());
@@ -189,4 +166,19 @@ public class UserService {
         }
       return userById;
     }
+
+  // helper function for updateUser()
+  private void checkIfTokenIsEqual(User userToBeUpdated, int userId){
+      User userFrontEnd = userRepository.findByUserId(userId);
+
+      // check if there's a user in the database with the same username
+      User userWithSameUsernameInDatabase = userRepository.findByUsername(userToBeUpdated.getUsername());
+
+      // check if user with same username is the user itself or another user
+      if(!Objects.equals(userFrontEnd.getToken(), userWithSameUsernameInDatabase.getToken())) {
+          String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be updated!";
+          throw new ResponseStatusException(HttpStatus.CONFLICT,
+                  String.format(baseErrorMessage, "username", "is"));
+      }
+  }
 }

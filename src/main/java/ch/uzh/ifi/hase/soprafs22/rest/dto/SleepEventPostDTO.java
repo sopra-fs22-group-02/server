@@ -11,6 +11,7 @@ public class SleepEventPostDTO {
     private LocalTime endTime;
     private String comment;
 
+/** getters and setters */
 
     public LocalDate getStartDate() {
         return startDate;

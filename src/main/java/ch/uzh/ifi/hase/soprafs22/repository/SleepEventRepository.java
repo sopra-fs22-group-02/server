@@ -4,7 +4,6 @@ import ch.uzh.ifi.hase.soprafs22.entity.SleepEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository("sleepEventRepository")
 public interface SleepEventRepository extends JpaRepository<SleepEvent, Long> {

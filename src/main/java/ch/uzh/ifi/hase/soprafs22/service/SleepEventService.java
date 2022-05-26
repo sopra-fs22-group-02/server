@@ -74,14 +74,16 @@ public class SleepEventService {
             }
         }
 
-        // make sure the sleep event <= 12 hours
+        // make sure the sleep event <= 12 hours and >= 1 hour
         long timeDifference = startNewEvent.until(endNewEvent, ChronoUnit.MINUTES);
 
+        // check if sleep event is long enough (in terms of time)
         if(timeDifference < 60L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too short (min 1 hour) and can therefore not be updated!");
         }
 
+        // check if sleep event is not too long (in terms of time)
         if(timeDifference > 720L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too long (max 12 hours)!");
@@ -92,6 +94,8 @@ public class SleepEventService {
         // set event state
         newSleepEvent.setState(EventState.AVAILABLE);
 
+        // saves the given entity but data is only persisted in the database once
+        // flush() is called
         newSleepEvent = sleepEventRepository.save(newSleepEvent);
         sleepEventRepository.flush();
 
@@ -106,8 +110,10 @@ public class SleepEventService {
     }
 
     public List<SleepEvent> getAllSleepEventsForPlace(int placeId){
+        // find place by id
         Place place = placeRepository.findByPlaceId(placeId);
 
+        // check if place exists
         if(place == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This place does not exist!");
@@ -117,8 +123,10 @@ public class SleepEventService {
     }
 
     public List<SleepEvent> getAllAvailableSleepEventsForPlace(int placeId){
+        // find place by id
         Place place = placeRepository.findByPlaceId(placeId);
 
+        // check if place exists
         if(place == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This place does not exist!");
@@ -150,7 +158,10 @@ public class SleepEventService {
     }
 
     public SleepEvent findSleepEventById(int eventId){
+        // find sleep event by eventId
         SleepEvent sleepEvent =sleepEventRepository.findByEventId(eventId);
+
+        // check if sleep event exists
         if(sleepEvent == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This sleep event does not exist!");
@@ -159,9 +170,10 @@ public class SleepEventService {
     }
 
     public SleepEvent updateSleepEvent(int userId, int eventId, SleepEvent updates){
-
+        // find sleep event by eventId
         SleepEvent eventToBeUpdated = sleepEventRepository.findByEventId(eventId);
 
+        // check if sleep event exists
         if(eventToBeUpdated == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This sleep event does not exist!");
@@ -180,17 +192,19 @@ public class SleepEventService {
                     "You are not the provider of this sleep event and therefore cannot edit it!");
         }
 
-        // make sure new time slot <= 12h
+        // make sure new time slot <= 12h and >= 1h
         LocalDateTime startUpdated = LocalDateTime.of(updates.getStartDate(), updates.getStartTime());
         LocalDateTime endUpdated = LocalDateTime.of(updates.getEndDate(), updates.getEndTime());
 
         long timeDifference = startUpdated.until(endUpdated, ChronoUnit.MINUTES);
 
+        // check if sleep event is long enough (in terms of time)
         if(timeDifference < 60L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too short (min 1 hour) and can therefore not be updated!");
         }
 
+        // check if sleep event is not too long (in terms of time)
         if(timeDifference > 720L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The sleep event is too long (max 12 hours) and can therefore not be updated!");
@@ -213,9 +227,10 @@ public class SleepEventService {
     }
 
     public void deleteSleepEvent(int eventId, int userId){
-
+        // find sleep event by eventId
         SleepEvent eventToBeDeleted = sleepEventRepository.findByEventId(eventId);
 
+        // check if sleep event exists
         if(eventToBeDeleted == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This sleep does not exist and can therefore not be deleted!");
@@ -254,6 +269,7 @@ public class SleepEventService {
 
     // helper function for deleteSleepEvent()
     private void deleteEventFromProvidersCalendar(int providerId, int eventId){
+        // find provider by id
         User provider = userRepository.findByUserId(providerId);
         List<SleepEvent> calendarAsProvider = provider.getMyCalendarAsProvider();
         calendarAsProvider.removeIf(event -> event.getEventId() == eventId);
@@ -277,15 +293,14 @@ public class SleepEventService {
     public SleepEvent addApplicant(int userId, int eventId) {
         // fetch sleep event
         SleepEvent correspondingEvent = sleepEventRepository.findByEventId(eventId);
-        // TODO: check if the userId equals providerId, if it does, throw exception bc provider cant apply for own sleepevent
 
+        // check if user is the provider him-/herself
         if(userId == correspondingEvent.getProviderId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "You cannot apply to an event which you created.");
         }
 
-        // TODO: check if user has already applied for this sleepevent -> check if userId is in "applicants" (the list).
-
+        // check if user has already applied for this sleep event
         if(correspondingEvent.getApplicants().contains(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "You have already applied for this SleepEvent.");
@@ -323,7 +338,7 @@ public class SleepEventService {
         // find SleepEvent by Id
         SleepEvent confirmedSleepEvent = sleepEventRepository.findByEventId(eventId);
 
-        // TODO: check if confirmedApplicant is NULL or 0 so that no one can accept more than one applicant
+        // check if an applicant was already confirmed for this sleep event
         if(confirmedSleepEvent.getConfirmedApplicant() != 0){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "An applicant was already confirmed, you cannot accept more than one applicant.");
@@ -420,6 +435,7 @@ public class SleepEventService {
     // cannot use deleteSleepEvent(), because an expired sleep event does have a confirmed applicant
     // (would stop at first if), but it has to be deleted anyway, because it is over
     private void deletePastSleepEvent(int eventId){
+        // find sleep event by eventId
         SleepEvent pastEvent = sleepEventRepository.findByEventId(eventId);
 
         Place place = placeRepository.findByPlaceId(pastEvent.getPlaceId());

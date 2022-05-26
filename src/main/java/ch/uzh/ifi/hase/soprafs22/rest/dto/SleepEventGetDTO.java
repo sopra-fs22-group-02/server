@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs22.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs22.constant.ApplicationStatus;
 import ch.uzh.ifi.hase.soprafs22.constant.EventState;
-import ch.uzh.ifi.hase.soprafs22.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,6 +21,7 @@ public class SleepEventGetDTO {
     private String comment;
     private ApplicationStatus applicationStatus;
 
+/** getters and setters */
 
     public int getEventId() {
         return eventId;

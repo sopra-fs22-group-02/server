@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs22.controller;
 
-
 import ch.uzh.ifi.hase.soprafs22.entity.Notification;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.NotificationGetDTO;
 import ch.uzh.ifi.hase.soprafs22.rest.dto.NotificationPostDTO;

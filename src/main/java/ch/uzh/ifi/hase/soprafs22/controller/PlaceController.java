@@ -75,6 +75,7 @@ public class PlaceController {
     @DeleteMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePlace(@PathVariable int placeId){
+        // delete place
         placeService.deletePlace(placeId);
     }
 

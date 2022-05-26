@@ -62,6 +62,8 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     private List<Notification> myNotifications;
 
+/** getters and setters */
+
     public int getUserId() {
     return userId;
   }

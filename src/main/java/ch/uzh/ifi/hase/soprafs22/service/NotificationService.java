@@ -34,12 +34,13 @@ public class NotificationService {
     }
 
     public Notification createNotification(int userId, Notification newNotification) {
-
         // find the receiver of the message
         User receiver = userRepository.findByUserId(userId);
         newNotification.setCreationDate(LocalDateTime.now());
         newNotification.setReceiverId(userId);
 
+        // saves the given entity but data is only persisted in the database once
+        // flush() is called
         newNotification = notificationRepository.save(newNotification);
         notificationRepository.flush();
 
@@ -50,8 +51,10 @@ public class NotificationService {
     }
 
     public List<Notification> getAllNotificationsForUser(int userId){
+        // find user by id
         User user = userRepository.findByUserId(userId);
 
+        // check if user exists
         if(user == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "This user does not exist!");
@@ -90,6 +93,7 @@ public class NotificationService {
     private void deleteExpiredNotification(Notification notification){
         // find receiver
         User receiver = userRepository.findByUserId(notification.getReceiverId());
+
         // fetch all notifications within the receiver
         List<Notification> notificationsReceiver = receiver.getMyNotifications();
 
@@ -105,6 +109,7 @@ public class NotificationService {
 
         // update the receiver's notification list
         receiver.setMyNotifications(notificationsReceiverUpdated);
+
         // remove the notification from the notification repository
         notificationRepository.delete(notification);
     }

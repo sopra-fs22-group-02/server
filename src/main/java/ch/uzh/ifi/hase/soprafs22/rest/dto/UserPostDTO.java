@@ -6,6 +6,8 @@ public class UserPostDTO {
     private String username;
     private String password;
 
+/** getters and setters */
+
     public String getEmail() {
     return email;
     }

@@ -8,6 +8,8 @@ public class QnAMessage {
       private MessageType messageType;
       private String content;
       private String sender;
+
+/** getters and setters */
     
       public MessageType getType() {
         return messageType;

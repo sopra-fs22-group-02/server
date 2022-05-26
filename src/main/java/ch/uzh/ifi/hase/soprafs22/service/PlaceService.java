@@ -34,11 +34,25 @@ public class PlaceService {
       this.userRepository = userRepository;
   }
 
-  public List<Place> getPlaces(){
-      return this.placeRepository.findAll();
+  public Place createPlace(Place newPlace) {
+
+      checkIfPlaceExists(newPlace);
+
+      // saves the given entity but data is only persisted in the database once
+      // flush() is called
+      newPlace = placeRepository.save(newPlace);
+      placeRepository.flush();
+
+      log.debug("Created Information for User: {}", newPlace);
+      return newPlace;
   }
 
+  public List<Place> getPlaces(){
+        return this.placeRepository.findAll();
+    }
+
   public List<Place> getAllPlacesForUser(int userId){
+      // find user by id
       User userById = userRepository.findByUserId(userId);
 
       List<Place> allPlaces = getPlaces();
@@ -50,6 +64,7 @@ public class PlaceService {
           }
       }
 
+      // check if user exists
       if (userById == null) {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                   "The user provided is not found!");
@@ -57,28 +72,8 @@ public class PlaceService {
       return usersPlaces;
   }
 
-  public Place createPlace(Place newPlace) {
-
-      checkIfPlaceExists(newPlace);
-
-      newPlace = placeRepository.save(newPlace);
-      placeRepository.flush();
-
-      log.debug("Created Information for User: {}", newPlace);
-      return newPlace;
-  }
-
-  private void checkIfPlaceExists(Place placeToBeCreated) {
-      Place placeByProvider = placeRepository.findByProviderId(placeToBeCreated.getProviderId());
-
-      if (placeByProvider != null) {
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                  "You have already created a place. Therefore, the place could not be created!");
-      }
-  }
-
   public void deletePlace(int placeId) {
-          placeRepository.delete(placeRepository.findByPlaceId(placeId));
+      placeRepository.delete(placeRepository.findByPlaceId(placeId));
 
   }
 
@@ -120,4 +115,17 @@ public class PlaceService {
       return UpdatePlace;
 
   }
+
+/** helper methods */
+
+  private void checkIfPlaceExists(Place placeToBeCreated) {
+      // find place by providerId
+      Place placeByProvider = placeRepository.findByProviderId(placeToBeCreated.getProviderId());
+
+      if (placeByProvider != null) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "You have already created a place. Therefore, the place could not be created!");
+      }
+  }
+
 }

@@ -16,6 +16,8 @@ public class PlaceGetDTO {
     private String pictureOfThePlace;
     private List<SleepEvent> sleepEvents;
 
+/** getters and setters */
+
     public int getPlaceId(){
         return placeId;
     }

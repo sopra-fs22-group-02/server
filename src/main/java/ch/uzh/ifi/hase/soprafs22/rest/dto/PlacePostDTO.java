@@ -10,6 +10,8 @@ public class PlacePostDTO {
     private Campus closestCampus;
     private String description;
 
+/** getters and setters */
+
     public int getProviderId(){
         return providerId;
     }
