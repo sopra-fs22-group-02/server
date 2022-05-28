@@ -335,6 +335,13 @@ public class SleepEventService {
         // find user by Id
         User userById = userRepository.findByUserId(userId);
 
+        // check for the very unlikely case where someone applies for an event and then deletes his account before the
+        // provider could accept her/him
+        if(userById == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "This user who you wanted to accept does not exist!");
+        }
+
         // find SleepEvent by Id
         SleepEvent confirmedSleepEvent = sleepEventRepository.findByEventId(eventId);
 
@@ -359,13 +366,6 @@ public class SleepEventService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "The applicant you want to accept has not applied for this sleep event!");
         }
-        // check for the very unlikely case where someone applies for an event and then deletes his account before the
-        // provider could accept her/him
-        if(userById == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "This user who you wanted to accept does not exist!");
-        }
-
         
         // set confirmed applicant
         confirmedSleepEvent.setConfirmedApplicant(userId);

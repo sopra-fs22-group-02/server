@@ -569,6 +569,40 @@ public class SleepEventServiceTest {
 
     }
 
+    @Test
+    public void addApplicant_applyForOwnEvent() {
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.addApplicant(testUser.getUserId(), testEvent.getEventId()));
+    }
+
+    @Test
+    public void addApplicant_applyTwice() {
+        User testUser2 = new User();
+        testUser2.setUserId(5);
+
+        List<Integer> listApplicants = new ArrayList<>();
+        listApplicants.add(testUser2.getUserId());
+
+        testEvent.setApplicants(listApplicants);
+
+        SleepEvent pendingEvent = new SleepEvent();
+        pendingEvent.setEventId(20);
+        pendingEvent.setProviderId(1);
+        pendingEvent.setPlaceId(2);
+        pendingEvent.setApplicants(listApplicants);
+        pendingEvent.setConfirmedApplicant(0);
+        pendingEvent.setStartDate(LocalDate.of(2022, 8, 1));
+        pendingEvent.setEndDate(LocalDate.of(2022, 8, 2));
+        pendingEvent.setStartTime(LocalTime.of(22, 0));
+        pendingEvent.setEndTime(LocalTime.of(8, 0));
+        pendingEvent.setState(EventState.AVAILABLE);
+        pendingEvent.setComment("some comment");
+        pendingEvent.setApplicationStatus(ApplicationStatus.PENDING);
+
+        Mockito.when(sleepEventRepository.findByEventId(Mockito.anyInt())).thenReturn(pendingEvent);
+
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.addApplicant(testUser2.getUserId(), pendingEvent.getEventId()));
+    }
+
 
     @Test
     public void confirmSleepEvent_success() {
@@ -619,6 +653,11 @@ public class SleepEventServiceTest {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.confirmSleepEvent(testUser3.getUserId(), testEvent.getEventId()));
     }
 
+    @Test
+    public void confirmSleepEvent_userDoesNotExist() {
+        Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(null);
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.confirmSleepEvent(30, testEvent.getEventId()));
+    }
 
     @Test
     public void checkIfExpiredOrOver_setToExpired() {

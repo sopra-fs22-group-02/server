@@ -1411,6 +1411,83 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
+    public void addApplicant_applyForOwnEvent() {
+        // given
+        assertNull(userRepository.findByUserId(1));
+        assertNull(placeRepository.findByPlaceId(2));
+        assertNull(sleepEventRepository.findByEventId(3));
+
+        User provider = new User();
+        provider.setUsername("username");
+        provider.setEmail("username@uzh.ch");
+        provider.setPassword("password");
+
+        Place testPlace = new Place();
+        testPlace.setName("testName");
+        testPlace.setAddress("Universitätsstrasse 1");
+        testPlace.setClosestCampus(Campus.CENTER);
+        testPlace.setDescription("this is my room.");
+        testPlace.setPictureOfThePlace("some link");
+
+        SleepEvent testEvent = new SleepEvent();
+        testEvent.setStartDate(LocalDate.of(2023, 1, 1));
+        testEvent.setEndDate(LocalDate.of(2023, 1, 2));
+        testEvent.setStartTime(LocalTime.of(22, 0));
+        testEvent.setEndTime(LocalTime.of(8, 0));
+        testEvent.setComment("some comment");
+
+        // create approved event
+        User createdUser = userService.createUser(provider);
+        Place createdPlace = placeService.createPlace(testPlace);
+        SleepEvent createdEvent = sleepEventService.createSleepEvent(createdUser.getUserId(), createdPlace.getPlaceId(), testEvent);
+
+        // check that an error is thrown
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.addApplicant(createdUser.getUserId(), createdEvent.getEventId()));
+    }
+
+    @Test
+    public void addApplicant_applyTwice() {
+        // given
+        assertNull(userRepository.findByUserId(1));
+        assertNull(placeRepository.findByPlaceId(2));
+        assertNull(sleepEventRepository.findByEventId(3));
+
+        User provider = new User();
+        provider.setUsername("username");
+        provider.setEmail("username@uzh.ch");
+        provider.setPassword("password");
+
+        User applicant = new User();
+        applicant.setUsername("username2");
+        applicant.setEmail("username2@uzh.ch");
+        applicant.setPassword("password");
+
+        Place testPlace = new Place();
+        testPlace.setName("testName");
+        testPlace.setAddress("Universitätsstrasse 1");
+        testPlace.setClosestCampus(Campus.CENTER);
+        testPlace.setDescription("this is my room.");
+        testPlace.setPictureOfThePlace("some link");
+
+        SleepEvent testEvent = new SleepEvent();
+        testEvent.setStartDate(LocalDate.of(2023, 1, 1));
+        testEvent.setEndDate(LocalDate.of(2023, 1, 2));
+        testEvent.setStartTime(LocalTime.of(22, 0));
+        testEvent.setEndTime(LocalTime.of(8, 0));
+        testEvent.setComment("some comment");
+
+        // create approved event
+        User createdUser = userService.createUser(provider);
+        User createdApplicant = userService.createUser(applicant);
+        Place createdPlace = placeService.createPlace(testPlace);
+        SleepEvent createdEvent = sleepEventService.createSleepEvent(createdUser.getUserId(), createdPlace.getPlaceId(), testEvent);
+        sleepEventService.addApplicant(createdApplicant.getUserId(), createdEvent.getEventId());
+
+        // check that an error is thrown
+        assertThrows(ResponseStatusException.class, () -> sleepEventService.addApplicant(createdApplicant.getUserId(), createdEvent.getEventId()));
+        }
+
+    @Test
     public void confirmSleepEvent_success() {
         // given
         assertNull(userRepository.findByUserId(1));
