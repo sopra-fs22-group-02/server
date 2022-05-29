@@ -80,13 +80,13 @@ public class SleepEventService {
         // check if sleep event is long enough (in terms of time)
         if(timeDifference < 60L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "The sleep event is too short (min 1 hour) and can therefore not be updated!");
+                    "The sleep event is too short (min 1 hour) and can therefore not be created!");
         }
 
         // check if sleep event is not too long (in terms of time)
         if(timeDifference > 720L){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "The sleep event is too long (max 12 hours)!");
+                    "The sleep event is too long (max 12 hours) and can therefore not be created!");
         }
 
         newSleepEvent.setProviderId(providerId);
