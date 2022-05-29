@@ -1,6 +1,6 @@
 # FindAPlace - SoPra FS22 Group 02 (Backend)
 ## Introduction
-**FindAPlace** is a location-centric event-planner that allows students to quickly and easily find a place to sleep. Whether it is about taking a quick nap, or just crashing at a place to sleep after a long night of studying or partying. **FindAPlace** has you covered!
+**FindAPlace** is a platform that allows students to quickly and easily find a place to sleep. Whether it is about taking a quick nap, or just crashing at a place to sleep after a long night of studying or partying. **FindAPlace** has you covered!
 
 Places for sleeping are offered by other users. These places can then be chosen when searching for a suitable time slot and location. A simple accept / reject mechanism allows the place provider to then simply choose which applicant will get the place for the desired time.
 
