@@ -65,7 +65,7 @@ public class PlaceServiceIntegrationTest {
   }
 
   @Test
-  public void createPlace_duplicateUser_throwsException() {
+  public void createPlace_secondPlace_throwsException() {
     assertNull(placeRepository.findByPlaceId(1));
 
     Place testPlace = new Place();
@@ -99,37 +99,6 @@ public class PlaceServiceIntegrationTest {
   }
 
   @Test
-  public void deletePlace_validInputs_success() {
-      Place testPlace = new Place();
-      testPlace.setName("testName");
-      testPlace.setAddress("Universitätsstrasse 1");
-      testPlace.setClosestCampus(Campus.CENTER);
-      testPlace.setDescription("this is my room.");
-      testPlace.setPictureOfThePlace("some link");
-      placeService.createPlace(testPlace);
-
-      placeService.deletePlace(testPlace.getPlaceId());
-
-      assertTrue(placeService.getPlaces().isEmpty());
-  }
-
-  @Test
-  public void updatePlace_IdNotFound_throwsException() {
-      assertNull(placeRepository.findByPlaceId(1));
-
-      // create new place, but it will not get saved it into the database
-      Place placeUpdates = new Place();
-      placeUpdates.setName("testName");
-      placeUpdates.setAddress("Universitätsstrasse 1");
-      placeUpdates.setClosestCampus(Campus.CENTER);
-      placeUpdates.setDescription("this is my room.");
-      placeUpdates.setPictureOfThePlace("some link");
-
-      // check that an error is thrown
-      assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(placeUpdates, 1));
-  }
-
-  @Test
   public void updatePlace_validInputs_success() {
       Place testPlace = new Place();
       testPlace.setName("testName");
@@ -148,6 +117,22 @@ public class PlaceServiceIntegrationTest {
       placeService.updatePlace(createdPlace, testPlace.getPlaceId());
 
       assertEquals(createdPlace, testPlace);
+  }
+
+  @Test
+  public void updatePlace_IdNotFound_throwsException() {
+      assertNull(placeRepository.findByPlaceId(1));
+
+      // create new place, but it will not get saved it into the database
+      Place placeUpdates = new Place();
+      placeUpdates.setName("testName");
+      placeUpdates.setAddress("Universitätsstrasse 1");
+      placeUpdates.setClosestCampus(Campus.CENTER);
+      placeUpdates.setDescription("this is my room.");
+      placeUpdates.setPictureOfThePlace("some link");
+
+      // check that an error is thrown
+      assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(placeUpdates, 1));
   }
 
   @Test
@@ -193,4 +178,19 @@ public class PlaceServiceIntegrationTest {
       // check that an error is thrown
       assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(createdPlace, 1));
   }
+
+    @Test
+    public void deletePlace_validInputs_success() {
+        Place testPlace = new Place();
+        testPlace.setName("testName");
+        testPlace.setAddress("Universitätsstrasse 1");
+        testPlace.setClosestCampus(Campus.CENTER);
+        testPlace.setDescription("this is my room.");
+        testPlace.setPictureOfThePlace("some link");
+        placeService.createPlace(testPlace);
+
+        placeService.deletePlace(testPlace.getPlaceId());
+
+        assertTrue(placeService.getPlaces().isEmpty());
+    }
 }

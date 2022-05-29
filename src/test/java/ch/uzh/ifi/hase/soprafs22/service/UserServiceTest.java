@@ -71,18 +71,7 @@ public class UserServiceTest {
     // is thrown
     assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
   }
-  @Test
-  public void createUser_duplicateEmail_throwsException() {
-      // given -> a first user has already been created
-      userService.createUser(testUser);
 
-      // when -> setup additional mocks for UserRepository
-      Mockito.when(userRepository.findByEmail(Mockito.any())).thenReturn(testUser);
-
-        // then -> attempt to create second user with same user -> check that an error
-        // is thrown
-        assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
-    }
   @Test
   public void createUser_duplicateUsername_throwsException() {
     // given -> a first user has already been created
@@ -94,6 +83,19 @@ public class UserServiceTest {
     // then -> attempt to create second user with same user -> check that an error
     // is thrown
     assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
+  }
+
+  @Test
+  public void createUser_duplicateEmail_throwsException() {
+      // given -> a first user has already been created
+      userService.createUser(testUser);
+
+      // when -> setup additional mocks for UserRepository
+      Mockito.when(userRepository.findByEmail(Mockito.any())).thenReturn(testUser);
+
+      // then -> attempt to create second user with same user -> check that an error
+      // is thrown
+      assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
   }
 
   @Test
@@ -193,6 +195,22 @@ public class UserServiceTest {
       assertThrows(ResponseStatusException.class, () -> userService.findUserById(Mockito.anyInt()));
   }
 
+  @Test
+  public void updateUser_validInputs_success() {
+      // given
+      User user = userService.createUser(testUser);
+      user.setEmail("abc@uzh.ch");
+      user.setUsername("anotherUsername");
+      user.setPassword("1234");
+
+      // when -> setup additional mocks for UserRepository
+      Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser);
+      userService.updateUser(user, testUser.getUserId());
+
+      // then
+      assertEquals(user, testUser);
+  }
+
   // test if 404 (NOT_FOUND) is thrown when trying to update a non-existing user
   @Test
   public void updateUser_IdNotFound_throwsException() {
@@ -225,21 +243,4 @@ public class UserServiceTest {
       // is thrown
       assertThrows(ResponseStatusException.class, () -> userService.updateUser(testUser, Mockito.anyInt()));
   }
-
-  @Test
-  public void updateUser_validInputs_success() {
-      // given
-      User user = userService.createUser(testUser);
-      user.setEmail("abc@uzh.ch");
-      user.setUsername("anotherUsername");
-      user.setPassword("1234");
-
-      // when -> setup additional mocks for UserRepository
-      Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(testUser);
-      userService.updateUser(user, testUser.getUserId());
-
-      // then
-      assertEquals(user, testUser);
-  }
-
 }

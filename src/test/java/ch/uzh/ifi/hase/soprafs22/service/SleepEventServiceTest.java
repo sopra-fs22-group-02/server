@@ -268,7 +268,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void createSleepEvent_tooShort() {
+    public void createSleepEvent_tooShort_throwsException() {
         // given
         SleepEvent newEvent = new SleepEvent();
         newEvent.setEventId(12);
@@ -286,7 +286,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void createSleepEvent_tooLong() {
+    public void createSleepEvent_tooLong_throwsException() {
         // given
         SleepEvent newEvent = new SleepEvent();
         newEvent.setEventId(12);
@@ -317,7 +317,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void getAllSleepEventsForPlace_placeDoesNotExist() {
+    public void getAllSleepEventsForPlace_placeDoesNotExist_throwsException() {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.getAllSleepEventsForPlace(20));
     }
 
@@ -390,7 +390,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void getAllAvailableSleepEventsForPlace_placeDoesNotExist() {
+    public void getAllAvailableSleepEventsForPlace_placeDoesNotExist_throwsException() {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.getAllAvailableSleepEventsForPlace(20));
     }
 
@@ -429,7 +429,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void updateSleep_alreadyApproved() {
+    public void updateSleep_approvedEvent_throwsException() {
         // given
         User testUser2 = new User();
         testUser2.setUserId(5);
@@ -462,7 +462,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void updateSleep_notProvider() {
+    public void updateSleep_notProvider_throwsException() {
         // given
         User testUser2 = new User();
         testUser2.setUserId(5);
@@ -479,7 +479,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void updateSleep_tooShort() {
+    public void updateSleep_tooShort_throwsException() {
         // given
         SleepEvent testEvent2 = new SleepEvent();
         testEvent2.setStartDate(LocalDate.of(2024, 1, 1));
@@ -492,7 +492,7 @@ public class SleepEventServiceTest {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.updateSleepEvent(testEvent.getProviderId(), testEvent.getPlaceId(), testEvent2));
     }
     @Test
-    public void updateSleep_tooLong() {
+    public void updateSleep_tooLong_throwsException() {
         // given
         SleepEvent testEvent2 = new SleepEvent();
         testEvent2.setStartDate(LocalDate.of(2024, 1, 1));
@@ -504,8 +504,6 @@ public class SleepEventServiceTest {
         // then
         assertThrows(ResponseStatusException.class, () -> sleepEventService.updateSleepEvent(testEvent.getProviderId(), testEvent.getPlaceId(), testEvent2));
     }
-
-
 
     @Test
     public void addApplicant_success() {
@@ -533,7 +531,7 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void addApplicant_eventApproved() {
+    public void addApplicant_eventApproved_throwsException() {
         User testUser2 = new User();
         testUser2.setUserId(5);
 
@@ -570,12 +568,12 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void addApplicant_applyForOwnEvent() {
+    public void addApplicant_applyForOwnEvent_throwsException() {
         assertThrows(ResponseStatusException.class, () -> sleepEventService.addApplicant(testUser.getUserId(), testEvent.getEventId()));
     }
 
     @Test
-    public void addApplicant_applyTwice() {
+    public void addApplicant_applyTwice_throwsException() {
         User testUser2 = new User();
         testUser2.setUserId(5);
 
@@ -631,7 +629,7 @@ public class SleepEventServiceTest {
 
 
     @Test
-    public void confirmSleepEvent_applicantHasNotApplied() {
+    public void confirmSleepEvent_applicantHasNotApplied_throwsException() {
         // when
         User testUser2 = new User();
         testUser2.setUserId(5);
@@ -654,13 +652,13 @@ public class SleepEventServiceTest {
     }
 
     @Test
-    public void confirmSleepEvent_userDoesNotExist() {
+    public void confirmSleepEvent_applicantDoesNotExist_throwsException() {
         Mockito.when(userRepository.findByUserId(Mockito.anyInt())).thenReturn(null);
         assertThrows(ResponseStatusException.class, () -> sleepEventService.confirmSleepEvent(30, testEvent.getEventId()));
     }
 
     @Test
-    public void checkIfExpiredOrOver_setToExpired() {
+    public void checkIfExpiredOrOver_setToExpired_success() {
         User testUser2 = new User();
         testUser2.setUserId(5);
 

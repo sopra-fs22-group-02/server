@@ -93,6 +93,19 @@ public class UserService {
       return this.userRepository.findAll();
   }
 
+    // method is used to get the user info for the user profile
+    // returns a single user by ID
+    public User findUserById(int id) {
+        User userById = userRepository.findByUserId(id);
+
+        String baseErrorMessage = "The %s provided %s not found!";
+        if (userById == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format(baseErrorMessage, "Id", "is"));
+        }
+        return userById;
+    }
+
   public User updateUser(User userUpdated, int id) {
       // find user by ID
       User UpdateUser = userRepository.findByUserId(id);
@@ -153,19 +166,6 @@ public class UserService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "email", "is"));
     }
   }
-
-  // method is used to get the user info for the user profile
-  // returns a single user by ID
-  public User findUserById(int id) {
-      User userById = userRepository.findByUserId(id);
-
-      String baseErrorMessage = "The %s provided %s not found!";
-      if (userById == null) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                  String.format(baseErrorMessage, "Id", "is"));
-        }
-      return userById;
-    }
 
   // helper function for updateUser()
   private void checkIfTokenIsEqual(User userToBeUpdated, int userId){

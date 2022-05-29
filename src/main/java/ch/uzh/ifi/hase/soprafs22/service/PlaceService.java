@@ -72,11 +72,6 @@ public class PlaceService {
       return usersPlaces;
   }
 
-  public void deletePlace(int placeId) {
-      placeRepository.delete(placeRepository.findByPlaceId(placeId));
-
-  }
-
   public Place updatePlace(Place placeUpdated, int placeId) {
       // find place by ID
       Place UpdatePlace = placeRepository.findByPlaceId(placeId);
@@ -113,6 +108,11 @@ public class PlaceService {
       UpdatePlace.setPictureOfThePlace(UpdatedPictureOfThePlace);
 
       return UpdatePlace;
+
+  }
+
+  public void deletePlace(int placeId) {
+      placeRepository.delete(placeRepository.findByPlaceId(placeId));
 
   }
 

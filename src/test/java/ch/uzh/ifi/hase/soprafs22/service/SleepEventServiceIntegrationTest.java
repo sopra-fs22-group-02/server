@@ -514,7 +514,7 @@ public class SleepEventServiceIntegrationTest {
 
 
     @Test
-    public void createPlace_validInputs_eventTooShort() {
+    public void createPlace_validInputs_eventTooShort_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -549,7 +549,7 @@ public class SleepEventServiceIntegrationTest {
 
 
     @Test
-    public void createPlace_validInputs_eventTooLong() {
+    public void createPlace_validInputs_eventTooLong_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -650,7 +650,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void getAllSleepEventsForPlace_placeDoesNotExist() {
+    public void getAllSleepEventsForPlace_placeDoesNotExist_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -725,7 +725,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void getAllAvailableSleepEventsForPlace_placeDoesNotExist() {
+    public void getAllAvailableSleepEventsForPlace_placeDoesNotExist_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -854,7 +854,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void findSleepEventById_eventDoesNotExist() {
+    public void findSleepEventById_eventDoesNotExist_throwsException() {
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
         assertNull(sleepEventRepository.findByEventId(3));
@@ -919,7 +919,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void updateSleepEvent_approvedEvent() {
+    public void updateSleepEvent_approvedEvent_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -968,7 +968,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void updateSleepEvent_notProvider() {
+    public void updateSleepEvent_notProvider_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1017,7 +1017,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void updateSleepEvent_eventTooShort() {
+    public void updateSleepEvent_eventTooShort_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1058,7 +1058,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void updateSleepEvent_eventTooLong() {
+    public void updateSleepEvent_eventTooLong_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1099,7 +1099,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void updateSleepEvent_eventDoesNotExist() {
+    public void updateSleepEvent_eventDoesNotExist_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1183,7 +1183,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void deleteSleepEvent_eventDoesNotExist() {
+    public void deleteSleepEvent_eventDoesNotExist_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1216,7 +1216,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void deleteSleepEvent_approvedEvent() {
+    public void deleteSleepEvent_approvedEvent_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1265,7 +1265,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void deleteSleepEvent_notProvider() {
+    public void deleteSleepEvent_notProvider_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1360,7 +1360,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void addApplicant_eventUnavailable() {
+    public void addApplicant_eventApproved_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1411,7 +1411,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void addApplicant_applyForOwnEvent() {
+    public void addApplicant_applyForOwnEvent_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1446,7 +1446,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void addApplicant_applyTwice() {
+    public void addApplicant_applyTwice_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1542,7 +1542,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void confirmSleepEvent_applicantHasNotApplied() {
+    public void confirmSleepEvent_applicantHasNotApplied_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1591,7 +1591,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void confirmSleepEvent_applicantDoeNotExist() {
+    public void confirmSleepEvent_applicantDoeNotExist_throwsException() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1635,7 +1635,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void checkIfExpiredOrOver_deleteEvent() {
+    public void checkIfExpiredOrOver_deleteEvent_success() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));
@@ -1686,7 +1686,7 @@ public class SleepEventServiceIntegrationTest {
     }
 
     @Test
-    public void checkIfExpiredOrOver_setToExpired() {
+    public void checkIfExpiredOrOver_setToExpired_success() {
         // given
         assertNull(userRepository.findByUserId(1));
         assertNull(placeRepository.findByPlaceId(2));

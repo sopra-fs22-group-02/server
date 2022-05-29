@@ -249,6 +249,28 @@ public class UserServiceIntegrationTest {
       assertThrows(ResponseStatusException.class, () -> userService.findUserById(1));
   }
 
+  @Test
+  public void updateUser_validInputs_success() {
+      // given
+      User testUser = new User();
+      testUser.setEmail("firstname.lastname@uzh.ch");
+      testUser.setUsername("testUsername");
+      testUser.setPassword("password");
+      testUser.setBio("hello my name is Peter.");
+      testUser.setProfilePicture("some link");
+      User createdUser = userService.createUser(testUser);
+
+      createdUser.setUsername("anotherUsername");
+      createdUser.setPassword("1234");
+      createdUser.setBio("I am from Switzerland.");
+      createdUser.setProfilePicture("some other link");
+
+      userService.updateUser(createdUser, testUser.getUserId());
+
+      // then
+      assertEquals(createdUser, testUser);
+  }
+
   // test if 404 (NOT_FOUND) is thrown when trying to update a non-existing user
   @Test
   public void updateUser_IdNotFound_throwsException() {
@@ -298,28 +320,6 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void updateUser_validInputs_success() {
-      // given
-      User testUser = new User();
-      testUser.setEmail("firstname.lastname@uzh.ch");
-      testUser.setUsername("testUsername");
-      testUser.setPassword("password");
-      testUser.setBio("hello my name is Peter.");
-      testUser.setProfilePicture("some link");
-      User createdUser = userService.createUser(testUser);
-
-      createdUser.setUsername("anotherUsername");
-      createdUser.setPassword("1234");
-      createdUser.setBio("I am from Switzerland.");
-      createdUser.setProfilePicture("some other link");
-
-      userService.updateUser(createdUser, testUser.getUserId());
-
-      // then
-      assertEquals(createdUser, testUser);
-  }
-
-  @Test
   public void updateUser_checkIfTokenIsEqual_SameUser() {
       // given
       User testUser = new User();
@@ -341,7 +341,7 @@ public class UserServiceIntegrationTest {
   }
 
   @Test
-  public void updateUser_checkIfTokenIsEqual_NotSameUser() {
+  public void updateUser_checkIfTokenIsEqual_NotSameUser_throwsException() {
       // given
       User testUser = new User();
       testUser.setEmail("firstname.lastname@uzh.ch");

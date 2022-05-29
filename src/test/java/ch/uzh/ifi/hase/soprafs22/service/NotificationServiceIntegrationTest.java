@@ -119,23 +119,18 @@ public class NotificationServiceIntegrationTest {
       System.out.println(userByUserId.getMyNotifications());
 
       // when
-      //System.out.println("userMyNotifications: " + notificationService.getAllNotificationsForUser(createdUser.getUserId()));
-      //List<Notification> userMyNotifications = notificationService.getAllNotificationsForUser(createdUser.getUserId());
-      //System.out.println("userMyNotifications: " + userMyNotifications);
-
       Notification foundNotification = Collections.singletonList(testNotification).get(0);
       Notification anotherFoundNotification = notificationService.getAllNotificationsForUser(createdUser.getUserId()).get(0);
       Notification foundNotification2 = Collections.singletonList(anothertestNotification).get(0);
       Notification anotherFoundNotifcation2 = notificationService.getAllNotificationsForUser(createdUser.getUserId()).get(1);
 
       // then
-      //assertEquals(Collections.singletonList(testNotification), notificationService.getAllNotificationsForUser(createdUser.getUserId()));
       assertEquals(foundNotification.getNotificationId(), anotherFoundNotification.getNotificationId());
       assertEquals(foundNotification2.getNotificationId(), anotherFoundNotifcation2.getNotificationId());
   }
 
   @Test
-  public void checkIfOlderThan24h_deleteNotification() {
+  public void checkIfOlderThan24h_deleteNotification_success() {
       assertEquals(Collections.emptyList(), userRepository.findAll());
       assertEquals(Collections.emptyList(),(notificationRepository.findAll()));
 

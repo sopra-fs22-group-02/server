@@ -76,19 +76,6 @@ public class PlaceServiceTest {
   }
 
   @Test
-  public void deletePlace_validInputs_success() {
-      // given
-      placeService.createPlace(testPlace);
-
-      // when
-      Mockito.when(placeRepository.findByProviderId(Mockito.anyInt())).thenReturn(testPlace);
-      placeService.deletePlace(testPlace.getPlaceId());
-
-      // then
-      assertNull(placeRepository.findByPlaceId(testPlace.getPlaceId()));
-  }
-
-  @Test
   public void updatePlace_validInputs_success() {
       // given
       Place createdPlace = placeService.createPlace(testPlace);
@@ -136,5 +123,18 @@ public class PlaceServiceTest {
       // is thrown
       assertThrows(ResponseStatusException.class, () -> placeService.updatePlace(testPlace, Mockito.anyInt()));
   }
+
+    @Test
+    public void deletePlace_validInputs_success() {
+        // given
+        placeService.createPlace(testPlace);
+
+        // when
+        Mockito.when(placeRepository.findByProviderId(Mockito.anyInt())).thenReturn(testPlace);
+        placeService.deletePlace(testPlace.getPlaceId());
+
+        // then
+        assertNull(placeRepository.findByPlaceId(testPlace.getPlaceId()));
+    }
 
 }
